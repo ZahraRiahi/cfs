@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>Comprehensive-financial-system</artifactId>
+        <groupId>ir.demisco.cfs</groupId>
+        <version>1.0.0</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>app</artifactId>
+
+    <dependencies>
+        <dependency>
+            <artifactId>service</artifactId>
+            <groupId>ir.demisco.cfs</groupId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ir.demisco.cloud.core</groupId>
+            <artifactId>dms-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.200</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ir.demisco.cloud.core</groupId>
+            <artifactId>dms-audit</artifactId>
+            <version>${basic-Service-version}</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>ir.demisco.cloud.core</groupId>-->
+<!--            <artifactId>dms-resource-security</artifactId>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>net.ttddyy</groupId>
+            <artifactId>datasource-proxy</artifactId>
+            <version>1.5.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ir.demisco.cloud.core</groupId>
+            <artifactId>dms-middleware</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ir.demisco.cloud.core</groupId>
+            <artifactId>dms-data-grid</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ir.demisco.core</groupId>
+            <artifactId>jasper-server-client</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-openfeign-core</artifactId>
+            <version>2.1.2.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
