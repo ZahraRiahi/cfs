@@ -11,9 +11,9 @@
 
     <artifactId>app</artifactId>
 
-    <profiles>
-        <profile>
-            <id>DEV</id>
+<!--    <profiles>-->
+<!--        <profile>-->
+<!--            <id>DEV</id>-->
             <build>
                 <plugins>
                     <plugin>
@@ -28,8 +28,8 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-    </profiles>
+<!--        </profile>-->
+<!--    </profiles>-->
 
     <dependencies>
         <dependency>
