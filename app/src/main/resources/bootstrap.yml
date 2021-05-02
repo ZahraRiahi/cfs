@@ -48,12 +48,13 @@ security:
 
 eureka:
   client:
-    register-with-eureka: false
-    fetch-registry: false
+    register-with-eureka: true
+    fetch-registry: true
     serviceUrl:
-      defaultZone: http://
+      defaultZone: http://discovery-service.cfs.svc.cluster.local:8080/eureka/
   instance:
     prefer-ip-address: true
+
 
 dms:
   jasper-server:
