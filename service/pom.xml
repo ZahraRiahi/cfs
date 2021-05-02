@@ -13,8 +13,8 @@
 
     <dependencies>
         <dependency>
-            <artifactId>model</artifactId>
             <groupId>ir.demisco.cfs</groupId>
+            <artifactId>model</artifactId>
             <version>1.0.0</version>
         </dependency>
 

@@ -33,10 +33,10 @@
             <artifactId>dms-audit</artifactId>
             <version>${basic-Service-version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>ir.demisco.cloud.core</groupId>-->
-<!--            <artifactId>dms-resource-security</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>ir.demisco.cloud.core</groupId>
+            <artifactId>dms-resource-security</artifactId>
+        </dependency>
         <dependency>
             <groupId>net.ttddyy</groupId>
             <artifactId>datasource-proxy</artifactId>
@@ -95,6 +95,16 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>ir.demisco.cloud.core</groupId>-->
+<!--            <artifactId>dms.security.service</artifactId>-->
+<!--            <version>${basic-Service-version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.security</groupId>-->
+<!--            <artifactId>spring-security-test</artifactId>-->
+<!--        </dependency>-->
+
     </dependencies>
 
 </project>
