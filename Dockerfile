@@ -1,5 +1,5 @@
 FROM 192.168.25.203:8080/library/serverjre:8
-COPY /service/target/*.jar /usr/local/lib/app.jar
+COPY /app/target/*.jar /usr/local/lib/app.jar
                         
 ENV spring.cloud.config.uri='http://config-server-cfs.cfs.svc.cluster.local:8080'
 ENV spring.cloud.config.profile='dev'
