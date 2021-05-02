@@ -10,8 +10,8 @@ variables:
   REGISTRY_ADDRESS: $CI_REGISTRY
   app_name: "cfs-service"
   nodePort: "30450"
-  clusterPort: "8080"
-  containerPort: "8080"
+  clusterPort: "8082"
+  containerPort: "8082"
   name_space: "cfs"
   name_space_dev: "cfs"
   replica: "1"
