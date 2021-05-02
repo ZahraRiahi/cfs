@@ -9,53 +9,53 @@ import java.util.Date;
 @Entity
 @Table(name = "financial_period_type", schema = "fnpr")
 public class FinancialPeriodType {
-    private Long ID;
-    private String Description;
-    private Long FromMonth;
-    private Long ToMonth;
-    private Long CalendarTypeId;
+    private Long id;
+    private String description;
+    private Long fromMonth;
+    private Long toMonth;
+    private Long calendarTypeId;
 
     @Id
-    public Long getID() {
-        return ID;
+    public Long getId() {
+        return id;
     }
 
-    public void setID(Long ID) {
-        this.ID = ID;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        description = description;
     }
 
     @Column(name = "FROM_MONTH")
     public Long getFromMonth() {
-        return FromMonth;
+        return fromMonth;
     }
 
     public void setFromMonth(Long fromMonth) {
-        FromMonth = fromMonth;
+        fromMonth = fromMonth;
     }
 
     @Column(name = "TO_MONTH")
     public Long getToMonth() {
-        return ToMonth;
+        return toMonth;
     }
 
     public void setToMonth(Long toMonth) {
-        ToMonth = toMonth;
+        toMonth = toMonth;
     }
 
     @Column(name = "CALENDAR_TYPE_ID")
     public Long getCalendarTypeId() {
-        return CalendarTypeId;
+        return calendarTypeId;
     }
 
     public void setCalendarTypeId(Long calendarTypeId) {
-        CalendarTypeId = calendarTypeId;
+        calendarTypeId = calendarTypeId;
     }
 }

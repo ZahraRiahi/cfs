@@ -11,6 +11,26 @@
 
     <artifactId>app</artifactId>
 
+    <profiles>
+        <profile>
+            <id>DEV</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <configuration>
+                            <parameters>true</parameters>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <artifactId>service</artifactId>
@@ -95,15 +115,16 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>ir.demisco.cloud.core</groupId>-->
-<!--            <artifactId>dms.security.service</artifactId>-->
-<!--            <version>${basic-Service-version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.security</groupId>-->
-<!--            <artifactId>spring-security-test</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>ir.demisco.cloud.core</groupId>-->
+        <!--            <artifactId>dms.security.service</artifactId>-->
+        <!--            <version>${basic-Service-version}</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.security</groupId>-->
+        <!--            <artifactId>spring-security-test</artifactId>-->
+        <!--        </dependency>-->
+
 
     </dependencies>
 
