@@ -19,16 +19,16 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     private final GridFilterService gridFilterService;
     private final FinancialPeriodListGridProvider financialPeriodListGridProvider;
-    private final FinancialPeriodStatusRepository financialPeriodStatusRepository;
-    private final FinancialPeriodTypeAssignRepository financialPeriodTypeAssignRepository;
-    private final FinancialPeriodRepository financialPeriodRepository;
+//    private final FinancialPeriodStatusRepository financialPeriodStatusRepository;
+//    private final FinancialPeriodTypeAssignRepository financialPeriodTypeAssignRepository;
+//    private final FinancialPeriodRepository financialPeriodRepository;
 
-    public DefaultFinancialPeriod(GridFilterService gridFilterService, FinancialPeriodListGridProvider financialPeriodListGridProvider, FinancialPeriodStatusRepository financialPeriodStatusRepository, FinancialPeriodTypeAssignRepository financialPeriodTypeAssignRepository, FinancialPeriodRepository financialPeriodRepository) {
+    public DefaultFinancialPeriod(GridFilterService gridFilterService, FinancialPeriodListGridProvider financialPeriodListGridProvider) {
         this.gridFilterService = gridFilterService;
         this.financialPeriodListGridProvider = financialPeriodListGridProvider;
-        this.financialPeriodStatusRepository = financialPeriodStatusRepository;
-        this.financialPeriodTypeAssignRepository = financialPeriodTypeAssignRepository;
-        this.financialPeriodRepository = financialPeriodRepository;
+//        this.financialPeriodStatusRepository = financialPeriodStatusRepository;
+//        this.financialPeriodTypeAssignRepository = financialPeriodTypeAssignRepository;
+//        this.financialPeriodRepository = financialPeriodRepository;
     }
 
     @Override
@@ -39,15 +39,15 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         return gridFilterService.filter(dataSourceRequest, financialPeriodListGridProvider);
     }
 
-@Override
-public void save(FinancialPeriodDto financialPeriodDto) {
-    FinancialPeriod financialPeriod = new FinancialPeriod();
-    financialPeriod.setEndDate(financialPeriodDto.getEndDate());
-    financialPeriod.setStartDate(financialPeriodDto.getStartDate());
-    financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
-    financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getFinancialPeriodStatus().getId()));
-    financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
-    financialPeriodRepository.save(financialPeriod);
-}
+//@Override
+//public void save(FinancialPeriodDto financialPeriodDto) {
+//    FinancialPeriod financialPeriod = new FinancialPeriod();
+//    financialPeriod.setEndDate(financialPeriodDto.getEndDate());
+//    financialPeriod.setStartDate(financialPeriodDto.getStartDate());
+//    financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
+//    financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getFinancialPeriodStatus().getId()));
+//    financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
+//    financialPeriodRepository.save(financialPeriod);
+//}
 
 }
