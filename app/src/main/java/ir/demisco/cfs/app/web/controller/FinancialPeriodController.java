@@ -14,14 +14,20 @@ public class FinancialPeriodController {
 
     private final FinancialPeriodService financialPeriodService;
 
-    public FinancialPeriodController(FinancialPeriodService  financialPeriodService) {
+    public FinancialPeriodController(FinancialPeriodService financialPeriodService) {
         this.financialPeriodService = financialPeriodService;
     }
 
 
-    @GetMapping()
-    public ResponseEntity<DataSourceResult> responseEntity (@RequestBody DataSourceRequest dataSourceRequest){
+    @PostMapping()
+    public ResponseEntity<DataSourceResult> responseEntity(@RequestBody DataSourceRequest dataSourceRequest) {
 //        SecurityHelper.getCurrentUser().getOrganizationId()
-        return ResponseEntity.ok(financialPeriodService.getFinancialPeriodByOrganizationId(2L,dataSourceRequest));
+        return ResponseEntity.ok(financialPeriodService.getFinancialPeriodByOrganizationId(SecurityHelper.getCurrentUser().getOrganizationId(), dataSourceRequest));
     }
+
+//    @PostMapping()
+//    public ResponseEntity<FinancialPeriodDto>  saveFinancialPeriod(@RequestBody FinancialPeriodDto financialPeriodDto) {
+//        financialPeriodService.save(financialPeriodDto);
+//        return ResponseEntity.ok(financialPeriodDto);
+//    }
 }
