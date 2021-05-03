@@ -21,7 +21,6 @@ public class FinancialPeriodController {
 
     @PostMapping()
     public ResponseEntity<DataSourceResult> responseEntity(@RequestBody DataSourceRequest dataSourceRequest) {
-//        SecurityHelper.getCurrentUser().getOrganizationId()
         return ResponseEntity.ok(financialPeriodService.getFinancialPeriodByOrganizationId(SecurityHelper.getCurrentUser().getOrganizationId(), dataSourceRequest));
     }
 
