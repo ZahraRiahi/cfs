@@ -64,16 +64,17 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     @Transactional(rollbackOn = Throwable.class)
     public FinancialPeriodDto update(FinancialPeriodDto financialPeriodDto) {
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId()).orElseThrow(() -> new RuleException("برای انجام عملیات ویرایش شناسه ی دوره ی مالی الزامی میباشد."));
+        validationUpdate(financialPeriodDto,"start");
         financialPeriod.setEndDate(financialPeriodDto.getEndDate());
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
         financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getFinancialPeriodStatus().getId()));
         financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
         financialPeriod = financialPeriodRepository.save(financialPeriod);
-        validationUpdate(financialPeriodDto);
+        validationUpdate(financialPeriodDto,"end");
         return convertFinancialPeriodToDto(financialPeriod);
     }
 
-    private void validationUpdate(FinancialPeriodDto financialPeriodDto) {
+    private void validationUpdate(FinancialPeriodDto financialPeriodDto,String mode) {
         List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(1L, "OPEN");
         if (period.size() >= 3) {
             throw new RuleException("برای هر سازمان بیش از 2 دوره مالی فعال وجود ندارد.");
@@ -85,7 +86,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
             throw new RuleException("تاریخ شروع قابل ویرایش نیست.");
         }
         Long countFinancialPeriod = financialPeriodRepository.getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(financialPeriodDto.getEndDate(), financialPeriodDto.getFinancialPeriodTypeAssignId());
-        if(countFinancialPeriod>0){
+        if (countFinancialPeriod > 0 && mode.equals("start")) {
             throw new RuleException("دروه ی مالی برای این سازمان با این تاریخ پایان موجود میباشد.");
         }
     }
