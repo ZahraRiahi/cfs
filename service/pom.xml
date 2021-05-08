@@ -33,6 +33,10 @@
             <groupId>ir.demisco.cloud.core</groupId>
             <artifactId>dms-data-grid</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ir.demisco.cloud.core</groupId>
+            <artifactId>dms-resource-security</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

@@ -5,10 +5,12 @@ import ir.demisco.cfs.model.dto.response.FinancialPeriodStatusDto;
 import ir.demisco.cfs.model.entity.FinancialPeriod;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridDataProvider;
 import org.springframework.stereotype.Component;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Selection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +25,7 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
 
     @Override
     public List<Order> getCustomSort(FilterContext filterContext) {
-        return null;
+        return Collections.singletonList(filterContext.getCriteriaBuilder().desc(filterContext.getPath("startDate")));
     }
 
     @Override
