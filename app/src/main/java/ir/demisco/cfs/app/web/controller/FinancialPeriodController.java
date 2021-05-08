@@ -25,16 +25,14 @@ public class FinancialPeriodController {
 
     @PostMapping("/save")
     public ResponseEntity<FinancialPeriodDto> saveFinancialPeriod(@RequestBody FinancialPeriodDto financialPeriodDto) {
-        Long aLong = financialPeriodService.save(financialPeriodDto, "save");
+        Long aLong = financialPeriodService.save(financialPeriodDto);
         financialPeriodDto.setId(aLong);
         return ResponseEntity.ok(financialPeriodDto);
     }
 
     @PutMapping("/update")
     public ResponseEntity<FinancialPeriodDto> updateFinancialPeriod(@RequestBody FinancialPeriodDto financialPeriodDto) {
-        Long aLong = financialPeriodService.save(financialPeriodDto, "update");
-        financialPeriodDto.setId(aLong);
-        return ResponseEntity.ok(financialPeriodDto);
+        return ResponseEntity.ok(financialPeriodService.update(financialPeriodDto));
     }
 
     @PutMapping("/update/{id}")
