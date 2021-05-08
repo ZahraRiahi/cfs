@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api-test")
+@RequestMapping("/api-financial")
 public class FinancialPeriodController {
 
     private final FinancialPeriodService financialPeriodService;
@@ -19,14 +19,27 @@ public class FinancialPeriodController {
     }
 
 
-    @PostMapping()
+    @PostMapping("/list")
     public ResponseEntity<DataSourceResult> responseEntity(@RequestBody DataSourceRequest dataSourceRequest) {
-        return ResponseEntity.ok(financialPeriodService.getFinancialPeriodByOrganizationId(SecurityHelper.getCurrentUser().getOrganizationId(), dataSourceRequest));
+        return ResponseEntity.ok(financialPeriodService.getFinancialPeriodByOrganizationId(2L, dataSourceRequest));
     }
 
-//    @PostMapping()
-//    public ResponseEntity<FinancialPeriodDto>  saveFinancialPeriod(@RequestBody FinancialPeriodDto financialPeriodDto) {
-//        financialPeriodService.save(financialPeriodDto);
-//        return ResponseEntity.ok(financialPeriodDto);
-//    }
+    @PostMapping("/save")
+    public ResponseEntity<FinancialPeriodDto> saveFinancialPeriod(@RequestBody FinancialPeriodDto financialPeriodDto) {
+        Long aLong = financialPeriodService.save(financialPeriodDto, "save");
+        financialPeriodDto.setId(aLong);
+        return ResponseEntity.ok(financialPeriodDto);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<FinancialPeriodDto> updateFinancialPeriod(@RequestBody FinancialPeriodDto financialPeriodDto) {
+        Long aLong = financialPeriodService.save(financialPeriodDto, "update");
+        financialPeriodDto.setId(aLong);
+        return ResponseEntity.ok(financialPeriodDto);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<FinancialPeriodDto> changeStatusFinancialPeriod(@PathVariable("id") Long financialPeriodId) {
+        return ResponseEntity.ok(null);
+    }
 }
