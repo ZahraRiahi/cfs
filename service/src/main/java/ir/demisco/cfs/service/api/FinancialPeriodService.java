@@ -10,7 +10,9 @@ public interface FinancialPeriodService {
 
     DataSourceResult getFinancialPeriodByOrganizationId(Long OrganizationId, DataSourceRequest dataSourceRequest);
 
-    Long save(FinancialPeriodDto financialPeriodDto, String mode);
+    Long save(FinancialPeriodDto financialPeriodDto);
+
+    FinancialPeriodDto update(FinancialPeriodDto financialPeriodDto);
 
     FinancialPeriodDto changeStatusFinancialPeriodById(Long financialPeriodId);
 
