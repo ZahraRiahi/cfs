@@ -1,11 +1,15 @@
 package ir.demisco.cfs.model.entity;
 
-import javax.persistence.*;
+import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.*;
+import javax.persistence.Table;
 
 @Entity
-@Table(name = "FINANCIAL_PERIOD_STATUS", schema = "fnpr")
-public class FinancialPeriodStatus {
+@Table(name = "financial_month_status", schema = "fnpr")
+public class FinancialMonthStatus extends AuditModel<Long> {
     private Long id;
     private String code;
     private String name;

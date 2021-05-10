@@ -63,26 +63,31 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     @Override
     @Transactional(rollbackOn = Throwable.class)
     public FinancialPeriodDto update(FinancialPeriodDto financialPeriodDto) {
+        validationUpdate(financialPeriodDto, "start");
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId()).orElseThrow(() -> new RuleException("برای انجام عملیات ویرایش شناسه ی دوره ی مالی الزامی میباشد."));
-        validationUpdate(financialPeriodDto,"start");
         financialPeriod.setEndDate(financialPeriodDto.getEndDate());
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
-        financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getFinancialPeriodStatus().getId()));
+        financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getStatusId()));
         financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
         financialPeriod = financialPeriodRepository.save(financialPeriod);
-        validationUpdate(financialPeriodDto,"end");
+        validationUpdate(financialPeriodDto, "end");
         return convertFinancialPeriodToDto(financialPeriod);
     }
 
-    private void validationUpdate(FinancialPeriodDto financialPeriodDto,String mode) {
+    private void validationUpdate(FinancialPeriodDto financialPeriodDto, String mode) {
+        if (financialPeriodDto.getId() == null && mode.equals("start")) {
+            throw new RuleException("برای انجام عملیات ویرایش شناسه ی دوره ی مالی الزامی میباشد.");
+        }
         List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(1L, "OPEN");
-        if (period.size() >= 3) {
-            throw new RuleException("برای هر سازمان بیش از 2 دوره مالی فعال وجود ندارد.");
+        if (period.size() >= 3 && mode.equals("end")) {
+            throw new RuleException("برای هر سازمان بیش از 2 دوره مالی باز وجود ندارد.");
+        } else if (period.size() > 2 && mode.equals("change")) {
+            throw new RuleException("برای هر سازمان بیش از 2 دوره مالی باز وجود ندارد.");
         }
         if (!String.valueOf(financialPeriodDto.getOpenMonthCount()).matches("1[0-2]|[1-9]")) {
             throw new RuleException("تعداد ماه قابل ویرایش میبایست بین 1 تا 12 باشد.");
         }
-        if (financialPeriodDto.getStartDate() != null) {
+        if (financialPeriodDto.getStartDate() != null && mode.equals("start")) {
             throw new RuleException("تاریخ شروع قابل ویرایش نیست.");
         }
         Long countFinancialPeriod = financialPeriodRepository.getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(financialPeriodDto.getEndDate(), financialPeriodDto.getFinancialPeriodTypeAssignId());
@@ -95,7 +100,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 //        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(1L, "OPEN");
         if (period.size() >= 2) {
-            throw new RuleException("برای هر سازمان بیش از 2 دوره مالی فعال نمی توان ایجاد کرد");
+            throw new RuleException("برای هر سازمان بیش از 2 دوره مالی باز نمی توان ایجاد کرد");
         } else if (period.size() == 1) {
             Date endDate = period.get(0).getEndDate();
             financialPeriodDto.setStartDate(DateUtil.addMonth(endDate, 1, Locale.ENGLISH));
@@ -109,17 +114,18 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     }
 
-    @Transactional
     @Override
+    @Transactional(rollbackOn = Throwable.class)
     public FinancialPeriodDto changeStatusFinancialPeriodById(Long financialPeriodId) {
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodId).orElseThrow(() -> new RuleException("هیچ دوره ی مالی یافت نشد."));
-//        financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(1L));
-        FinancialPeriodDto financialPeriodDto = FinancialPeriodDto.builder().startDate(
-                financialPeriod.getStartDate())
-                .endDate(financialPeriod.getEndDate()).openMonthCount(financialPeriod.getOpenMonthCount())
-                .financialPeriodStatusDto(FinancialPeriodStatusDto.builder().id(financialPeriod.getFinancialPeriodStatus().getId()).name(financialPeriod.getFinancialPeriodStatus().getName()).build())
-                .build();
-        validationSave(financialPeriodDto);
+        if (financialPeriod.getFinancialPeriodStatus().getId().equals(1L)) {
+            financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(2L));
+        } else {
+            financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(1L));
+        }
+        financialPeriodRepository.save(financialPeriod);
+        FinancialPeriodDto financialPeriodDto = convertFinancialPeriodToDto(financialPeriod);
+        validationUpdate(financialPeriodDto, "change");
         return financialPeriodDto;
     }
 
@@ -127,7 +133,8 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         return FinancialPeriodDto.builder().startDate(
                 financialPeriod.getStartDate())
                 .endDate(financialPeriod.getEndDate()).openMonthCount(financialPeriod.getOpenMonthCount())
-                .financialPeriodStatusDto(FinancialPeriodStatusDto.builder().id(financialPeriod.getFinancialPeriodStatus().getId()).name(financialPeriod.getFinancialPeriodStatus().getName()).build())
+                .statusId(financialPeriod.getFinancialPeriodStatus().getId())
+                .statusName(financialPeriod.getFinancialPeriodStatus().getName())
                 .build();
 
     }
