@@ -9,7 +9,9 @@ public class FinancialPeriodDto {
     private Date endDate;
     private Long openMonthCount;
     private Long financialPeriodTypeAssignId;
-    private FinancialPeriodStatusDto financialPeriodStatus;
+    private Long statusId;
+    private String statusCode;
+    private String statusName;
 
     public Long getId() {
         return id;
@@ -43,15 +45,31 @@ public class FinancialPeriodDto {
         this.openMonthCount = openMonthCount;
     }
 
-    public FinancialPeriodStatusDto getFinancialPeriodStatus() {
-        return financialPeriodStatus;
+    public Long getStatusId() {
+        return statusId;
     }
 
-    public void setFinancialPeriodStatus(FinancialPeriodStatusDto financialPeriodStatus) {
-        this.financialPeriodStatus = financialPeriodStatus;
+    public void setStatusId(Long statusId) {
+        this.statusId = statusId;
     }
 
-    public static Builder builder(){
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
+    }
+
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -93,13 +111,25 @@ public class FinancialPeriodDto {
             financialPeriodDto.setOpenMonthCount(openMonthCount);
             return this;
         }
+
         public Builder financialPeriodTypeAssignId(Long financialPeriodTypeAssignId) {
             financialPeriodDto.setFinancialPeriodTypeAssignId(financialPeriodTypeAssignId);
             return this;
         }
 
-        public Builder financialPeriodStatusDto(FinancialPeriodStatusDto financialPeriodStatusDto) {
-            financialPeriodDto.setFinancialPeriodStatus(financialPeriodStatusDto);
+
+        public Builder statusId(Long statusId) {
+            financialPeriodDto.setStatusId(statusId);
+            return this;
+        }
+
+        public Builder statusCode(String statusCode) {
+            financialPeriodDto.setStatusCode(statusCode);
+            return this;
+        }
+
+        public Builder statusName(String statusName) {
+            financialPeriodDto.setStatusName(statusName);
             return this;
         }
 
@@ -107,4 +137,5 @@ public class FinancialPeriodDto {
             return financialPeriodDto;
         }
     }
+
 }

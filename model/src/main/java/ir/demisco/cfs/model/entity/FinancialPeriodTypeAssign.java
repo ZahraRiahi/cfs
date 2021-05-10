@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "financial_period_type_assign", schema = "fnpr")
-public class FinancialPeriodTypeAssign{
+public class FinancialPeriodTypeAssign {
 
     private Long id;
     private Organization organization;

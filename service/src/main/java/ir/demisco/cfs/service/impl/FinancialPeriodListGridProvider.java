@@ -58,14 +58,15 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
                     .startDate((Date) array[1])
                     .endDate((Date) array[2])
                     .openMonthCount((Long) array[3])
-                    .financialPeriodStatusDto(FinancialPeriodStatusDto.builder()
-                            .id((Long) array[4])
-                            .name((String) array[5])
-                            .build())
+                    .statusId((Long) array[4])
+                    .statusName((String) array[5])
+//                    .financialPeriodStatusDto(FinancialPeriodStatusDto.builder()
+//                            .id((Long) array[4])
+//                            .name((String) array[5])
+//                    .build())
                     .financialPeriodTypeAssignId((Long) array[6])
                     .build();
         }).collect(Collectors.toList());
     }
-
 
 }

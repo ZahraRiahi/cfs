@@ -37,6 +37,7 @@ public class FinancialPeriodController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<FinancialPeriodDto> changeStatusFinancialPeriod(@PathVariable("id") Long financialPeriodId) {
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(financialPeriodService.changeStatusFinancialPeriodById(financialPeriodId));
     }
+
 }
