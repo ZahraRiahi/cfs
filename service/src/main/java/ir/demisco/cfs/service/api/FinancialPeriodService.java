@@ -16,5 +16,4 @@ public interface FinancialPeriodService {
 
     FinancialPeriodDto changeStatusFinancialPeriodById(Long financialPeriodId);
 
-
 }

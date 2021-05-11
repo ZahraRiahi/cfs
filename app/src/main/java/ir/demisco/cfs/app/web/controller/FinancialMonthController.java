@@ -1,5 +1,6 @@
 package ir.demisco.cfs.app.web.controller;
 
+import ir.demisco.cfs.model.dto.response.FinancialMonthDto;
 import ir.demisco.cfs.service.api.FinancialMonthService;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceResult;
@@ -18,5 +19,10 @@ public class FinancialMonthController {
     @PostMapping("/list/{id}")
     public ResponseEntity<DataSourceResult> responseEntity(@RequestBody DataSourceRequest dataSourceRequest, @PathVariable("id") Long financialPeriodId) {
         return ResponseEntity.ok(financialMonthService.getFinancialMonthByFinancialPeriodId(financialPeriodId, dataSourceRequest));
+    }
+
+    @PutMapping("/updateMonth/{id}")
+    public ResponseEntity<FinancialMonthDto> changeStatusFinancialMonth(@PathVariable("id") Long financialMonthId) {
+        return ResponseEntity.ok(financialMonthService.changeStatusFinancialMonthById(financialMonthId));
     }
 }

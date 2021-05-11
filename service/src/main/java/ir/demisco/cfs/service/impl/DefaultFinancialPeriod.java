@@ -1,7 +1,6 @@
 package ir.demisco.cfs.service.impl;
 
 import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
-import ir.demisco.cfs.model.dto.response.FinancialPeriodStatusDto;
 import ir.demisco.cfs.model.entity.FinancialPeriod;
 import ir.demisco.cfs.service.api.FinancialPeriodService;
 import ir.demisco.cfs.service.repository.FinancialPeriodRepository;
@@ -19,7 +18,6 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Service
 public class DefaultFinancialPeriod implements FinancialPeriodService {
