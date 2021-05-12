@@ -50,5 +50,4 @@ public class DefaultFinancialPeriodParameter implements FinancialPeriodParameter
         return financialPeriodParameterRepository.save(financialPeriodParameter).getId();
     }
 
-
 }
