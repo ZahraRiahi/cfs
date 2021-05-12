@@ -1,6 +1,5 @@
 package ir.demisco.cfs.model.dto.response;
 
-import ir.demisco.cfs.model.entity.FinancialPeriod;
 
 import java.time.LocalDateTime;
 
