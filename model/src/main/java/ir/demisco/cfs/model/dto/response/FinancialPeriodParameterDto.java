@@ -1,0 +1,156 @@
+package ir.demisco.cfs.model.dto.response;
+
+import ir.demisco.cfs.model.entity.FinancialPeriod;
+
+import java.time.LocalDateTime;
+
+public class FinancialPeriodParameterDto {
+    private Long id;
+    private Long financialPeriodId;
+    private LocalDateTime startDate;
+    private Long taxDeductionRate;
+    private Long vatTaxRate;
+    private Long vatTollRate;
+    private Long insuranceDeductionRate;
+    private Long maxFewerAmount;
+    private Long vatFillFlag;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getFinancialPeriodId() {
+        return financialPeriodId;
+    }
+
+    public void setFinancialPeriodId(Long financialPeriodId) {
+        this.financialPeriodId = financialPeriodId;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public Long getTaxDeductionRate() {
+        return taxDeductionRate;
+    }
+
+    public void setTaxDeductionRate(Long taxDeductionRate) {
+        this.taxDeductionRate = taxDeductionRate;
+    }
+
+    public Long getVatTaxRate() {
+        return vatTaxRate;
+    }
+
+    public void setVatTaxRate(Long vatTaxRate) {
+        this.vatTaxRate = vatTaxRate;
+    }
+
+    public Long getVatTollRate() {
+        return vatTollRate;
+    }
+
+    public void setVatTollRate(Long vatTollRate) {
+        this.vatTollRate = vatTollRate;
+    }
+
+    public Long getInsuranceDeductionRate() {
+        return insuranceDeductionRate;
+    }
+
+    public void setInsuranceDeductionRate(Long insuranceDeductionRate) {
+        this.insuranceDeductionRate = insuranceDeductionRate;
+    }
+
+    public Long getMaxFewerAmount() {
+        return maxFewerAmount;
+    }
+
+    public void setMaxFewerAmount(Long maxFewerAmount) {
+        this.maxFewerAmount = maxFewerAmount;
+    }
+
+    public Long getVatFillFlag() {
+        return vatFillFlag;
+    }
+
+    public void setVatFillFlag(Long vatFillFlag) {
+        this.vatFillFlag = vatFillFlag;
+    }
+
+    public static FinancialPeriodParameterDto.Builder builder() {
+        return new FinancialPeriodParameterDto.Builder();
+    }
+
+
+    public static final class Builder {
+        private FinancialPeriodParameterDto financialPeriodParameterDto;
+
+        private Builder() {
+            financialPeriodParameterDto = new FinancialPeriodParameterDto();
+        }
+
+        public static Builder financialPeriodParameterDto() {
+            return new Builder();
+        }
+
+        public Builder id(Long id) {
+            financialPeriodParameterDto.setId(id);
+            return this;
+        }
+
+        public Builder financialPeriodId(Long financialPeriodId) {
+            financialPeriodParameterDto.setFinancialPeriodId(financialPeriodId);
+            return this;
+        }
+
+        public Builder startDate(LocalDateTime startDate) {
+            financialPeriodParameterDto.setStartDate(startDate);
+            return this;
+        }
+
+        public Builder taxDeductionRate(Long taxDeductionRate) {
+            financialPeriodParameterDto.setTaxDeductionRate(taxDeductionRate);
+            return this;
+        }
+
+        public Builder vatTaxRate(Long vatTaxRate) {
+            financialPeriodParameterDto.setVatTaxRate(vatTaxRate);
+            return this;
+        }
+
+        public Builder vatTollRate(Long vatTollRate) {
+            financialPeriodParameterDto.setVatTollRate(vatTollRate);
+            return this;
+        }
+
+        public Builder insuranceDeductionRate(Long insuranceDeductionRate) {
+            financialPeriodParameterDto.setInsuranceDeductionRate(insuranceDeductionRate);
+            return this;
+        }
+
+        public Builder maxFewerAmount(Long maxFewerAmount) {
+            financialPeriodParameterDto.setMaxFewerAmount(maxFewerAmount);
+            return this;
+        }
+
+        public Builder vatFillFlag(Long vatFillFlag) {
+            financialPeriodParameterDto.setVatFillFlag(vatFillFlag);
+            return this;
+        }
+
+        public FinancialPeriodParameterDto build() {
+            return financialPeriodParameterDto;
+        }
+
+    }
+}

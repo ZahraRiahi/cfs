@@ -1,29 +1,21 @@
 package ir.demisco.cfs.service.impl;
 
-import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
-import ir.demisco.cfs.model.entity.FinancialPeriod;
+import ir.demisco.cfs.model.dto.response.FinancialPeriodParameterDto;
+import ir.demisco.cfs.model.entity.FinancialPeriodParameter;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridDataProvider;
 import org.springframework.stereotype.Component;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Selection;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class FinancialPeriodListGridProvider implements GridDataProvider {
-
+public class FinancialPeriodParameterListGridProvider implements GridDataProvider {
     @Override
     public Class<?> getRootEntityClass() {
-        return FinancialPeriod.class;
-    }
-
-    @Override
-    public List<Order> getCustomSort(FilterContext filterContext) {
-        return Collections.singletonList(filterContext.getCriteriaBuilder().desc(filterContext.getPath("startDate")));
+        return FinancialPeriodParameter.class;
     }
 
     @Override
@@ -36,12 +28,13 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
         CriteriaBuilder criteriaBuilder = filterContext.getCriteriaBuilder();
         return criteriaBuilder.array(
                 filterContext.getPath("id"),
+                filterContext.getPath("financialPeriod.id"),
                 filterContext.getPath("startDate"),
-                filterContext.getPath("endDate"),
-                filterContext.getPath("openMonthCount"),
-                filterContext.getPath("financialPeriodStatus.id"),
-                filterContext.getPath("financialPeriodStatus.name"),
-                filterContext.getPath("financialPeriodTypeAssign.id")
+                filterContext.getPath("taxDeductionRate"),
+                filterContext.getPath("vatTaxRate"),
+                filterContext.getPath("insuranceDeductionRate"),
+                filterContext.getPath("maxFewerAmount"),
+                filterContext.getPath("vatFillFlag")
         );
     }
 
@@ -50,15 +43,15 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
 
         return resultList.stream().map(object -> {
             Object[] array = (Object[]) object;
-
-            return FinancialPeriodDto.builder()
+            return FinancialPeriodParameterDto.builder()
                     .id((Long) array[0])
-                    .startDate((LocalDateTime) array[1])
-                    .endDate((LocalDateTime) array[2])
-                    .openMonthCount((Long) array[3])
-                    .statusId((Long) array[4])
-                    .statusName((String) array[5])
-                    .financialPeriodTypeAssignId((Long) array[6])
+                    .financialPeriodId((Long) array[1])
+                    .startDate((LocalDateTime) array[2])
+                    .vatTaxRate((Long) array[3])
+                    .vatTollRate((Long) array[4])
+                    .insuranceDeductionRate((Long) array[5])
+                    .maxFewerAmount((Long) array[6])
+                    .vatFillFlag(((Long) array[7]))
                     .build();
         }).collect(Collectors.toList());
     }

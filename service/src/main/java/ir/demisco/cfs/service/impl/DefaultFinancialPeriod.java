@@ -10,14 +10,11 @@ import ir.demisco.cloud.core.middle.exception.RuleException;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceResult;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridFilterService;
-import ir.demisco.core.utils.DateUtil;
 import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 public class DefaultFinancialPeriod implements FinancialPeriodService {
@@ -100,13 +97,12 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         if (period.size() >= 2) {
             throw new RuleException("برای هر سازمان بیش از 2 دوره مالی باز نمی توان ایجاد کرد");
         } else if (period.size() == 1) {
-            Date endDate = period.get(0).getEndDate();
-            financialPeriodDto.setStartDate(DateUtil.addMonth(endDate, 1, Locale.ENGLISH));
+            financialPeriodDto.setStartDate(financialPeriodDto.getEndDate().plusMonths(1));
         }
         if (!String.valueOf(financialPeriodDto.getOpenMonthCount()).matches("1[0-2]|[1-9]")) {
             throw new RuleException("تعداد ماه قابل ویرایش میبایست بین 1 تا 12 باشد.");
         }
-        if (financialPeriodDto.getStartDate().after(financialPeriodDto.getEndDate())) {
+        if (financialPeriodDto.getStartDate().isAfter(financialPeriodDto.getEndDate())) {
             throw new RuleException("تاریخ شروع نمیتواند از تاریخ پایان بزرگتر باشد.");
         }
 

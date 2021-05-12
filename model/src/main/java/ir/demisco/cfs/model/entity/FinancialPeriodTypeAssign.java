@@ -1,12 +1,13 @@
 package ir.demisco.cfs.model.entity;
 
+import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
 import ir.demisco.cloud.basic.model.entity.org.Organization;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "financial_period_type_assign", schema = "fnpr")
-public class FinancialPeriodTypeAssign {
+public class FinancialPeriodTypeAssign extends AuditModel<Long> {
 
     private Long id;
     private Organization organization;
