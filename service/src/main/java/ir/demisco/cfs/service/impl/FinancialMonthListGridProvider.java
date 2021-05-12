@@ -1,16 +1,12 @@
 package ir.demisco.cfs.service.impl;
 
 import ir.demisco.cfs.model.dto.response.FinancialMonthDto;
-import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
 import ir.demisco.cfs.model.entity.FinancialMonth;
-import ir.demisco.cfs.model.entity.FinancialPeriod;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridDataProvider;
 import org.springframework.stereotype.Component;
-
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Selection;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 

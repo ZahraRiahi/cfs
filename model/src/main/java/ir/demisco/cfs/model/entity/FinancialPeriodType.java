@@ -1,14 +1,16 @@
 package ir.demisco.cfs.model.entity;
 
+import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
+
 
 @Entity
 @Table(name = "financial_period_type", schema = "fnpr")
-public class FinancialPeriodType {
+public class FinancialPeriodType extends AuditModel<Long> {
     private Long id;
     private String description;
     private Long fromMonth;
@@ -29,7 +31,7 @@ public class FinancialPeriodType {
     }
 
     public void setDescription(String description) {
-        description = description;
+        this.description = description;
     }
 
     @Column(name = "FROM_MONTH")
@@ -38,7 +40,7 @@ public class FinancialPeriodType {
     }
 
     public void setFromMonth(Long fromMonth) {
-        fromMonth = fromMonth;
+        this.fromMonth = fromMonth;
     }
 
     @Column(name = "TO_MONTH")
@@ -47,7 +49,7 @@ public class FinancialPeriodType {
     }
 
     public void setToMonth(Long toMonth) {
-        toMonth = toMonth;
+        this.toMonth = toMonth;
     }
 
     @Column(name = "CALENDAR_TYPE_ID")
@@ -56,6 +58,6 @@ public class FinancialPeriodType {
     }
 
     public void setCalendarTypeId(Long calendarTypeId) {
-        calendarTypeId = calendarTypeId;
+        this.calendarTypeId = calendarTypeId;
     }
 }

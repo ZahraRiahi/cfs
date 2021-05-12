@@ -2,15 +2,15 @@ package ir.demisco.cfs.model.entity;
 
 import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 @Entity
 @Table(name = "financial_period", schema = "fnpr")
 public class FinancialPeriod extends AuditModel<Long> {
     private Long id;
-    private Date startDate;
-    private Date endDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private Long openMonthCount;
     private FinancialPeriodStatus financialPeriodStatus;
     private FinancialPeriodTypeAssign financialPeriodTypeAssign;
@@ -27,11 +27,11 @@ public class FinancialPeriod extends AuditModel<Long> {
     }
 
     @Column(name = "START_DATE")
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
@@ -57,11 +57,11 @@ public class FinancialPeriod extends AuditModel<Long> {
     }
 
     @Column(name = "END_DATE")
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
