@@ -14,6 +14,8 @@ public class FinancialPeriodTypeAssign extends AuditModel<Long> {
     private FinancialPeriodType financialPeriodType;
 
     @Id
+    @SequenceGenerator(schema = "fnpr", name = "financial_period_type_assign_generator", sequenceName = "sq_financial_period_type_assign",allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_period_type_assign_generator")
     public Long getId() {
         return id;
     }
