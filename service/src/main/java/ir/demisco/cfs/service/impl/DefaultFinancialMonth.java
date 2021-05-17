@@ -33,8 +33,11 @@ public class DefaultFinancialMonth implements FinancialMonthService {
     @Transactional
     public DataSourceResult getFinancialMonthByFinancialPeriodId(Long financialPeriodId, DataSourceRequest dataSourceRequest) {
         Asserts.notNull(financialPeriodId, "financialPeriodId is null");
-        dataSourceRequest.setFilter(DataSourceRequest.FilterDescriptor.create("financialPeriod.id", financialPeriodId));
+        dataSourceRequest.getFilter().setLogic("and");
+        dataSourceRequest.getFilter().getFilters().add(DataSourceRequest
+                .FilterDescriptor.create("financialPeriod.id", financialPeriodId, DataSourceRequest.Operators.EQUALS));
         return gridFilterService.filter(dataSourceRequest, financialMonthListGridProvider);
+
     }
 
     @Override
