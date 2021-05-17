@@ -85,10 +85,10 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         if (financialPeriodDto.getStartDate() != null && mode.equals("start")) {
             throw new RuleException("تاریخ شروع قابل ویرایش نیست.");
         }
-        Long countFinancialPeriod = financialPeriodRepository.getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(financialPeriodDto.getEndDate(), financialPeriodDto.getFinancialPeriodTypeAssignId());
-        if (countFinancialPeriod > 0 && mode.equals("start")) {
-            throw new RuleException("دروه ی مالی برای این سازمان با این تاریخ پایان موجود میباشد.");
-        }
+//        Long countFinancialPeriod = financialPeriodRepository.getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(financialPeriodDto.getEndDate(), financialPeriodDto.getFinancialPeriodTypeAssignId());
+//        if (countFinancialPeriod > 0 && mode.equals("start")) {
+//            throw new RuleException("دروه ی مالی برای این سازمان با این تاریخ پایان موجود میباشد.");
+//        }
     }
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
