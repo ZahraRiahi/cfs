@@ -1,0 +1,64 @@
+image: 192.168.25.203:8080/library/mvn-k8s:latest
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  DOCKER_TLS_CERTDIR: ""
+  GIT_SSL_NO_VERIFY: "true"
+  CONTAINER_JOBID_IMAGE:  gitlab.demisco.com:5050/cfs/cfs:$CI_PIPELINE_ID
+  CONTAINER_JOBID_IMAGE_DEV:  gitlab.demisco.com:5050/cfs/cfs:dev-$CI_PIPELINE_ID
+
+  REGISTRY_ADDRESS: $CI_REGISTRY
+  app_name: "cfs-service"
+  nodePort: "30450"
+  clusterPort: "8080"
+  containerPort: "8080"
+  name_space: "cfs"
+  name_space_dev: "cfs"
+  replica: "1"
+  replica_history: "2"
+  registry_secret: "gitlab-pull-secret"
+  
+
+stages:
+  - dev
+
+cache:
+  paths:
+    - .m2/repository/
+    - target/
+    
+
+
+deploy-dev:
+  stage: dev
+  script: 
+    - echo "------------------------build maven-------------------------------------------------"
+    - rm -rf .m2/repository/ir
+    - mvn $MAVEN_CLI_OPTS clean package -Dmaven.test.skip=true
+    - echo "------------------------docker build-------------------------------------------------"
+    - docker build -t $CONTAINER_JOBID_IMAGE_DEV .
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $CI_REGISTRY
+    - docker push $CONTAINER_JOBID_IMAGE_DEV
+    - echo "------------------------deploy docker-------------------------------------------------"
+    - kubectl config set clusters.kubernetes.server https://192.168.25.71:6443 --insecure-skip-tls-verify=true 
+    - kubectl config set clusters.k8s.certificate-authority-data ${CERTIFICATE_AUTHORITY_DATA}
+    - kubectl config set-credentials gitlab-admin --token="${USER_TOKEN_DEV}"
+    - kubectl config set-context kubernetes --cluster=kubernetes --user=gitlab-admin
+    - kubectl config use-context kubernetes
+    - sed -i "s#\$image_name#${CONTAINER_JOBID_IMAGE_DEV}#" deploy.yml
+    - sed -i "s#\$registry_secret#${registry_secret}#" deploy.yml
+    - sed -i "s#\$app_name#${app_name}#" deploy.yml
+    - sed -i "s#\$name_space#${name_space_dev}#" deploy.yml
+    - sed -i "s#\$replica#${replica}#" deploy.yml
+    - sed -i "s#\$clusterPort#${clusterPort}#" deploy.yml
+    - sed -i "s#\$containerPort#${containerPort}#" deploy.yml
+    - sed -i "s#\$nodePort#${nodePort}#" deploy.yml
+    - kubectl apply -f deploy.yml --insecure-skip-tls-verify=true --validate=false
+  artifacts:
+    paths:
+      - app/target/*.jar
+    expire_in: 1 days
+  when: manual
+  only:
+    refs:
+      - dev
