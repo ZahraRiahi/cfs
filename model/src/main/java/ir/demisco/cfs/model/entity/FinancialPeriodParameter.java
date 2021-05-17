@@ -21,7 +21,7 @@ public class FinancialPeriodParameter extends AuditModel<Long> {
     private Long vatFillFlag;
 
     @Id
-    @SequenceGenerator(schema = "fnpr", name = "financial_period_parameter_generator", sequenceName = "sq_financial_period_parameter")
+    @SequenceGenerator(schema = "fnpr", name = "financial_period_parameter_generator", sequenceName = "sq_financial_period_parameter",allocationSize = 50)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_period_parameter_generator")
     public Long getId() {
         return id;
