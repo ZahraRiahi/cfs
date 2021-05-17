@@ -105,7 +105,10 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         if (financialPeriodDto.getStartDate().isAfter(financialPeriodDto.getEndDate())) {
             throw new RuleException("تاریخ شروع نمیتواند از تاریخ پایان بزرگتر باشد.");
         }
-
+        Long financialCount = financialPeriodRepository.getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(financialPeriodDto.getStartDate(), financialPeriodDto.getEndDate(), financialPeriodDto.getFinancialPeriodTypeAssignId());
+        if (financialCount > 0) {
+            throw new RuleException("برای این سازمان، دوره ی مالی با تاریخ شروع یا پایان قبلا ثبت شده است.");
+        }
     }
 
     @Override
