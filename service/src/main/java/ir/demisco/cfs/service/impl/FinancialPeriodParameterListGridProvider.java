@@ -2,11 +2,11 @@ package ir.demisco.cfs.service.impl;
 
 import ir.demisco.cfs.model.dto.response.FinancialPeriodParameterDto;
 import ir.demisco.cfs.model.entity.FinancialPeriodParameter;
+import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridDataProvider;
 import org.springframework.stereotype.Component;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Selection;
+
+import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,11 +16,6 @@ public class FinancialPeriodParameterListGridProvider implements GridDataProvide
     @Override
     public Class<?> getRootEntityClass() {
         return FinancialPeriodParameter.class;
-    }
-
-    @Override
-    public Predicate getCustomRestriction(FilterContext filterContext) {
-        return null;
     }
 
     @Override
