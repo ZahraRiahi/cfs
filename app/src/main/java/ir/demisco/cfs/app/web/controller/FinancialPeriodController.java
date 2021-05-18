@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api-financial")
+@RequestMapping("/api-financialPeriod")
 public class FinancialPeriodController {
 
     private final FinancialPeriodService financialPeriodService;
@@ -24,15 +24,19 @@ public class FinancialPeriodController {
 
     @PostMapping("/save")
     public ResponseEntity<FinancialPeriodDto> saveFinancialPeriod(@RequestBody FinancialPeriodDto financialPeriodDto) {
-        Long aLong = financialPeriodService.save(financialPeriodDto);
-        financialPeriodDto.setId(aLong);
-        return ResponseEntity.ok(financialPeriodDto);
+        if (financialPeriodDto.getId() == null) {
+            Long aLong = financialPeriodService.save(financialPeriodDto);
+            financialPeriodDto.setId(aLong);
+            return ResponseEntity.ok(financialPeriodDto);
+        } else {
+            return ResponseEntity.ok(financialPeriodService.update(financialPeriodDto));
+        }
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<FinancialPeriodDto> updateFinancialPeriod(@RequestBody FinancialPeriodDto financialPeriodDto) {
-        return ResponseEntity.ok(financialPeriodService.update(financialPeriodDto));
-    }
+//    @PostMapping("/SetStatus")
+//    public ResponseEntity<FinancialPeriodDto> updateFinancialPeriod(@RequestBody FinancialPeriodDto financialPeriodDto) {
+//        return ResponseEntity.ok(financialPeriodService.update(financialPeriodDto));
+//    }
 
     @PostMapping("/update/{id}")
     public ResponseEntity<FinancialPeriodDto> changeStatusFinancialPeriod(@PathVariable("id") Long financialPeriodId) {

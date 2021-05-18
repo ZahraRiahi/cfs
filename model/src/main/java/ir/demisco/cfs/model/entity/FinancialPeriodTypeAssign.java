@@ -12,9 +12,10 @@ public class FinancialPeriodTypeAssign extends AuditModel<Long> {
     private Long id;
     private Organization organization;
     private FinancialPeriodType financialPeriodType;
+    private Long activeFlag;
 
     @Id
-    @SequenceGenerator(schema = "fnpr", name = "financial_period_type_assign_generator", sequenceName = "sq_financial_period_type_assign",allocationSize = 50)
+    @SequenceGenerator(schema = "fnpr", name = "financial_period_type_assign_generator", sequenceName = "sq_financial_period_type_assign", allocationSize = 50)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_period_type_assign_generator")
     public Long getId() {
         return id;
@@ -44,5 +45,12 @@ public class FinancialPeriodTypeAssign extends AuditModel<Long> {
         this.organization = organization;
     }
 
+    @Column(name = "ACTIVE_FLAG")
+    public Long getActiveFlag() {
+        return activeFlag;
+    }
 
+    public void setActiveFlag(Long activeFlag) {
+        this.activeFlag = activeFlag;
+    }
 }

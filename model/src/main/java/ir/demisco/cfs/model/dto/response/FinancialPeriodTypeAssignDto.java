@@ -6,6 +6,7 @@ public class FinancialPeriodTypeAssignDto {
     private Long organizationId;
     private Long financialPeriodTypeId;
     private String financialPeriodTypeDescription;
+    private Long activeFlag;
 
     public Long getId() {
         return id;
@@ -37,6 +38,14 @@ public class FinancialPeriodTypeAssignDto {
 
     public void setFinancialPeriodTypeDescription(String financialPeriodTypeDescription) {
         this.financialPeriodTypeDescription = financialPeriodTypeDescription;
+    }
+
+    public Long getActiveFlag() {
+        return activeFlag;
+    }
+
+    public void setActiveFlag(Long activeFlag) {
+        this.activeFlag = activeFlag;
     }
 
     public static Builder builder() {
@@ -71,6 +80,11 @@ public class FinancialPeriodTypeAssignDto {
 
         public Builder financialPeriodTypeDescription(String financialPeriodTypeDescription) {
             financialPeriodTypeAssignDto.setFinancialPeriodTypeDescription(financialPeriodTypeDescription);
+            return this;
+        }
+
+        public Builder activeFlag(Long activeFlag) {
+            financialPeriodTypeAssignDto.setActiveFlag(activeFlag);
             return this;
         }
 
