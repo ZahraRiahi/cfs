@@ -1,11 +1,11 @@
 package ir.demisco.cfs.service.repository;
 
 import ir.demisco.cfs.model.entity.FinancialPeriod;
+import ir.demisco.cfs.model.entity.FinancialPeriodTypeAssign;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod, Long> {
@@ -18,9 +18,9 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             " fp.endDate =:endDate and fp.financialPeriodTypeAssign.id=:typeAssignId  ")
     Long getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(LocalDateTime endDate, Long typeAssignId);
 
-
     @Query("select coalesce(COUNT(fp.id),0) from FinancialPeriod fp where (fp.startDate=:startDate and fp.financialPeriodTypeAssign.id=:typeAssignId ) " +
             " or (fp.endDate =:endDate and fp.financialPeriodTypeAssign.id=:typeAssignId)  ")
-    Long getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(LocalDateTime startDate, LocalDateTime endDate , Long typeAssignId);
+    Long getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(LocalDateTime startDate, LocalDateTime endDate, Long typeAssignId);
 
-}
+
+    }

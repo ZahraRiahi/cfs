@@ -38,7 +38,9 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     @Transactional
     public DataSourceResult getFinancialPeriodByOrganizationId(Long organizationId, DataSourceRequest dataSourceRequest) {
         Asserts.notNull(organizationId, "organizationId is null");
-        dataSourceRequest.setFilter(DataSourceRequest.FilterDescriptor.create("financialPeriodTypeAssign.organization.id", organizationId));
+        dataSourceRequest.getFilter().setLogic("and");
+        dataSourceRequest.getFilter().getFilters().add(DataSourceRequest
+                .FilterDescriptor.create("financialPeriodTypeAssign.organization.id", organizationId, DataSourceRequest.Operators.EQUALS));
         return gridFilterService.filter(dataSourceRequest, financialPeriodListGridProvider);
     }
 
@@ -51,7 +53,8 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod.setStartDate(financialPeriodDto.getStartDate());
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
         financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(1L));
-        financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
+//        financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
+        financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(1L).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی وجود ندارد.")));
         return financialPeriodRepository.save(financialPeriod).getId();
     }
 
@@ -93,10 +96,11 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
 //        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(1L, "OPEN");
+        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(2L, "OPEN");
         if (period.size() >= 2) {
             throw new RuleException("برای هر سازمان بیش از 2 دوره مالی باز نمی توان ایجاد کرد");
         } else if (period.size() == 1) {
+//            financialPeriodDto.setFinancialPeriodTypeAssignId(period.get(0).getFinancialPeriodTypeAssign().getId());
             financialPeriodDto.setStartDate(financialPeriodDto.getEndDate().plusMonths(1));
         }
         if (!String.valueOf(financialPeriodDto.getOpenMonthCount()).matches("1[0-2]|[1-9]")) {
