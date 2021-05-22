@@ -15,14 +15,11 @@ import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 
-import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 
 @Service
 public class DefaultFinancialPeriod implements FinancialPeriodService {
@@ -104,8 +101,6 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     }
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
-        LocalDate now = LocalDate.now();
-        LocalDate firstDay = now.with(firstDayOfYear());
 //        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(1L, "OPEN");
         if (period.size() >= 2) {
