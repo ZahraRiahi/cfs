@@ -19,7 +19,7 @@ public class FinancialPeriodController {
 
     @PostMapping("/list")
     public ResponseEntity<DataSourceResult> responseEntity(@RequestBody DataSourceRequest dataSourceRequest) {
-        return ResponseEntity.ok(financialPeriodService.getFinancialPeriodByOrganizationId(2L, dataSourceRequest));
+        return ResponseEntity.ok(financialPeriodService.getFinancialPeriodByOrganizationId(1L, dataSourceRequest));
     }
 
     @PostMapping("/save")

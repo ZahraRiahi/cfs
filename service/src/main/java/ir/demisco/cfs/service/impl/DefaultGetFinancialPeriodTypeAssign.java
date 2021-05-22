@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -37,9 +38,15 @@ public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeA
 
     @Override
     public Long save(FinancialPeriodTypeAssignDto financialPeriodTypeAssignDto) {
+        FinancialPeriodTypeAssign periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(1L).orElse(new FinancialPeriodTypeAssign());
+        if (periodTypeAssign.getId() != null) {
+            periodTypeAssign.setActiveFlag(0L);
+            financialPeriodTypeAssignRepository.save(periodTypeAssign);
+        }
         FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.findById(financialPeriodTypeAssignDto.getId() == null ? 0L : financialPeriodTypeAssignDto.getId()).orElse(new FinancialPeriodTypeAssign());
         financialPeriodTypeAssign.setOrganization(organizationRepository.getOne(1L));
         financialPeriodTypeAssign.setFinancialPeriodType(financialPeriodTypeRepository.getOne(financialPeriodTypeAssignDto.getFinancialPeriodTypeId()));
+        financialPeriodTypeAssign.setActiveFlag(1L);
         return financialPeriodTypeAssignRepository.save(financialPeriodTypeAssign).getId();
     }
 
