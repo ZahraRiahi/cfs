@@ -10,11 +10,19 @@ import ir.demisco.cloud.core.middle.exception.RuleException;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceResult;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridFilterService;
+import ir.demisco.core.utils.DateUtil;
 import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
+
+import static java.time.temporal.TemporalAdjusters.firstDayOfYear;
 
 @Service
 public class DefaultFinancialPeriod implements FinancialPeriodService {
@@ -49,13 +57,14 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     public Long save(FinancialPeriodDto financialPeriodDto) {
         validationSave(financialPeriodDto);
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId() == null ? 0L : financialPeriodDto.getId()).orElse(new FinancialPeriod());
-        financialPeriod.setEndDate(financialPeriodDto.getEndDate());
-        financialPeriod.setStartDate(financialPeriodDto.getStartDate());
+        financialPeriod.setEndDate(financialPeriodDto.getEndDate().truncatedTo(ChronoUnit.DAYS));
+        financialPeriod.setStartDate(financialPeriodDto.getStartDate().truncatedTo(ChronoUnit.DAYS));
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
         financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(1L));
 //        financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
-        financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(1L).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی وجود ندارد.")));
+        financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
         return financialPeriodRepository.save(financialPeriod).getId();
+//        return null;
     }
 
     @Override
@@ -95,13 +104,21 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     }
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
+        LocalDate now = LocalDate.now();
+        LocalDate firstDay = now.with(firstDayOfYear());
+
 //        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(2L, "OPEN");
+        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(1L, "OPEN");
         if (period.size() >= 2) {
             throw new RuleException("برای هر سازمان بیش از 2 دوره مالی باز نمی توان ایجاد کرد");
         } else if (period.size() == 1) {
-//            financialPeriodDto.setFinancialPeriodTypeAssignId(period.get(0).getFinancialPeriodTypeAssign().getId());
-            financialPeriodDto.setStartDate(financialPeriodDto.getEndDate().plusMonths(1));
+            financialPeriodDto.setFinancialPeriodTypeAssignId(period.get(0).getFinancialPeriodTypeAssign().getId());
+            financialPeriodDto.setStartDate(period.get(0).getEndDate().plusMonths(1));
+        } else {
+            financialPeriodDto.setStartDate(DateUtil.jalaliToGregorian(DateUtil.gregorianToJalali
+                    (DateUtil.convertStringToDate(LocalDateTime.now().toString().substring(0, 10).replace("-", "/"))).substring(0, 4) + "/01/01")
+                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+            financialPeriodDto.setFinancialPeriodTypeAssignId(financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(1L).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی وجود ندارد.")).getId());
         }
         if (!String.valueOf(financialPeriodDto.getOpenMonthCount()).matches("1[0-2]|[1-9]")) {
             throw new RuleException("تعداد ماه قابل ویرایش میبایست بین 1 تا 12 باشد.");
