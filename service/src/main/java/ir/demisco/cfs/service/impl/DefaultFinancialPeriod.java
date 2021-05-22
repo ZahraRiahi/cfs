@@ -113,7 +113,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
             throw new RuleException("برای هر سازمان بیش از 2 دوره مالی باز نمی توان ایجاد کرد");
         } else if (period.size() == 1) {
             financialPeriodDto.setFinancialPeriodTypeAssignId(period.get(0).getFinancialPeriodTypeAssign().getId());
-            financialPeriodDto.setStartDate(period.get(0).getEndDate().plusMonths(1));
+            financialPeriodDto.setStartDate(period.get(0).getEndDate().plusDays(1));
         } else {
             financialPeriodDto.setStartDate(DateUtil.jalaliToGregorian(DateUtil.gregorianToJalali
                     (DateUtil.convertStringToDate(LocalDateTime.now().toString().substring(0, 10).replace("-", "/"))).substring(0, 4) + "/01/01")
