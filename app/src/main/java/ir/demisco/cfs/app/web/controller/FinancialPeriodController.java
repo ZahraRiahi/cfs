@@ -33,11 +33,6 @@ public class FinancialPeriodController {
         }
     }
 
-//    @PostMapping("/SetStatus")
-//    public ResponseEntity<FinancialPeriodDto> updateFinancialPeriod(@RequestBody FinancialPeriodDto financialPeriodDto) {
-//        return ResponseEntity.ok(financialPeriodService.update(financialPeriodDto));
-//    }
-
     @PostMapping("/SetStatus/{id}")
     public ResponseEntity<FinancialPeriodDto> changeStatusFinancialPeriod(@PathVariable("id") Long financialPeriodId) {
         return ResponseEntity.ok(financialPeriodService.changeStatusFinancialPeriodById(financialPeriodId));

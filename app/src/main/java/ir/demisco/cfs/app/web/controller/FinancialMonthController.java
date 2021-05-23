@@ -21,7 +21,7 @@ public class FinancialMonthController {
         return ResponseEntity.ok(financialMonthService.getFinancialMonthByFinancialPeriodId(financialPeriodId, dataSourceRequest));
     }
 
-    @PostMapping("/updateMonth/{id}")
+    @PostMapping("/SetStatus/{id}")
     public ResponseEntity<FinancialMonthDto> changeStatusFinancialMonth(@PathVariable("id") Long financialMonthId) {
         return ResponseEntity.ok(financialMonthService.changeStatusFinancialMonthById(financialMonthId));
     }
