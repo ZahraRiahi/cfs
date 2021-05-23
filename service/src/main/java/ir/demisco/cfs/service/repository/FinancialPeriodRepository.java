@@ -18,8 +18,8 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             " fp.endDate =:endDate and fp.financialPeriodTypeAssign.id=:typeAssignId  ")
     Long getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(LocalDateTime endDate, Long typeAssignId);
 
-    @Query("select coalesce(COUNT(fp.id),0) from FinancialPeriod fp where (fp.startDate=:startDate and fp.financialPeriodTypeAssign.id=:typeAssignId ) " +
-            " or (fp.endDate =:endDate and fp.financialPeriodTypeAssign.id=:typeAssignId)  ")
+    @Query("select coalesce(COUNT(fp.id),0) from FinancialPeriod fp where ((fp.startDate=:startDate and fp.financialPeriodTypeAssign.id=:typeAssignId ) " +
+            " or (fp.endDate =:endDate and fp.financialPeriodTypeAssign.id=:typeAssignId)) and fp.financialPeriodStatus.id = 1  ")
     Long getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(LocalDateTime startDate, LocalDateTime endDate, Long typeAssignId);
 
 
