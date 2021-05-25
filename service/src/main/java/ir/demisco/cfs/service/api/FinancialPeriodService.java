@@ -13,6 +13,6 @@ public interface FinancialPeriodService {
 
     FinancialPeriodDto update(FinancialPeriodDto financialPeriodDto);
 
-    FinancialPeriodDto changeStatusFinancialPeriodById(Long financialPeriodId);
+    FinancialPeriodDto changeStatusFinancialPeriodById(FinancialPeriodDto financialPeriodDto);
 
 }

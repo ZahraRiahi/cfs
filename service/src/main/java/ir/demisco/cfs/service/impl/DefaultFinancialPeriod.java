@@ -61,7 +61,6 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 //        financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
         financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
         return financialPeriodRepository.save(financialPeriod).getId();
-//        return null;
     }
 
     @Override
@@ -128,17 +127,13 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     @Override
     @Transactional(rollbackOn = Throwable.class)
-    public FinancialPeriodDto changeStatusFinancialPeriodById(Long financialPeriodId) {
-        FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodId).orElseThrow(() -> new RuleException("هیچ دوره ی مالی یافت نشد."));
-        if (financialPeriod.getFinancialPeriodStatus().getId().equals(1L)) {
-            financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(2L));
-        } else {
-            financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(1L));
-        }
+    public FinancialPeriodDto changeStatusFinancialPeriodById(FinancialPeriodDto financialPeriodDto) {
+        FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId()).orElseThrow(() -> new RuleException("هیچ دوره ی مالی یافت نشد."));
+        financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getStatusId()));
         financialPeriodRepository.save(financialPeriod);
-        FinancialPeriodDto financialPeriodDto = convertFinancialPeriodToDto(financialPeriod);
-        validationUpdate(financialPeriodDto, "change");
-        return financialPeriodDto;
+        FinancialPeriodDto financialPeriodDto1 = convertFinancialPeriodToDto(financialPeriod);
+        validationUpdate(financialPeriodDto1, "change");
+        return financialPeriodDto1;
     }
 
     private FinancialPeriodDto convertFinancialPeriodToDto(FinancialPeriod financialPeriod) {
