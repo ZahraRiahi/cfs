@@ -1,8 +1,0 @@
-ir\demisco\cfs\service\impl\FinancialPeriodListGridProvider.class
-ir\demisco\cfs\service\repository\TestRepo.class
-ir\demisco\cfs\service\api\FinancialPeriodService.class
-ir\demisco\cfs\service\api\TestService.class
-ir\demisco\cfs\service\impl\TestServiceImpl.class
-ir\demisco\cfs\service\repository\FinancialPeriodRepository.class
-ir\demisco\cfs\service\impl\DefaultFinancialPeriod.class
-ir\demisco\cfs\service\repository\FinancialPeriodStatusRepository.class
