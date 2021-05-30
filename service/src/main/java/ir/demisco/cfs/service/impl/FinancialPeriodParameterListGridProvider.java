@@ -27,6 +27,7 @@ public class FinancialPeriodParameterListGridProvider implements GridDataProvide
                 filterContext.getPath("startDate"),
                 filterContext.getPath("taxDeductionRate"),
                 filterContext.getPath("vatTaxRate"),
+                filterContext.getPath("vatTollRate"),
                 filterContext.getPath("insuranceDeductionRate"),
                 filterContext.getPath("maxFewerAmount"),
                 filterContext.getPath("vatFillFlag")
@@ -42,11 +43,12 @@ public class FinancialPeriodParameterListGridProvider implements GridDataProvide
                     .id((Long) array[0])
                     .financialPeriodId((Long) array[1])
                     .startDate((LocalDateTime) array[2])
-                    .vatTaxRate((Long) array[3])
-                    .vatTollRate((Long) array[4])
-                    .insuranceDeductionRate((Long) array[5])
-                    .maxFewerAmount((Long) array[6])
-                    .vatFillFlag(((Long) array[7]))
+                    .taxDeductionRate((Long) array[3])
+                    .vatTaxRate((Long) array[4])
+                    .vatTollRate((Long) array[5])
+                    .insuranceDeductionRate((Long) array[6])
+                    .maxFewerAmount((Long) array[7])
+                    .vatFillFlag(((Long) array[8]))
                     .build();
         }).collect(Collectors.toList());
     }
