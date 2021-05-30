@@ -22,5 +22,7 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             " or (fp.endDate =:endDate and fp.financialPeriodTypeAssign.id=:typeAssignId)) and fp.financialPeriodStatus.id = 1  ")
     Long getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(LocalDateTime startDate, LocalDateTime endDate, Long typeAssignId);
 
-
+    @Query(value = "select fp from  FinancialPeriod fp join  fp.financialPeriodTypeAssign fpa join  fp.financialPeriodStatus fps" +
+            " where fpa.organization.id=:organizationId and fpa.activeFlag=1 order by fp.endDate desc ")
+    List<FinancialPeriod> findByFinancialPeriodGetStartDateOrganizationId(Long organizationId);
     }
