@@ -136,6 +136,18 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         return financialPeriodDto1;
     }
 
+    @Override
+    public LocalDateTime getStartDateFinancialPeriod(Long organizationId) {
+        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(organizationId);
+        if (period.size() == 0) {
+            return DateUtil.jalaliToGregorian(DateUtil.gregorianToJalali
+                    (DateUtil.convertStringToDate(LocalDateTime.now().toString().substring(0, 10).replace("-", "/"))).substring(0, 4) + "/01/01")
+                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        } else {
+            return period.get(0).getEndDate().plusDays(1);
+        }
+    }
+
     private FinancialPeriodDto convertFinancialPeriodToDto(FinancialPeriod financialPeriod) {
         return FinancialPeriodDto.builder().startDate(
                 financialPeriod.getStartDate())

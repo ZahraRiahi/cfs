@@ -7,6 +7,8 @@ import ir.demisco.cloud.core.middle.model.dto.DataSourceResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/api-financialPeriod")
 public class FinancialPeriodController {
@@ -38,4 +40,8 @@ public class FinancialPeriodController {
         return ResponseEntity.ok(financialPeriodService.changeStatusFinancialPeriodById(financialPeriodDto));
     }
 
+    @GetMapping("/GetStartDate/{organizationId}")
+    public ResponseEntity<LocalDateTime> responseEntitygetStartDate(@PathVariable Long organizationId) {
+        return ResponseEntity.ok(financialPeriodService.getStartDateFinancialPeriod(organizationId));
+    }
 }
