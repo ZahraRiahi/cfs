@@ -18,10 +18,10 @@ public class FinancialPeriodParameter extends AuditModel<Long> {
     private Long vatTollRate;
     private Long insuranceDeductionRate;
     private Long maxFewerAmount;
-    private Long vatFillFlag;
+    private Boolean vatFillFlag;
 
     @Id
-    @SequenceGenerator(schema = "fnpr", name = "financial_period_parameter_generator", sequenceName = "sq_financial_period_parameter",allocationSize = 50)
+    @SequenceGenerator(schema = "fnpr", name = "financial_period_parameter_generator", sequenceName = "sq_financial_period_parameter", allocationSize = 50)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_period_parameter_generator")
     public Long getId() {
         return id;
@@ -96,11 +96,11 @@ public class FinancialPeriodParameter extends AuditModel<Long> {
     }
 
     @Column(name = "VAT_FILL_FLAG")
-    public Long getVatFillFlag() {
+    public Boolean getVatFillFlag() {
         return vatFillFlag;
     }
 
-    public void setVatFillFlag(Long vatFillFlag) {
+    public void setVatFillFlag(Boolean vatFillFlag) {
         this.vatFillFlag = vatFillFlag;
     }
 }

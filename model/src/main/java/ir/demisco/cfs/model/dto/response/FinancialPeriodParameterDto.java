@@ -12,7 +12,7 @@ public class FinancialPeriodParameterDto {
     private Long vatTollRate;
     private Long insuranceDeductionRate;
     private Long maxFewerAmount;
-    private Long vatFillFlag;
+    private Boolean vatFillFlag;
 
     public Long getId() {
         return id;
@@ -78,11 +78,11 @@ public class FinancialPeriodParameterDto {
         this.maxFewerAmount = maxFewerAmount;
     }
 
-    public Long getVatFillFlag() {
+    public Boolean getVatFillFlag() {
         return vatFillFlag;
     }
 
-    public void setVatFillFlag(Long vatFillFlag) {
+    public void setVatFillFlag(Boolean vatFillFlag) {
         this.vatFillFlag = vatFillFlag;
     }
 
@@ -142,7 +142,7 @@ public class FinancialPeriodParameterDto {
             return this;
         }
 
-        public Builder vatFillFlag(Long vatFillFlag) {
+        public Builder vatFillFlag(Boolean vatFillFlag) {
             financialPeriodParameterDto.setVatFillFlag(vatFillFlag);
             return this;
         }

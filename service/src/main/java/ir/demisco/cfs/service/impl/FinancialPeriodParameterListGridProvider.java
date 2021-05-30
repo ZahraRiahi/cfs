@@ -48,7 +48,7 @@ public class FinancialPeriodParameterListGridProvider implements GridDataProvide
                     .vatTollRate((Long) array[5])
                     .insuranceDeductionRate((Long) array[6])
                     .maxFewerAmount((Long) array[7])
-                    .vatFillFlag(((Long) array[8]))
+                    .vatFillFlag(((Boolean) array[8]))
                     .build();
         }).collect(Collectors.toList());
     }
