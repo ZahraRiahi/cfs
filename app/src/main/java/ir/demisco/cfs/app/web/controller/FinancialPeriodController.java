@@ -40,7 +40,7 @@ public class FinancialPeriodController {
         return ResponseEntity.ok(financialPeriodService.changeStatusFinancialPeriodById(financialPeriodDto));
     }
 
-    @GetMapping("/GetStartDate/{organizationId}")
+    @PostMapping("/GetStartDate/{organizationId}")
     public ResponseEntity<LocalDateTime> responseEntitygetStartDate(@PathVariable Long organizationId) {
         return ResponseEntity.ok(financialPeriodService.getStartDateFinancialPeriod(organizationId));
     }
