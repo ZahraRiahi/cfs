@@ -1,7 +1,6 @@
 package ir.demisco.cfs.service.repository;
 
 import ir.demisco.cfs.model.entity.FinancialPeriod;
-import ir.demisco.cfs.model.entity.FinancialPeriodTypeAssign;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -25,4 +24,13 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
     @Query(value = "select fp from  FinancialPeriod fp join  fp.financialPeriodTypeAssign fpa join  fp.financialPeriodStatus fps" +
             " where fpa.organization.id=:organizationId and fpa.activeFlag=1 order by fp.endDate desc ")
     List<FinancialPeriod> findByFinancialPeriodGetStartDateOrganizationId(Long organizationId);
+
+
+    @Query("select fnpr from FinancialPeriod fnpr " +
+            " where  fnpr.deletedDat is null  " +
+            "  and fnpr.financialPeriodTypeAssign.id in (select fpt.id" +
+            "      from FinancialPeriodTypeAssign fpt" +
+            "     where fpt.organization.id =:organizationId  And fpt.activeFlag=1 " +
+            "     and fpt.deletedDat is null)")
+    List<FinancialPeriod>  findActiveFinancialPeriod(Long organizationId);
     }

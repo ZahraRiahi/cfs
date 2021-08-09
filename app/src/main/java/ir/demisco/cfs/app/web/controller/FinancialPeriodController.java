@@ -1,13 +1,12 @@
 package ir.demisco.cfs.app.web.controller;
 
+import ir.demisco.cfs.model.dto.response.FinancialPeriodDateDto;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
 import ir.demisco.cfs.service.api.FinancialPeriodService;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceResult;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api-financialPeriod")
@@ -40,8 +39,8 @@ public class FinancialPeriodController {
         return ResponseEntity.ok(financialPeriodService.changeStatusFinancialPeriodById(financialPeriodDto));
     }
 
-    @PostMapping("/GetStartDate/{organizationId}")
-    public ResponseEntity<LocalDateTime> responseEntitygetStartDate(@PathVariable Long organizationId) {
+    @PostMapping("/GetDate/{organizationId}")
+    public ResponseEntity<FinancialPeriodDateDto> responseEntitygetStartDate(@PathVariable Long organizationId) {
         return ResponseEntity.ok(financialPeriodService.getStartDateFinancialPeriod(organizationId));
     }
 }
