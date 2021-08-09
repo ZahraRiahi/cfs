@@ -14,6 +14,7 @@ public class FinancialPeriod extends AuditModel<Long> {
     private Long openMonthCount;
     private FinancialPeriodStatus financialPeriodStatus;
     private FinancialPeriodTypeAssign financialPeriodTypeAssign;
+    private LocalDateTime deletedDat;
 
     @Id
     @SequenceGenerator(schema = "fnpr", name = "financial_period_generator", sequenceName = "sq_financial_period")
@@ -73,5 +74,14 @@ public class FinancialPeriod extends AuditModel<Long> {
 
     public void setFinancialPeriodTypeAssign(FinancialPeriodTypeAssign financialPeriodTypeAssign) {
         this.financialPeriodTypeAssign = financialPeriodTypeAssign;
+    }
+
+    @Column(name = "DELETED_DATE")
+    public LocalDateTime getDeletedDat() {
+        return deletedDat;
+    }
+
+    public void setDeletedDat(LocalDateTime deletedDat) {
+        this.deletedDat = deletedDat;
     }
 }

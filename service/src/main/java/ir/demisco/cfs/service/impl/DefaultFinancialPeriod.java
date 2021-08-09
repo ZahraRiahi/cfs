@@ -1,5 +1,6 @@
 package ir.demisco.cfs.service.impl;
 
+import ir.demisco.cfs.model.dto.response.FinancialPeriodDateDto;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
 import ir.demisco.cfs.model.entity.FinancialPeriod;
 import ir.demisco.cfs.service.api.FinancialPeriodService;
@@ -13,12 +14,13 @@ import ir.demisco.cloud.core.middle.service.business.api.core.GridFilterService;
 import ir.demisco.core.utils.DateUtil;
 import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -36,6 +38,13 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         this.financialPeriodStatusRepository = financialPeriodStatusRepository;
         this.financialPeriodTypeAssignRepository = financialPeriodTypeAssignRepository;
         this.financialPeriodRepository = financialPeriodRepository;
+    }
+
+    private static FinancialPeriodDateDto apply(Object[] object) {
+        return FinancialPeriodDateDto.builder()
+                .startDate((Date) object[0])
+                .endDate(DateUtil.convertStringToDate(object[1].toString()))
+                .build();
     }
 
 
@@ -133,16 +142,21 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     }
 
     @Override
-    public LocalDateTime getStartDateFinancialPeriod(Long organizationId) {
-        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(organizationId);
-        if (period.size() == 0) {
-            return DateUtil.jalaliToGregorian(DateUtil.gregorianToJalali
-                    (DateUtil.convertStringToDate(LocalDateTime.now().toString().substring(0, 10).replace("-", "/"))).substring(0, 4) + "/01/01")
-                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+    public FinancialPeriodDateDto getStartDateFinancialPeriod(Long organizationId) {
+        List<FinancialPeriod> period = financialPeriodRepository.findActiveFinancialPeriod(organizationId);
+        if (period.isEmpty()) {
+            List<Object[]> objects= financialPeriodTypeAssignRepository.getStartDateAndEndDate(organizationId);
+            return objectToDto(objects);
         } else {
-            return period.get(0).getEndDate().plusDays(1);
+            List<Object[]> objectsDate= financialPeriodTypeAssignRepository.getStartDateAndEndDateActive(organizationId);
+            return objectToDto(objectsDate);
         }
     }
+
+    private FinancialPeriodDateDto objectToDto(List<Object[]> objects) {
+         return  objects.stream().map(DefaultFinancialPeriod::apply).collect(Collectors.toList()).get(0);
+    }
+
 
     private FinancialPeriodDto convertFinancialPeriodToDto(FinancialPeriod financialPeriod) {
         return FinancialPeriodDto.builder().startDate(

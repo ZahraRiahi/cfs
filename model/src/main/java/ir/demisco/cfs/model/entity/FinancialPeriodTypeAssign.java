@@ -4,6 +4,7 @@ import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
 import ir.demisco.cloud.basic.model.entity.org.Organization;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "financial_period_type_assign", schema = "fnpr")
@@ -13,6 +14,7 @@ public class FinancialPeriodTypeAssign extends AuditModel<Long> {
     private Organization organization;
     private FinancialPeriodType financialPeriodType;
     private Long activeFlag;
+    private LocalDateTime deletedDat;
 
     @Id
     @SequenceGenerator(schema = "fnpr", name = "financial_period_type_assign_generator", sequenceName = "sq_financial_period_type_assign", allocationSize = 50)
@@ -52,5 +54,14 @@ public class FinancialPeriodTypeAssign extends AuditModel<Long> {
 
     public void setActiveFlag(Long activeFlag) {
         this.activeFlag = activeFlag;
+    }
+
+    @Column(name = "DELETED_DATE")
+    public LocalDateTime getDeletedDat() {
+        return deletedDat;
+    }
+
+    public void setDeletedDat(LocalDateTime deletedDat) {
+        this.deletedDat = deletedDat;
     }
 }
