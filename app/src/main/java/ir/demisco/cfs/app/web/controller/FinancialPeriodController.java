@@ -5,6 +5,7 @@ import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
 import ir.demisco.cfs.service.api.FinancialPeriodService;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceResult;
+import ir.demisco.cloud.core.security.util.SecurityHelper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,8 +40,9 @@ public class FinancialPeriodController {
         return ResponseEntity.ok(financialPeriodService.changeStatusFinancialPeriodById(financialPeriodDto));
     }
 
-    @PostMapping("/GetDate/{organizationId}")
-    public ResponseEntity<FinancialPeriodDateDto> responseEntitygetStartDate(@PathVariable Long organizationId) {
+    @PostMapping("/GetDate")
+    public ResponseEntity<FinancialPeriodDateDto> responseEntitygetStartDate() {
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         return ResponseEntity.ok(financialPeriodService.getStartDateFinancialPeriod(organizationId));
     }
 }
