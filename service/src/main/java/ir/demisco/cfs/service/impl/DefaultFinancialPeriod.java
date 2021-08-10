@@ -42,7 +42,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     private static FinancialPeriodDateDto apply(Object[] object) {
         return FinancialPeriodDateDto.builder()
-                .startDate((Date) object[0])
+                .startDate(DateUtil.convertStringToDate(object[0].toString()))
                 .endDate(DateUtil.convertStringToDate(object[1].toString()))
                 .build();
     }
@@ -142,15 +142,11 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     }
 
     @Override
+    @Transactional
     public FinancialPeriodDateDto getStartDateFinancialPeriod(Long organizationId) {
-        List<FinancialPeriod> period = financialPeriodRepository.findActiveFinancialPeriod(organizationId);
-        if (period.isEmpty()) {
+
             List<Object[]> objects= financialPeriodTypeAssignRepository.getStartDateAndEndDate(organizationId);
             return objectToDto(objects);
-        } else {
-            List<Object[]> objectsDate= financialPeriodTypeAssignRepository.getStartDateAndEndDateActive(organizationId);
-            return objectToDto(objectsDate);
-        }
     }
 
     private FinancialPeriodDateDto objectToDto(List<Object[]> objects) {
