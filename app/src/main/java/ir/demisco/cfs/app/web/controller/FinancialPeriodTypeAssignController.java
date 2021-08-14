@@ -17,7 +17,7 @@ public class FinancialPeriodTypeAssignController {
     }
     @GetMapping("/list")
     public ResponseEntity<List<FinancialPeriodTypeAssignDto>> responseEntity() {
-        return ResponseEntity.ok(financialPeriodTypeAssignService.getFinancialPeriodTypeAssignByOrganizationId(2L));
+        return ResponseEntity.ok(financialPeriodTypeAssignService.getFinancialPeriodTypeAssignByOrganizationId(8L));
     }
 
     @PostMapping("/save")

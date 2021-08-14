@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FinancialPeriodTypeAssignRepository extends JpaRepository<FinancialPeriodTypeAssign, Long> {
-    @Query("select fpta from FinancialPeriodTypeAssign fpta where fpta.organization.id=:organizationId")
+    @Query("select fpta from FinancialPeriodTypeAssign fpta where fpta.organization.id=:organizationId and fpta.deletedDat is null")
     List<FinancialPeriodTypeAssign> findByOrganizationId(Long organizationId);
 
     @Query("select fpa from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId ")

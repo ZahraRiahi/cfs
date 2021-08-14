@@ -1,12 +1,16 @@
 package ir.demisco.cfs.model.dto.response;
 
 
+import java.time.LocalDateTime;
+
+
 public class FinancialPeriodTypeAssignDto {
     private Long id;
     private Long organizationId;
     private Long financialPeriodTypeId;
     private String financialPeriodTypeDescription;
     private Long activeFlag;
+    private LocalDateTime startDate;
 
     public Long getId() {
         return id;
@@ -48,9 +52,19 @@ public class FinancialPeriodTypeAssignDto {
         this.activeFlag = activeFlag;
     }
 
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
+
 
     public static final class Builder {
         private FinancialPeriodTypeAssignDto financialPeriodTypeAssignDto;
@@ -85,6 +99,11 @@ public class FinancialPeriodTypeAssignDto {
 
         public Builder activeFlag(Long activeFlag) {
             financialPeriodTypeAssignDto.setActiveFlag(activeFlag);
+            return this;
+        }
+
+        public Builder startDate(LocalDateTime startDate) {
+            financialPeriodTypeAssignDto.setStartDate(startDate);
             return this;
         }
 
