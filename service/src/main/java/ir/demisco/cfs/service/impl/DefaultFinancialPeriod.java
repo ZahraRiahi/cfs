@@ -70,7 +70,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     public Long save(FinancialPeriodDto financialPeriodDto) {
         validationSave(financialPeriodDto);
         //        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        Long organizationId=7L;
+        Long organizationId=8L;
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId() == null ? 0L : financialPeriodDto.getId()).orElse(new FinancialPeriod());
         financialPeriod.setEndDate(financialPeriodDto.getEndDate().truncatedTo(ChronoUnit.DAYS));
         financialPeriod.setStartDate(financialPeriodDto.getStartDate().truncatedTo(ChronoUnit.DAYS));
@@ -130,7 +130,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         if (financialPeriodDto.getId() == null && mode.equals("start")) {
             throw new RuleException("برای انجام عملیات ویرایش شناسه ی دوره ی مالی الزامی میباشد.");
         }
-        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(7L, "OPEN");
+        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(8L, "OPEN");
         if (period.size() >= 3 && mode.equals("end")) {
             throw new RuleException("برای هر سازمان بیش از 2 دوره مالی باز وجود ندارد.");
         } else if (period.size() > 2 && mode.equals("change")) {
@@ -146,8 +146,8 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
 //        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(7L, "OPEN");
-        List<FinancialPeriod> periodStartDate = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(7L);
+        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(8L, "OPEN");
+        List<FinancialPeriod> periodStartDate = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(8L);
         if (period.size() >= 2) {
             throw new RuleException("برای هر سازمان بیش از 2 دوره مالی باز نمی توان ایجاد کرد");
         } else if (periodStartDate.size() > 0 ){
@@ -156,7 +156,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 //            financialPeriodDto.setStartDate(periodStartDate.get(0).getEndDate().plusDays(1));
 //            financialPeriodDto.setEndDate(financialPeriodDto.getStartDate().plusYears(1).minusMonths(1).minusDays(1));
         } else{
-            FinancialPeriodTypeAssign  financialPeriodTypeAssign=financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(7L).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی وجود ندارد."));
+            FinancialPeriodTypeAssign  financialPeriodTypeAssign=financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(8L).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی وجود ندارد."));
 //            financialPeriodDto.setStartDate(DateUtil.jalaliToGregorian(DateUtil.gregorianToJalali
 //                    (DateUtil.convertStringToDate(LocalDateTime.now().toString().substring(0, 10).replace("-", "/"))).substring(0, 4) + "/01/01")
 //                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
