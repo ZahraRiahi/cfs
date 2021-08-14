@@ -126,6 +126,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     }
 
     private void validationUpdate(FinancialPeriodDto financialPeriodDto, String mode) {
+        FinancialPeriod financialPeriod=financialPeriodRepository.findById(financialPeriodDto.getId()).orElseThrow(() -> new RuleException("هیچ دوره ی مالی یافت نشد."));
         if (financialPeriodDto.getId() == null && mode.equals("start")) {
             throw new RuleException("برای انجام عملیات ویرایش شناسه ی دوره ی مالی الزامی میباشد.");
         }
@@ -138,7 +139,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         if (!String.valueOf(financialPeriodDto.getOpenMonthCount()).matches("1[0-2]|[1-9]")) {
             throw new RuleException("تعداد ماه قابل ویرایش میبایست بین 1 تا 12 باشد.");
         }
-        if (financialPeriodDto.getStartDate() != null && mode.equals("start")) {
+        if (financialPeriodDto.getStartDate() != null && !financialPeriod.getStartDate().equals(financialPeriodDto.getStartDate()) && mode.equals("start")) {
             throw new RuleException("تاریخ شروع قابل ویرایش نیست.");
         }
     }
