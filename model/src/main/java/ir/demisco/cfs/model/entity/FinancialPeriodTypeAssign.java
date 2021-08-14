@@ -5,6 +5,7 @@ import ir.demisco.cloud.basic.model.entity.org.Organization;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "financial_period_type_assign", schema = "fnpr")
@@ -14,6 +15,7 @@ public class FinancialPeriodTypeAssign extends AuditModel<Long> {
     private Organization organization;
     private FinancialPeriodType financialPeriodType;
     private Long activeFlag;
+    private Date startDate;
     private LocalDateTime deletedDat;
 
     @Id
@@ -54,6 +56,16 @@ public class FinancialPeriodTypeAssign extends AuditModel<Long> {
 
     public void setActiveFlag(Long activeFlag) {
         this.activeFlag = activeFlag;
+    }
+
+
+    @Column(name = "START_DATE")
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
     }
 
     @Column(name = "DELETED_DATE")
