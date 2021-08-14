@@ -21,7 +21,8 @@ public class FinancialPeriodController {
 
     @PostMapping("/list")
     public ResponseEntity<DataSourceResult> responseEntity(@RequestBody DataSourceRequest dataSourceRequest) {
-        return ResponseEntity.ok(financialPeriodService.getFinancialPeriodByOrganizationId(1L, dataSourceRequest));
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        return ResponseEntity.ok(financialPeriodService.getFinancialPeriodByOrganizationId(organizationId, dataSourceRequest));
     }
 
     @PostMapping("/save")
@@ -42,8 +43,7 @@ public class FinancialPeriodController {
 
     @GetMapping("/GetDate")
     public ResponseEntity<FinancialPeriodDateDto> responseEntitygetStartDate() {
-//        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        Long organizationId = 1L;
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         return ResponseEntity.ok(financialPeriodService.getStartDateFinancialPeriod(organizationId));
     }
 }

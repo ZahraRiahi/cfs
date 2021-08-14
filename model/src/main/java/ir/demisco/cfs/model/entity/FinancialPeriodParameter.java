@@ -5,6 +5,7 @@ import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.Date;
 import javax.persistence.*;
 
 @Entity
@@ -12,7 +13,7 @@ import javax.persistence.*;
 public class FinancialPeriodParameter extends AuditModel<Long> {
     private Long id;
     private FinancialPeriod financialPeriod;
-    private LocalDateTime startDate;
+    private Date startDate;
     private Long taxDeductionRate;
     private Long vatTaxRate;
     private Long vatTollRate;
@@ -42,13 +43,14 @@ public class FinancialPeriodParameter extends AuditModel<Long> {
     }
 
     @Column(name = "START_DATE")
-    public LocalDateTime getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
+
 
     @Column(name = "TAX_DEDUCTION_RATE")
     public Long getTaxDeductionRate() {

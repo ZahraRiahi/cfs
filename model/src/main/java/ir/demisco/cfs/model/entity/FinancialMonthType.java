@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Table(name = "financial_month_type", schema = "fnpr")
 public class FinancialMonthType extends AuditModel<Long> {
     private Long id;
-    private FinancialPeriod financialPeriod;
+    private FinancialPeriodType financialPeriodType;
     private String description;
     private Long monthNumber;
 
@@ -23,12 +23,12 @@ public class FinancialMonthType extends AuditModel<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FINANCIAL_PERIOD_TYPE_ID")
-    public FinancialPeriod getFinancialPeriod() {
-        return financialPeriod;
+    public FinancialPeriodType getFinancialPeriodType() {
+        return financialPeriodType;
     }
 
-    public void setFinancialPeriod(FinancialPeriod financialPeriod) {
-        this.financialPeriod = financialPeriod;
+    public void setFinancialPeriodType(FinancialPeriodType financialPeriodType) {
+        this.financialPeriodType = financialPeriodType;
     }
 
     @Column(name = "DESCRIPTION")

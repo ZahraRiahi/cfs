@@ -1,12 +1,13 @@
 package ir.demisco.cfs.model.dto.response;
 
 
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 public class FinancialPeriodParameterDto {
     private Long id;
     private Long financialPeriodId;
-    private LocalDateTime startDate;
+    private Date startDate;
     private Long taxDeductionRate;
     private Long vatTaxRate;
     private Long vatTollRate;
@@ -30,11 +31,11 @@ public class FinancialPeriodParameterDto {
         this.financialPeriodId = financialPeriodId;
     }
 
-    public LocalDateTime getStartDate() {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
 
@@ -112,7 +113,7 @@ public class FinancialPeriodParameterDto {
             return this;
         }
 
-        public Builder startDate(LocalDateTime startDate) {
+        public Builder startDate(Date startDate) {
             financialPeriodParameterDto.setStartDate(startDate);
             return this;
         }
