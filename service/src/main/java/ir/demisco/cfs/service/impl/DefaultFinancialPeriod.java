@@ -204,8 +204,9 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
 
     private FinancialPeriodDto convertFinancialPeriodToDto(FinancialPeriod financialPeriod) {
-        return FinancialPeriodDto.builder().startDate(
-                financialPeriod.getStartDate())
+        return FinancialPeriodDto.builder()
+                .id(financialPeriod.getId())
+                .startDate(financialPeriod.getStartDate())
                 .endDate(financialPeriod.getEndDate()).openMonthCount(financialPeriod.getOpenMonthCount())
                 .statusId(financialPeriod.getFinancialPeriodStatus().getId())
                 .statusName(financialPeriod.getFinancialPeriodStatus().getName())
