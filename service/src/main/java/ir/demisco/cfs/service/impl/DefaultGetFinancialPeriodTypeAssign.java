@@ -6,6 +6,7 @@ import ir.demisco.cfs.service.api.FinancialPeriodTypeAssignService;
 import ir.demisco.cfs.service.repository.FinancialPeriodTypeAssignRepository;
 import ir.demisco.cfs.service.repository.FinancialPeriodTypeRepository;
 import ir.demisco.cfs.service.repository.OrganizationRepository;
+import ir.demisco.cloud.core.security.util.SecurityHelper;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
@@ -39,13 +40,14 @@ public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeA
 
     @Override
     public Long save(FinancialPeriodTypeAssignDto financialPeriodTypeAssignDto) {
-        FinancialPeriodTypeAssign periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(8L).orElse(new FinancialPeriodTypeAssign());
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        FinancialPeriodTypeAssign periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(organizationId).orElse(new FinancialPeriodTypeAssign());
         if (periodTypeAssign.getId() != null) {
             periodTypeAssign.setActiveFlag(0L);
             financialPeriodTypeAssignRepository.save(periodTypeAssign);
         }
         FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.findById(financialPeriodTypeAssignDto.getId() == null ? 0L : financialPeriodTypeAssignDto.getId()).orElse(new FinancialPeriodTypeAssign());
-        financialPeriodTypeAssign.setOrganization(organizationRepository.getOne(8L));
+        financialPeriodTypeAssign.setOrganization(organizationRepository.getOne(organizationId));
         financialPeriodTypeAssign.setFinancialPeriodType(financialPeriodTypeRepository.getOne(financialPeriodTypeAssignDto.getFinancialPeriodTypeId()));
         financialPeriodTypeAssign.setActiveFlag(1L);
         financialPeriodTypeAssign.setStartDate(financialPeriodTypeAssignDto.getStartDate());

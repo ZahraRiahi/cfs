@@ -2,6 +2,7 @@ package ir.demisco.cfs.app.web.controller;
 
 import ir.demisco.cfs.model.dto.response.FinancialPeriodTypeAssignDto;
 import ir.demisco.cfs.service.api.FinancialPeriodTypeAssignService;
+import ir.demisco.cloud.core.security.util.SecurityHelper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,8 @@ public class FinancialPeriodTypeAssignController {
     }
     @GetMapping("/list")
     public ResponseEntity<List<FinancialPeriodTypeAssignDto>> responseEntity() {
-        return ResponseEntity.ok(financialPeriodTypeAssignService.getFinancialPeriodTypeAssignByOrganizationId(8L));
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        return ResponseEntity.ok(financialPeriodTypeAssignService.getFinancialPeriodTypeAssignByOrganizationId(organizationId));
     }
 
     @PostMapping("/save")

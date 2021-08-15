@@ -12,6 +12,7 @@ import ir.demisco.cloud.core.middle.exception.RuleException;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceResult;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridFilterService;
+import ir.demisco.cloud.core.security.util.SecurityHelper;
 import ir.demisco.core.utils.DateUtil;
 import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
@@ -69,8 +70,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     @Transactional(rollbackOn = Throwable.class)
     public Long save(FinancialPeriodDto financialPeriodDto) {
         validationSave(financialPeriodDto);
-        //        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        Long organizationId=8L;
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId() == null ? 0L : financialPeriodDto.getId()).orElse(new FinancialPeriod());
         financialPeriod.setEndDate(financialPeriodDto.getEndDate().truncatedTo(ChronoUnit.DAYS));
         financialPeriod.setStartDate(financialPeriodDto.getStartDate().truncatedTo(ChronoUnit.DAYS));
@@ -126,11 +126,12 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     }
 
     private void validationUpdate(FinancialPeriodDto financialPeriodDto, String mode) {
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         FinancialPeriod financialPeriod=financialPeriodRepository.findById(financialPeriodDto.getId()).orElseThrow(() -> new RuleException("هیچ دوره ی مالی یافت نشد."));
         if (financialPeriodDto.getId() == null && mode.equals("start")) {
             throw new RuleException("برای انجام عملیات ویرایش شناسه ی دوره ی مالی الزامی میباشد.");
         }
-        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(8L, "OPEN");
+        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN");
         if (period.size() >= 3 && mode.equals("end")) {
             throw new RuleException("برای هر سازمان بیش از 2 دوره مالی باز وجود ندارد.");
         } else if (period.size() > 2 && mode.equals("change")) {
@@ -145,9 +146,9 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     }
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
-//        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(8L, "OPEN");
-        List<FinancialPeriod> periodStartDate = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(8L);
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN");
+        List<FinancialPeriod> periodStartDate = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(organizationId);
         if (period.size() >= 2) {
             throw new RuleException("برای هر سازمان بیش از 2 دوره مالی باز نمی توان ایجاد کرد");
         } else if (periodStartDate.size() > 0 ){
@@ -156,7 +157,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 //            financialPeriodDto.setStartDate(periodStartDate.get(0).getEndDate().plusDays(1));
 //            financialPeriodDto.setEndDate(financialPeriodDto.getStartDate().plusYears(1).minusMonths(1).minusDays(1));
         } else{
-            FinancialPeriodTypeAssign  financialPeriodTypeAssign=financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(8L).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی وجود ندارد."));
+            FinancialPeriodTypeAssign  financialPeriodTypeAssign=financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(organizationId).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی وجود ندارد."));
 //            financialPeriodDto.setStartDate(DateUtil.jalaliToGregorian(DateUtil.gregorianToJalali
 //                    (DateUtil.convertStringToDate(LocalDateTime.now().toString().substring(0, 10).replace("-", "/"))).substring(0, 4) + "/01/01")
 //                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
