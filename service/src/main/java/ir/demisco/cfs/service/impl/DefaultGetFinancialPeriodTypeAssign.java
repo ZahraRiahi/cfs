@@ -1,6 +1,7 @@
 package ir.demisco.cfs.service.impl;
 
 import ir.demisco.cfs.model.dto.response.FinancialPeriodTypeAssignDto;
+import ir.demisco.cfs.model.dto.response.FinancialPeriodTypeAssignSaveDto;
 import ir.demisco.cfs.model.entity.FinancialPeriodTypeAssign;
 import ir.demisco.cfs.service.api.FinancialPeriodTypeAssignService;
 import ir.demisco.cfs.service.repository.FinancialPeriodTypeAssignRepository;
@@ -39,7 +40,7 @@ public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeA
     }
 
     @Override
-    public Long save(FinancialPeriodTypeAssignDto financialPeriodTypeAssignDto) {
+    public FinancialPeriodTypeAssignSaveDto save(FinancialPeriodTypeAssignDto financialPeriodTypeAssignDto) {
         Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         FinancialPeriodTypeAssign periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(organizationId).orElse(new FinancialPeriodTypeAssign());
         if (periodTypeAssign.getId() != null) {
@@ -51,7 +52,18 @@ public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeA
         financialPeriodTypeAssign.setFinancialPeriodType(financialPeriodTypeRepository.getOne(financialPeriodTypeAssignDto.getFinancialPeriodTypeId()));
         financialPeriodTypeAssign.setActiveFlag(1L);
         financialPeriodTypeAssign.setStartDate(financialPeriodTypeAssignDto.getStartDate());
-        return financialPeriodTypeAssignRepository.save(financialPeriodTypeAssign).getId();
+        financialPeriodTypeAssign=financialPeriodTypeAssignRepository.save(financialPeriodTypeAssign);
+        return  convertFinancialPeriodTypeAssignToDto(financialPeriodTypeAssign);
+    }
+
+    private FinancialPeriodTypeAssignSaveDto convertFinancialPeriodTypeAssignToDto(FinancialPeriodTypeAssign financialPeriodTypeAssign) {
+        return FinancialPeriodTypeAssignSaveDto.builder()
+                .id(financialPeriodTypeAssign.getId())
+                .financialPeriodTypeId(financialPeriodTypeAssign.getFinancialPeriodType().getId())
+                .organizationId(financialPeriodTypeAssign.getOrganization().getId())
+                .activeFlag(financialPeriodTypeAssign.getActiveFlag())
+                .startDate(financialPeriodTypeAssign.getStartDate())
+                .build();
     }
 
 }
