@@ -4,7 +4,9 @@ import ir.demisco.cfs.model.entity.FinancialPeriod;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod, Long> {
@@ -32,5 +34,43 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "      from FinancialPeriodTypeAssign fpt" +
             "     where fpt.organization.id =:organizationId  And fpt.activeFlag=1 " +
             "     and fpt.deletedDat is null)")
-    List<FinancialPeriod>  findActiveFinancialPeriod(Long organizationId);
-    }
+    List<FinancialPeriod> findActiveFinancialPeriod(Long organizationId);
+
+    @Query(value = "select" +
+            "        fp.id," +
+            "        ' دوره مالی از ' || case          " +
+            "            when fpty.calendar_type_id = 1 then           TO_CHAR(TO_DATE(TO_char(fp.start_date," +
+            "            'mm/dd/yyyy')," +
+            "            'mm/dd/yyyy')," +
+            "            'yyyy/mm/dd'," +
+            "            'NLS_CALENDAR=persian') || ' تا ' ||          TO_CHAR(TO_DATE(TO_char(fp.end_date," +
+            "            'mm/dd/yyyy')," +
+            "            'mm/dd/yyyy')," +
+            "            'yyyy/mm/dd'," +
+            "            'NLS_CALENDAR=persian')         " +
+            "            when fpty.calendar_type_id = 2 then          TO_CHAR(TO_DATE(TO_char(fp.start_date," +
+            "            'mm/dd/yyyy')," +
+            "            'mm/dd/yyyy')," +
+            "            'yyyy/mm/dd') || ' تا ' ||          TO_CHAR(TO_DATE(TO_char(fp.end_date," +
+            "            'mm/dd/yyyy')," +
+            "            'mm/dd/yyyy')," +
+            "            'yyyy/mm/dd')            " +
+            "        end description   " +
+            "    from" +
+            "        fnpr.financial_period fp " +
+            "    inner join" +
+            "        fnpr.financial_period_type_assign fpt    " +
+            "            on fp.finan_period_type_assign_id = fpt.id   " +
+            "            and fpt.organization_id = :organizationId " +
+            "            and fpt.deleted_date is null   " +
+            "            and fpt.active_flag = 1 " +
+            "    inner join" +
+            "        fnpr.financial_period_type fpty    " +
+            "            on fpt.financial_period_type_id = fpty.id " +
+            "    where" +
+            "        fp.financial_period_status_id = 1   " +
+            "        and to_date(:localDate, 'yyyy-mm-dd') between fp.start_date and fp.end_date   " +
+            "        and fp.deleted_date is null "
+            , nativeQuery = true)
+    List<Object[]> findByFinancialPeriodAndDate(String localDate,Long organizationId);
+}
