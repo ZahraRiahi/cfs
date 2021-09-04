@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -16,6 +17,7 @@ public class FinancialPeriodType extends AuditModel<Long> {
     private Long fromMonth;
     private Long toMonth;
     private Long calendarTypeId;
+    private LocalDateTime deletedDat;
 
     @Id
     public Long getId() {
@@ -59,5 +61,14 @@ public class FinancialPeriodType extends AuditModel<Long> {
 
     public void setCalendarTypeId(Long calendarTypeId) {
         this.calendarTypeId = calendarTypeId;
+    }
+
+    @Column(name = "DELETED_DATE")
+    public LocalDateTime getDeletedDat() {
+        return deletedDat;
+    }
+
+    public void setDeletedDat(LocalDateTime deletedDat) {
+        this.deletedDat = deletedDat;
     }
 }
