@@ -79,8 +79,10 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod.setEndDate(financialPeriodDto.getEndDate().truncatedTo(ChronoUnit.DAYS));
         financialPeriod.setStartDate(financialPeriodDto.getStartDate().truncatedTo(ChronoUnit.DAYS));
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
-        financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(1L));
+        financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(organizationId));
         financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
+        financialPeriod.setDescription(financialPeriodDto.getDescription());
+        financialPeriod.setCode(financialPeriodDto.getCode());
         financialPeriod = financialPeriodRepository.save(financialPeriod);
         List<Object[]> list = financialMonthTypeRepository.findByParam(organizationId, financialPeriod.getId());
         FinancialPeriod finalFinancialPeriod = financialPeriod;
@@ -124,6 +126,8 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod.setEndDate(financialPeriodDto.getEndDate());
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
         financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getStatusId()));
+        financialPeriod.setDescription(financialPeriodDto.getDescription());
+        financialPeriod.setCode(financialPeriodDto.getCode());
         financialPeriod = financialPeriodRepository.save(financialPeriod);
         validationUpdate(financialPeriodDto, "end");
         return convertFinancialPeriodToDto(financialPeriod);
@@ -224,6 +228,9 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
                 .endDate(financialPeriod.getEndDate()).openMonthCount(financialPeriod.getOpenMonthCount())
                 .statusId(financialPeriod.getFinancialPeriodStatus().getId())
                 .statusName(financialPeriod.getFinancialPeriodStatus().getName())
+                .statusCode(financialPeriod.getFinancialPeriodStatus().getCode())
+                .description(financialPeriod.getDescription())
+                .code(financialPeriod.getCode())
                 .build();
     }
 }

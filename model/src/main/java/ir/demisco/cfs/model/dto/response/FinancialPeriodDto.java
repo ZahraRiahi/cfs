@@ -12,6 +12,8 @@ public class FinancialPeriodDto {
     private Long statusId;
     private String statusCode;
     private String statusName;
+    private String description;
+    private String code;
 
     public Long getId() {
         return id;
@@ -67,6 +69,22 @@ public class FinancialPeriodDto {
 
     public void setStatusName(String statusName) {
         this.statusName = statusName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public static Builder builder() {
@@ -130,6 +148,14 @@ public class FinancialPeriodDto {
 
         public Builder statusName(String statusName) {
             financialPeriodDto.setStatusName(statusName);
+            return this;
+        }
+        public Builder description(String description) {
+            financialPeriodDto.setDescription(description);
+            return this;
+        }
+        public Builder code(String code) {
+            financialPeriodDto.setCode(code);
             return this;
         }
 
