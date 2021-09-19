@@ -1,6 +1,7 @@
 package ir.demisco.cfs.model.entity;
 
 import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
@@ -14,6 +15,8 @@ public class FinancialPeriod extends AuditModel<Long> {
     private Long openMonthCount;
     private FinancialPeriodStatus financialPeriodStatus;
     private FinancialPeriodTypeAssign financialPeriodTypeAssign;
+    private String description;
+    private String code;
     private LocalDateTime deletedDat;
 
     @Id
@@ -74,6 +77,24 @@ public class FinancialPeriod extends AuditModel<Long> {
 
     public void setFinancialPeriodTypeAssign(FinancialPeriodTypeAssign financialPeriodTypeAssign) {
         this.financialPeriodTypeAssign = financialPeriodTypeAssign;
+    }
+
+    @Column(name = "DESCRIPTION")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Column(name = "CODE")
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     @Column(name = "DELETED_DATE")

@@ -4,6 +4,7 @@ import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
 import ir.demisco.cfs.model.entity.FinancialPeriod;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridDataProvider;
 import org.springframework.stereotype.Component;
+
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
@@ -41,7 +42,11 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
                 filterContext.getPath("openMonthCount"),
                 filterContext.getPath("financialPeriodStatus.id"),
                 filterContext.getPath("financialPeriodStatus.name"),
-                filterContext.getPath("financialPeriodTypeAssign.id")
+                filterContext.getPath("financialPeriodStatus.code"),
+                filterContext.getPath("financialPeriodTypeAssign.id"),
+                filterContext.getPath("description"),
+                filterContext.getPath("code")
+
         );
     }
 
@@ -58,7 +63,10 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
                     .openMonthCount((Long) array[3])
                     .statusId((Long) array[4])
                     .statusName((String) array[5])
-                    .financialPeriodTypeAssignId((Long) array[6])
+                    .statusCode((String) array[6])
+                    .financialPeriodTypeAssignId((Long) array[7])
+                    .description((String) array[8])
+                    .code((String) array[9])
                     .build();
         }).collect(Collectors.toList());
     }
