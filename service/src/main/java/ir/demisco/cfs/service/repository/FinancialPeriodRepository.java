@@ -36,27 +36,24 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "     and fpt.deletedDat is null)")
     List<FinancialPeriod> findActiveFinancialPeriod(Long organizationId);
 
-    @Query(value = "select" +
-            "        fp.id," +
-            "        ' دوره مالی از ' || case          " +
-            "            when fpty.calendar_type_id = 1 then           TO_CHAR(TO_DATE(TO_char(fp.start_date," +
-            "            'mm/dd/yyyy')," +
-            "            'mm/dd/yyyy')," +
-            "            'yyyy/mm/dd'," +
-            "            'NLS_CALENDAR=persian') || ' تا ' ||          TO_CHAR(TO_DATE(TO_char(fp.end_date," +
-            "            'mm/dd/yyyy')," +
-            "            'mm/dd/yyyy')," +
-            "            'yyyy/mm/dd'," +
-            "            'NLS_CALENDAR=persian')         " +
-            "            when fpty.calendar_type_id = 2 then          TO_CHAR(TO_DATE(TO_char(fp.start_date," +
-            "            'mm/dd/yyyy')," +
-            "            'mm/dd/yyyy')," +
-            "            'yyyy/mm/dd') || ' تا ' ||          TO_CHAR(TO_DATE(TO_char(fp.end_date," +
-            "            'mm/dd/yyyy')," +
-            "            'mm/dd/yyyy')," +
-            "            'yyyy/mm/dd')            " +
-            "        end description   " +
-            "    from" +
+    @Query(value = "select fp.id, " +
+            "       ' دوره مالی از ' || case" +
+            "         when fpty.calendar_type_id = 1 then " +
+            "          TO_CHAR(TO_DATE(TO_char(fp.start_date, 'mm/dd/yyyy'), 'mm/dd/yyyy'), " +
+            "                  'yyyy/mm/dd',\n" +
+            "                  'NLS_CALENDAR=persian') || ' تا ' || " +
+            "          TO_CHAR(TO_DATE(TO_char(fp.end_date, 'mm/dd/yyyy'), 'mm/dd/yyyy'), " +
+            "                  'yyyy/mm/dd',\n" +
+            "                  'NLS_CALENDAR=persian') " +
+            "         when fpty.calendar_type_id = 2 then " +
+            "          TO_CHAR(TO_DATE(TO_char(fp.start_date, 'mm/dd/yyyy'), 'mm/dd/yyyy'), " +
+            "                  'yyyy/mm/dd') || ' تا ' || " +
+            "          TO_CHAR(TO_DATE(TO_char(fp.end_date, 'mm/dd/yyyy'), 'mm/dd/yyyy'), " +
+            "                  'yyyy/mm/dd') " +
+            "       end Full_description , " +
+            "       fp.description , " +
+            "       fp.code  " +
+            "    from " +
             "        fnpr.financial_period fp " +
             "    inner join" +
             "        fnpr.financial_period_type_assign fpt    " +
@@ -67,10 +64,10 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "    inner join" +
             "        fnpr.financial_period_type fpty    " +
             "            on fpt.financial_period_type_id = fpty.id " +
-            "    where" +
+            "    where " +
             "        fp.financial_period_status_id = 1   " +
             "        and to_date(:localDate, 'yyyy-mm-dd') between fp.start_date and fp.end_date   " +
             "        and fp.deleted_date is null "
             , nativeQuery = true)
-    List<Object[]> findByFinancialPeriodAndDate(String localDate,Long organizationId);
+    List<Object[]> findByFinancialPeriodAndDate(String localDate, Long organizationId);
 }
