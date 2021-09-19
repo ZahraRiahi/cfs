@@ -16,7 +16,6 @@ import ir.demisco.cloud.core.middle.model.dto.DataSourceResult;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridFilterService;
 import ir.demisco.cloud.core.security.util.SecurityHelper;
 import ir.demisco.core.utils.DateUtil;
-import ir.demisco.core.utils.StringUtils;
 import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
 
