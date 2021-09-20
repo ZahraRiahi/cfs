@@ -2,8 +2,10 @@ package ir.demisco.cfs.service.impl;
 
 import ir.demisco.cfs.model.dto.response.FinancialPeriodParameterDto;
 import ir.demisco.cfs.model.entity.FinancialPeriodParameter;
+import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridDataProvider;
 import org.springframework.stereotype.Component;
+
 import javax.persistence.criteria.*;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +42,7 @@ public class FinancialPeriodParameterListGridProvider implements GridDataProvide
             return FinancialPeriodParameterDto.builder()
                     .id((Long) array[0])
                     .financialPeriodId((Long) array[1])
-                    .startDate((Date)array[2])
+                    .startDate((Date) array[2])
                     .taxDeductionRate((Long) array[3])
                     .vatTaxRate((Long) array[4])
                     .vatTollRate((Long) array[5])

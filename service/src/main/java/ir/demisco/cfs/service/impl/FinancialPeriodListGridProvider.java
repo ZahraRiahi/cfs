@@ -2,6 +2,7 @@ package ir.demisco.cfs.service.impl;
 
 import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
 import ir.demisco.cfs.model.entity.FinancialPeriod;
+import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridDataProvider;
 import org.springframework.stereotype.Component;
 
@@ -25,11 +26,6 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
     @Override
     public List<Order> getCustomSort(FilterContext filterContext) {
         return Collections.singletonList(filterContext.getCriteriaBuilder().desc(filterContext.getPath("startDate")));
-    }
-
-    @Override
-    public Predicate getCustomRestriction(FilterContext filterContext) {
-        return null;
     }
 
     @Override
@@ -71,4 +67,22 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public Predicate getCustomRestriction(FilterContext filterContext) {
+        DataSourceRequest dataSourceRequest = filterContext.getDataSourceRequest();
+        boolean flagSearch = false;
+        for (DataSourceRequest.FilterDescriptor filter : dataSourceRequest.getFilter().getFilters()) {
+            if ("SEARCH_STATUS_FLAG".equals(filter.getField())) {
+                filter.setDisable(true);
+                if (filter.getValue() instanceof Integer) {
+                    flagSearch = (int) filter.getValue() == 1;
+                }
+            }
+        }
+        if (flagSearch){
+            dataSourceRequest.getFilter().getFilters().add(DataSourceRequest
+                    .FilterDescriptor.create("financialPeriodStatus.id", 1L, DataSourceRequest.Operators.EQUALS));
+        }
+        return null;
+    }
 }
