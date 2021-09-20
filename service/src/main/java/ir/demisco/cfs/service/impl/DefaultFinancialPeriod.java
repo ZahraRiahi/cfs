@@ -209,7 +209,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     @Override
     @Transactional(rollbackOn = Throwable.class)
     public List<FinancialPeriodResponse> getFinancialAccountByDateAndOrgan(FinancialPeriodRequest financialPeriodRequest, Long organizationId) {
-        List<Object[]> financialPeriodListObject = financialPeriodRepository.findByFinancialPeriodAndDate(financialPeriodRequest.getDate().toString(),organizationId);
+        List<Object[]> financialPeriodListObject = financialPeriodRepository.findByFinancialPeriodAndDate(financialPeriodRequest.getDate().toString(), organizationId);
         return financialPeriodListObject.stream().map(objects -> FinancialPeriodResponse.builder().id(Long.parseLong(objects[0].toString()))
                 .description(objects[2] == null ? null : objects[2].toString())
                 .code(objects[3] == null ? null : objects[3].toString())
