@@ -17,7 +17,7 @@ public class FinancialPeriodType extends AuditModel<Long> {
     private Long fromMonth;
     private Long toMonth;
     private Long calendarTypeId;
-    private LocalDateTime deletedDat;
+    private LocalDateTime deletedDate;
 
     @Id
     public Long getId() {
@@ -64,11 +64,11 @@ public class FinancialPeriodType extends AuditModel<Long> {
     }
 
     @Column(name = "DELETED_DATE")
-    public LocalDateTime getDeletedDat() {
-        return deletedDat;
+    public LocalDateTime getDeletedDate() {
+        return deletedDate;
     }
 
-    public void setDeletedDat(LocalDateTime deletedDat) {
-        this.deletedDat = deletedDat;
+    public void setDeletedDate(LocalDateTime deletedDate) {
+        this.deletedDate = deletedDate;
     }
 }

@@ -1,5 +1,6 @@
 package ir.demisco.cfs.model.dto.response;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class FinancialPeriodDto {
@@ -14,6 +15,16 @@ public class FinancialPeriodDto {
     private String statusName;
     private String description;
     private String code;
+
+    private LocalDate endDate2;
+
+    public LocalDate getEndDate2() {
+        return endDate2;
+    }
+
+    public void setEndDate2(LocalDate endDate2) {
+        this.endDate2 = endDate2;
+    }
 
     public Long getId() {
         return id;

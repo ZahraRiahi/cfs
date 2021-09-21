@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FinancialPeriodTypeAssignRepository extends JpaRepository<FinancialPeriodTypeAssign, Long> {
-    @Query("select fpta from FinancialPeriodTypeAssign fpta where fpta.organization.id=:organizationId and fpta.deletedDat is null")
+    @Query("select fpta from FinancialPeriodTypeAssign fpta where fpta.organization.id=:organizationId and fpta.deletedDate is null")
     List<FinancialPeriodTypeAssign> findByOrganizationId(Long organizationId);
 
     @Query("select fpa from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId ")
@@ -45,4 +45,7 @@ public interface FinancialPeriodTypeAssignRepository extends JpaRepository<Finan
             "           And ta.active_flag = 1 " +
             "         group by calendar_type_id, ta.start_date)" , nativeQuery = true)
     List<Object[]> getStartDateAndEndDate(Long organizationId);
+
+    @Query("select fpa from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId and fpa.deletedDate is null ")
+    Optional<FinancialPeriodTypeAssign> getFinancialPeriodTypeAssignIdAndOrgan(Long organizationId);
 }

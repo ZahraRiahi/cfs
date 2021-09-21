@@ -20,6 +20,7 @@ import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -73,19 +74,27 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     @Transactional(rollbackOn = Throwable.class)
     public Long save(FinancialPeriodDto financialPeriodDto) {
         validationSave(financialPeriodDto);
-        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        Long organizationId = 100L;
+//        SecurityHelper.getCurrentUser().getOrganizationId();
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId() == null ? 0L : financialPeriodDto.getId()).orElse(new FinancialPeriod());
         financialPeriod.setEndDate(financialPeriodDto.getEndDate().truncatedTo(ChronoUnit.DAYS));
         financialPeriod.setStartDate(financialPeriodDto.getStartDate().truncatedTo(ChronoUnit.DAYS));
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
-        financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(organizationId));
-        financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
-        financialPeriod.setDescription(financialPeriodDto.getDescription());
-        financialPeriod.setCode(financialPeriodDto.getCode());
+        financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(1L));
+
+        FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignIdAndOrgan(organizationId).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی فعال وجود ندارد."));
+//        financialPeriodDto.setFinancialPeriodTypeAssignId(financialPeriodTypeAssign.getId());
+
+        financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssign);
+
+        financialPeriod.setCode(financialPeriodRepository.getCodeFinancialPeriod(organizationId));
+        financialPeriod.setDescription(financialPeriodRepository.getDescriptionFinancialPeriod(financialPeriodDto.getEndDate().toString().split("T")[0]));
+
+
         financialPeriod = financialPeriodRepository.save(financialPeriod);
         List<Object[]> list = financialMonthTypeRepository.findByParam(organizationId, financialPeriod.getId());
         FinancialPeriod finalFinancialPeriod = financialPeriod;
-        list.stream().forEach(item -> {
+        list.forEach(item -> {
             FinancialMonth financialMonth = new FinancialMonth();
             financialMonth.setFinancialPeriod(finalFinancialPeriod);
             financialMonth.setFinancialMonthType(financialMonthTypeRepository.getOne(Long.parseLong(item[0].toString())));
@@ -96,7 +105,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
             financialMonthRepository.save(financialMonth);
         });
         List<Object[]> periodParameters = periodParameterRepository.getPeriodParameterByPeriodId(organizationId, finalFinancialPeriod.getId());
-        periodParameters.stream().forEach(objects -> {
+        periodParameters.forEach(objects -> {
             FinancialPeriodParameter financialPeriodParameter = new FinancialPeriodParameter();
             financialPeriodParameter.setFinancialPeriod(finalFinancialPeriod);
             financialPeriodParameter.setStartDate((Date) objects[1]);
@@ -153,7 +162,8 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     }
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
-        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        Long organizationId = 100L;
+        SecurityHelper.getCurrentUser().getOrganizationId();
         List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN");
         List<FinancialPeriod> periodStartDate = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(organizationId);
         if (period.size() >= 2) {
