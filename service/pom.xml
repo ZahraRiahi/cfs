@@ -13,8 +13,8 @@
 
     <dependencies>
         <dependency>
-            <artifactId>model</artifactId>
             <groupId>ir.demisco.cfs</groupId>
+            <artifactId>model</artifactId>
             <version>1.0.0</version>
         </dependency>
 
@@ -32,6 +32,10 @@
         <dependency>
             <groupId>ir.demisco.cloud.core</groupId>
             <artifactId>dms-data-grid</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ir.demisco.cloud.core</groupId>
+            <artifactId>dms-resource-security</artifactId>
         </dependency>
     </dependencies>
 

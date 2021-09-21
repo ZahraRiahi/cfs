@@ -1,0 +1,80 @@
+package ir.demisco.cfs.model.entity;
+
+import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
+import ir.demisco.cloud.basic.model.entity.org.Organization;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.Date;
+
+@Entity
+@Table(name = "financial_period_type_assign", schema = "fnpr")
+public class FinancialPeriodTypeAssign extends AuditModel<Long> {
+
+    private Long id;
+    private Organization organization;
+    private FinancialPeriodType financialPeriodType;
+    private Long activeFlag;
+    private LocalDateTime startDate;
+    private LocalDateTime deletedDat;
+
+    @Id
+    @SequenceGenerator(schema = "fnpr", name = "financial_period_type_assign_generator", sequenceName = "sq_financial_period_type_assign", allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_period_type_assign_generator")
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FINANCIAL_PERIOD_TYPE_ID")
+    public FinancialPeriodType getFinancialPeriodType() {
+        return financialPeriodType;
+    }
+
+    public void setFinancialPeriodType(FinancialPeriodType financialPeriodType) {
+        this.financialPeriodType = financialPeriodType;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ORGANIZATION_ID")
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
+
+    @Column(name = "ACTIVE_FLAG")
+    public Long getActiveFlag() {
+        return activeFlag;
+    }
+
+    public void setActiveFlag(Long activeFlag) {
+        this.activeFlag = activeFlag;
+    }
+
+
+    @Column(name = "START_DATE")
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+
+    @Column(name = "DELETED_DATE")
+    public LocalDateTime getDeletedDat() {
+        return deletedDat;
+    }
+
+    public void setDeletedDat(LocalDateTime deletedDat) {
+        this.deletedDat = deletedDat;
+    }
+}
