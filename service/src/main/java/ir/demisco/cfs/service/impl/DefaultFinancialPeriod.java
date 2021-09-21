@@ -83,10 +83,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(1L));
 
         FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignIdAndOrgan(organizationId).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی فعال وجود ندارد."));
-//        financialPeriodDto.setFinancialPeriodTypeAssignId(financialPeriodTypeAssign.getId());
-
         financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssign);
-
         financialPeriod.setCode(financialPeriodRepository.getCodeFinancialPeriod(organizationId));
         financialPeriod.setDescription(financialPeriodRepository.getDescriptionFinancialPeriod(financialPeriodDto.getEndDate().toString().split("T")[0]));
 
