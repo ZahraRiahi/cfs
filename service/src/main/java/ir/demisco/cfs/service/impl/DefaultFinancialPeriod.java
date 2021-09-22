@@ -69,7 +69,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         dataSourceRequest.getFilter().setLogic("and");
         dataSourceRequest.getFilter().getFilters().add(DataSourceRequest
                 .FilterDescriptor.create("financialPeriodTypeAssign.organization.id", organizationId, DataSourceRequest.Operators.EQUALS));
-        dataSourceRequest.getFilter().getFilters().add(DataSourceRequest.FilterDescriptor.create("deletedDate",null,DataSourceRequest.Operators.IS_NULL));
+        dataSourceRequest.getFilter().getFilters().add(DataSourceRequest.FilterDescriptor.create("deletedDate", null, DataSourceRequest.Operators.IS_NULL));
         return gridFilterService.filter(dataSourceRequest, financialPeriodListGridProvider);
     }
 
@@ -174,18 +174,10 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         if (period.size() >= 2) {
             throw new RuleException("برای هر سازمان بیش از 2 دوره مالی باز نمی توان ایجاد کرد");
         } else if (periodStartDate.size() > 0) {
-//            financialPeriodDto.setFinancialPeriodTypeAssignId(period.get(0).getFinancialPeriodTypeAssign().getId());
             financialPeriodDto.setFinancialPeriodTypeAssignId(periodStartDate.get(0).getFinancialPeriodTypeAssign().getId());
-//            financialPeriodDto.setStartDate(periodStartDate.get(0).getEndDate().plusDays(1));
-//            financialPeriodDto.setEndDate(financialPeriodDto.getStartDate().plusYears(1).minusMonths(1).minusDays(1));
         } else {
             FinancialPeriodTypeAssign financialPeriodTypeAssign =
                     financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(organizationId).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی وجود ندارد."));
-//            financialPeriodDto.setStartDate(DateUtil.jalaliToGregorian(DateUtil.gregorianToJalali
-//                    (DateUtil.convertStringToDate(LocalDateTime.now().toString().substring(0, 10).replace("-", "/"))).substring(0, 4) + "/01/01")
-//                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-//            financialPeriodDto.setStartDate(financialPeriodTypeAssign.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
-//            financialPeriodDto.setEndDate(financialPeriodDto.getStartDate().plusYears(1).minusMonths(1).minusDays(1));
             financialPeriodDto.setFinancialPeriodTypeAssignId(financialPeriodTypeAssign.getId());
         }
         if (!String.valueOf(financialPeriodDto.getOpenMonthCount()).matches("1[0-2]|[1-9]")) {
@@ -204,11 +196,29 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     @Transactional(rollbackOn = Throwable.class)
     public FinancialPeriodDto changeStatusFinancialPeriodById(FinancialPeriodDto financialPeriodDto) {
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId()).orElseThrow(() -> new RuleException("هیچ دوره ی مالی یافت نشد."));
+        validationBeforeChangeStatus(financialPeriod.getId(), financialPeriodDto);
         financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getStatusId()));
         financialPeriodRepository.save(financialPeriod);
         FinancialPeriodDto financialPeriodDto1 = convertFinancialPeriodToDto(financialPeriod);
         validationUpdate(financialPeriodDto1, "change");
         return financialPeriodDto1;
+    }
+
+    private void validationBeforeChangeStatus(Long financialPeriodId, FinancialPeriodDto financialPeriodDto) {
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        if (financialPeriodDto.getStatusId() == 2) {
+            Long existOpen = financialPeriodRepository.checkFinancialStatusIdIsOpen(financialPeriodId, 100L);
+            if (existOpen != null && existOpen == 1) {
+                throw new RuleException("به دلیل باز بودن دوره مالی قبلی ، امکان بستن این دوره مالی وجود ندارد");
+            }
+        } else if (financialPeriodDto.getStatusId() == 1) {
+            Long exitClose = financialPeriodRepository.checkFinancialStatusIdIsClose(financialPeriodId, 100L);
+            if(exitClose  != null && exitClose==1){
+                throw new RuleException("به دلیل وجود دوره مالی بسته ، بعد از این دوره مالی ، امکان باز کردن این دوره مالی وجود ندارد’");
+
+            }
+        }
+
     }
 
     @Override
