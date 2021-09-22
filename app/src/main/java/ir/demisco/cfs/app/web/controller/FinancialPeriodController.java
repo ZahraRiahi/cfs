@@ -32,9 +32,8 @@ public class FinancialPeriodController {
     @PostMapping("/save")
     public ResponseEntity<FinancialPeriodDto> saveFinancialPeriod(@RequestBody FinancialPeriodDto financialPeriodDto) {
         if (financialPeriodDto.getId() == null) {
-            Long aLong = financialPeriodService.save(financialPeriodDto);
-            financialPeriodDto.setId(aLong);
-            return ResponseEntity.ok(financialPeriodDto);
+            FinancialPeriodDto financialPeriodDtoRes= financialPeriodService.save(financialPeriodDto);
+            return ResponseEntity.ok(financialPeriodDtoRes);
         } else {
             return ResponseEntity.ok(financialPeriodService.update(financialPeriodDto));
         }
