@@ -77,8 +77,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     @Transactional(rollbackOn = Throwable.class)
     public FinancialPeriodDto save(FinancialPeriodDto financialPeriodDto) {
         validationSave(financialPeriodDto);
-        Long organizationId = 100L;
-//        SecurityHelper.getCurrentUser().getOrganizationId();
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId() == null ? 0L : financialPeriodDto.getId()).orElse(new FinancialPeriod());
         financialPeriod.setEndDate(financialPeriodDto.getEndDate().truncatedTo(ChronoUnit.DAYS));
         financialPeriod.setStartDate(financialPeriodDto.getStartDate().truncatedTo(ChronoUnit.DAYS));
@@ -134,7 +133,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod.setEndDate(financialPeriodDto.getEndDate());
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
         financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getStatusId()));
-        Long organizationId = 100L;
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         financialPeriod.setCode(financialPeriodRepository.getCodeFinancialPeriod(organizationId));
         financialPeriod.setDescription(financialPeriodRepository.getDescriptionFinancialPeriod(financialPeriodDto.getEndDate().toString().split("T")[0]));
         financialPeriod = financialPeriodRepository.save(financialPeriod);
@@ -167,7 +166,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
-        Long organizationId = 100L;
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         SecurityHelper.getCurrentUser().getOrganizationId();
         List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN");
         List<FinancialPeriod> periodStartDate = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(organizationId);
@@ -207,12 +206,12 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     private void validationBeforeChangeStatus(Long financialPeriodId, FinancialPeriodDto financialPeriodDto) {
         Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         if (financialPeriodDto.getStatusId() == 2) {
-            Long existOpen = financialPeriodRepository.checkFinancialStatusIdIsOpen(financialPeriodId, 100L);
+            Long existOpen = financialPeriodRepository.checkFinancialStatusIdIsOpen(financialPeriodId, organizationId);
             if (existOpen != null && existOpen == 1) {
                 throw new RuleException("به دلیل باز بودن دوره مالی قبلی ، امکان بستن این دوره مالی وجود ندارد");
             }
         } else if (financialPeriodDto.getStatusId() == 1) {
-            Long exitClose = financialPeriodRepository.checkFinancialStatusIdIsClose(financialPeriodId, 100L);
+            Long exitClose = financialPeriodRepository.checkFinancialStatusIdIsClose(financialPeriodId, organizationId);
             if(exitClose  != null && exitClose==1){
                 throw new RuleException("به دلیل وجود دوره مالی بسته ، بعد از این دوره مالی ، امکان باز کردن این دوره مالی وجود ندارد’");
 
