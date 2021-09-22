@@ -69,6 +69,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         dataSourceRequest.getFilter().setLogic("and");
         dataSourceRequest.getFilter().getFilters().add(DataSourceRequest
                 .FilterDescriptor.create("financialPeriodTypeAssign.organization.id", organizationId, DataSourceRequest.Operators.EQUALS));
+        dataSourceRequest.getFilter().getFilters().add(DataSourceRequest.FilterDescriptor.create("deletedDate",null,DataSourceRequest.Operators.IS_NULL));
         return gridFilterService.filter(dataSourceRequest, financialPeriodListGridProvider);
     }
 
@@ -90,6 +91,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod.setDescription(financialPeriodRepository.getDescriptionFinancialPeriod(financialPeriodDto.getEndDate().toString().split("T")[0]));
 
         financialPeriod = financialPeriodRepository.save(financialPeriod);
+
         List<Object[]> list = financialMonthTypeRepository.findByParam(organizationId, financialPeriod.getId());
         FinancialPeriod finalFinancialPeriod = financialPeriod;
         list.forEach(item -> {
