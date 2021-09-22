@@ -89,7 +89,6 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod.setCode(financialPeriodRepository.getCodeFinancialPeriod(organizationId));
         financialPeriod.setDescription(financialPeriodRepository.getDescriptionFinancialPeriod(financialPeriodDto.getEndDate().toString().split("T")[0]));
 
-
         financialPeriod = financialPeriodRepository.save(financialPeriod);
         List<Object[]> list = financialMonthTypeRepository.findByParam(organizationId, financialPeriod.getId());
         FinancialPeriod finalFinancialPeriod = financialPeriod;
@@ -178,7 +177,8 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 //            financialPeriodDto.setStartDate(periodStartDate.get(0).getEndDate().plusDays(1));
 //            financialPeriodDto.setEndDate(financialPeriodDto.getStartDate().plusYears(1).minusMonths(1).minusDays(1));
         } else {
-            FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(organizationId).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی وجود ندارد."));
+            FinancialPeriodTypeAssign financialPeriodTypeAssign =
+                    financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(organizationId).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی وجود ندارد."));
 //            financialPeriodDto.setStartDate(DateUtil.jalaliToGregorian(DateUtil.gregorianToJalali
 //                    (DateUtil.convertStringToDate(LocalDateTime.now().toString().substring(0, 10).replace("-", "/"))).substring(0, 4) + "/01/01")
 //                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
