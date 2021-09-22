@@ -128,7 +128,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     public FinancialPeriodDto update(FinancialPeriodDto financialPeriodDto) {
         validationUpdate(financialPeriodDto, "start");
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId()).orElseThrow(() -> new RuleException("برای انجام عملیات ویرایش شناسه ی دوره ی مالی الزامی میباشد."));
-         financialPeriod.setStartDate(financialPeriodDto.getStartDate());
+        financialPeriod.setStartDate(financialPeriodDto.getStartDate());
         financialPeriod.setEndDate(financialPeriodDto.getEndDate());
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
         financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getStatusId()));
