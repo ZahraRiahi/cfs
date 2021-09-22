@@ -61,4 +61,4 @@ deploy-dev:
   when: manual
   only:
     refs:
-      - orgin-dev
+      - dev
