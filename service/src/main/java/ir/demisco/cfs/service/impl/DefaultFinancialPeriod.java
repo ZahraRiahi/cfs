@@ -205,6 +205,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     }
 
     private void validationBeforeChangeStatus(Long financialPeriodId, FinancialPeriodDto financialPeriodDto) {
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         if (financialPeriodDto.getStatusId() == 2) {
             Long existOpen = financialPeriodRepository.checkFinancialStatusIdIsOpen(financialPeriodId, 100L);
             if (existOpen != null && existOpen == 1) {
