@@ -20,6 +20,9 @@ import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -66,26 +69,32 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         dataSourceRequest.getFilter().setLogic("and");
         dataSourceRequest.getFilter().getFilters().add(DataSourceRequest
                 .FilterDescriptor.create("financialPeriodTypeAssign.organization.id", organizationId, DataSourceRequest.Operators.EQUALS));
+        dataSourceRequest.getFilter().getFilters().add(DataSourceRequest.FilterDescriptor.create("deletedDate",null,DataSourceRequest.Operators.IS_NULL));
         return gridFilterService.filter(dataSourceRequest, financialPeriodListGridProvider);
     }
 
     @Override
     @Transactional(rollbackOn = Throwable.class)
-    public Long save(FinancialPeriodDto financialPeriodDto) {
+    public FinancialPeriodDto save(FinancialPeriodDto financialPeriodDto) {
         validationSave(financialPeriodDto);
-        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        Long organizationId = 100L;
+//        SecurityHelper.getCurrentUser().getOrganizationId();
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId() == null ? 0L : financialPeriodDto.getId()).orElse(new FinancialPeriod());
         financialPeriod.setEndDate(financialPeriodDto.getEndDate().truncatedTo(ChronoUnit.DAYS));
         financialPeriod.setStartDate(financialPeriodDto.getStartDate().truncatedTo(ChronoUnit.DAYS));
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
-        financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(organizationId));
-        financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssignRepository.getOne(financialPeriodDto.getFinancialPeriodTypeAssignId()));
-        financialPeriod.setDescription(financialPeriodDto.getDescription());
-        financialPeriod.setCode(financialPeriodDto.getCode());
+        financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(1L));
+
+        FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignIdAndOrgan(organizationId).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی فعال وجود ندارد."));
+        financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssign);
+        financialPeriod.setCode(financialPeriodRepository.getCodeFinancialPeriod(organizationId));
+        financialPeriod.setDescription(financialPeriodRepository.getDescriptionFinancialPeriod(financialPeriodDto.getEndDate().toString().split("T")[0]));
+
         financialPeriod = financialPeriodRepository.save(financialPeriod);
+
         List<Object[]> list = financialMonthTypeRepository.findByParam(organizationId, financialPeriod.getId());
         FinancialPeriod finalFinancialPeriod = financialPeriod;
-        list.stream().forEach(item -> {
+        list.forEach(item -> {
             FinancialMonth financialMonth = new FinancialMonth();
             financialMonth.setFinancialPeriod(finalFinancialPeriod);
             financialMonth.setFinancialMonthType(financialMonthTypeRepository.getOne(Long.parseLong(item[0].toString())));
@@ -96,7 +105,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
             financialMonthRepository.save(financialMonth);
         });
         List<Object[]> periodParameters = periodParameterRepository.getPeriodParameterByPeriodId(organizationId, finalFinancialPeriod.getId());
-        periodParameters.stream().forEach(objects -> {
+        periodParameters.forEach(objects -> {
             FinancialPeriodParameter financialPeriodParameter = new FinancialPeriodParameter();
             financialPeriodParameter.setFinancialPeriod(finalFinancialPeriod);
             financialPeriodParameter.setStartDate((Date) objects[1]);
@@ -113,7 +122,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
             }
             periodParameterRepository.save(financialPeriodParameter);
         });
-        return finalFinancialPeriod.getId();
+        return convertFinancialPeriodToDto(financialPeriod);
     }
 
     @Override
@@ -125,12 +134,14 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod.setEndDate(financialPeriodDto.getEndDate());
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
         financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getStatusId()));
-        financialPeriod.setDescription(financialPeriodDto.getDescription());
-        financialPeriod.setCode(financialPeriodDto.getCode());
+        Long organizationId = 100L;
+        financialPeriod.setCode(financialPeriodRepository.getCodeFinancialPeriod(organizationId));
+        financialPeriod.setDescription(financialPeriodRepository.getDescriptionFinancialPeriod(financialPeriodDto.getEndDate().toString().split("T")[0]));
         financialPeriod = financialPeriodRepository.save(financialPeriod);
         validationUpdate(financialPeriodDto, "end");
         return convertFinancialPeriodToDto(financialPeriod);
     }
+
 
     private void validationUpdate(FinancialPeriodDto financialPeriodDto, String mode) {
         Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
@@ -147,13 +158,17 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         if (!String.valueOf(financialPeriodDto.getOpenMonthCount()).matches("1[0-2]|[1-9]")) {
             throw new RuleException("تعداد ماه قابل ویرایش میبایست بین 1 تا 12 باشد.");
         }
-        if (financialPeriodDto.getStartDate() != null && !financialPeriod.getStartDate().equals(financialPeriodDto.getStartDate()) && mode.equals("start")) {
-            throw new RuleException("تاریخ شروع قابل ویرایش نیست.");
+        if (financialPeriod.getStartDate() != null && !financialPeriod.getStartDate().equals(financialPeriodDto.getStartDate())) {
+            if (mode.equals("start")) {
+                throw new RuleException("تاریخ شروع قابل ویرایش نیست.");
+            }
         }
     }
 
+
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
-        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        Long organizationId = 100L;
+        SecurityHelper.getCurrentUser().getOrganizationId();
         List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN");
         List<FinancialPeriod> periodStartDate = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(organizationId);
         if (period.size() >= 2) {
@@ -164,7 +179,8 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 //            financialPeriodDto.setStartDate(periodStartDate.get(0).getEndDate().plusDays(1));
 //            financialPeriodDto.setEndDate(financialPeriodDto.getStartDate().plusYears(1).minusMonths(1).minusDays(1));
         } else {
-            FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(organizationId).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی وجود ندارد."));
+            FinancialPeriodTypeAssign financialPeriodTypeAssign =
+                    financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(organizationId).orElseThrow(() -> new RuleException("برای این سازمان هیچ نوع دوره ی مالی وجود ندارد."));
 //            financialPeriodDto.setStartDate(DateUtil.jalaliToGregorian(DateUtil.gregorianToJalali
 //                    (DateUtil.convertStringToDate(LocalDateTime.now().toString().substring(0, 10).replace("-", "/"))).substring(0, 4) + "/01/01")
 //                    .toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
@@ -208,7 +224,8 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     @Override
     @Transactional(rollbackOn = Throwable.class)
-    public List<FinancialPeriodResponse> getFinancialAccountByDateAndOrgan(FinancialPeriodRequest financialPeriodRequest, Long organizationId) {
+    public List<FinancialPeriodResponse> getFinancialAccountByDateAndOrgan(FinancialPeriodRequest
+                                                                                   financialPeriodRequest, Long organizationId) {
         List<Object[]> financialPeriodListObject = financialPeriodRepository.findByFinancialPeriodAndDate(financialPeriodRequest.getDate().toString(), organizationId);
         return financialPeriodListObject.stream().map(objects -> FinancialPeriodResponse.builder().id(Long.parseLong(objects[0].toString()))
                 .description(objects[2] == null ? null : objects[2].toString())
@@ -232,6 +249,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
                 .statusCode(financialPeriod.getFinancialPeriodStatus().getCode())
                 .description(financialPeriod.getDescription())
                 .code(financialPeriod.getCode())
+                .financialPeriodTypeAssignId(financialPeriod.getFinancialPeriodTypeAssign().getId())
                 .build();
     }
 }
