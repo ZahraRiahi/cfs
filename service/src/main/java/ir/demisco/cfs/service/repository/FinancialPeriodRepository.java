@@ -83,4 +83,17 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "        and fp.deleted_date is null "
             , nativeQuery = true)
     List<Object[]> findByFinancialPeriodAndDate(String localDate, Long organizationId);
+
+
+    @Query("select 1 from FinancialPeriod  fp  join FinancialPeriodTypeAssign ta on  " +
+            "ta.id = fp.financialPeriodTypeAssign.id and ta.organization.id =:organizationId  " +
+            "where fp.financialPeriodStatus.id=1  and fp.endDate=" +
+            "(select  fpd.startDate -1  from FinancialPeriod  fpd where fpd.id=:financialPeriodId) ")
+    Long checkFinancialStatusIdIsOpen(Long financialPeriodId, Long organizationId);
+
+    @Query("select 1 from FinancialPeriod  fp  join FinancialPeriodTypeAssign ta on  " +
+            "ta.id = fp.financialPeriodTypeAssign.id and ta.organization.id =:organizationId  " +
+            "where fp.financialPeriodStatus.id=2  and fp.startDate=" +
+            "(select  fpd.endDate +1  from FinancialPeriod  fpd where fpd.id=:financialPeriodId) ")
+    Long checkFinancialStatusIdIsClose(Long financialPeriodId, Long organizationId);
 }
