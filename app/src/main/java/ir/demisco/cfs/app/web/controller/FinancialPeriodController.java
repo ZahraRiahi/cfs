@@ -46,7 +46,7 @@ public class FinancialPeriodController {
 
     @GetMapping("/GetDate")
     public ResponseEntity<FinancialPeriodDateDto> responseEntitygetStartDate() {
-        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        Long organizationId = 100L;
         return ResponseEntity.ok(financialPeriodService.getStartDateFinancialPeriod(organizationId));
     }
 

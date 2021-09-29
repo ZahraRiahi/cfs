@@ -167,7 +167,6 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
         Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        SecurityHelper.getCurrentUser().getOrganizationId();
         List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN");
         List<FinancialPeriod> periodStartDate = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(organizationId);
         if (period.size() >= 2) {
