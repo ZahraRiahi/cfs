@@ -20,9 +20,6 @@ import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -211,7 +208,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
             }
         } else if (financialPeriodDto.getStatusId() == 1) {
             Long exitClose = financialPeriodRepository.checkFinancialStatusIdIsClose(financialPeriodId, organizationId);
-            if(exitClose  != null && exitClose==1){
+            if (exitClose != null && exitClose == 1) {
                 throw new RuleException("به دلیل وجود دوره مالی بسته ، بعد از این دوره مالی ، امکان باز کردن این دوره مالی وجود ندارد’");
 
             }
