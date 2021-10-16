@@ -25,14 +25,13 @@ public class FinancialPeriodController {
 
     @PostMapping("/list")
     public ResponseEntity<DataSourceResult> responseEntity(@RequestBody DataSourceRequest dataSourceRequest) {
-        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        return ResponseEntity.ok(financialPeriodService.getFinancialPeriodByOrganizationId(organizationId, dataSourceRequest));
+        return ResponseEntity.ok(financialPeriodService.getFinancialPeriodByOrganizationId(SecurityHelper.getCurrentUser().getOrganizationId(), dataSourceRequest));
     }
 
     @PostMapping("/save")
     public ResponseEntity<FinancialPeriodDto> saveFinancialPeriod(@RequestBody FinancialPeriodDto financialPeriodDto) {
         if (financialPeriodDto.getId() == null) {
-            FinancialPeriodDto financialPeriodDtoRes= financialPeriodService.save(financialPeriodDto);
+            FinancialPeriodDto financialPeriodDtoRes = financialPeriodService.save(financialPeriodDto);
             return ResponseEntity.ok(financialPeriodDtoRes);
         } else {
             return ResponseEntity.ok(financialPeriodService.update(financialPeriodDto));
@@ -46,8 +45,7 @@ public class FinancialPeriodController {
 
     @GetMapping("/GetDate")
     public ResponseEntity<FinancialPeriodDateDto> responseEntitygetStartDate() {
-        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        return ResponseEntity.ok(financialPeriodService.getStartDateFinancialPeriod(organizationId));
+        return ResponseEntity.ok(financialPeriodService.getStartDateFinancialPeriod(SecurityHelper.getCurrentUser().getOrganizationId()));
     }
 
     @PostMapping("/GetCurrent")
