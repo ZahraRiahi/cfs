@@ -210,7 +210,6 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
             Long exitClose = financialPeriodRepository.checkFinancialStatusIdIsClose(financialPeriodId, organizationId);
             if (exitClose != null && exitClose == 1) {
                 throw new RuleException("به دلیل وجود دوره مالی بسته ، بعد از این دوره مالی ، امکان باز کردن این دوره مالی وجود ندارد’");
-
             }
         }
 
