@@ -25,7 +25,7 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
 
     @Override
     public List<Order> getCustomSort(FilterContext filterContext) {
-        return Collections.singletonList(filterContext.getCriteriaBuilder().asc(filterContext.getPath("startDate")));
+        return Collections.singletonList(filterContext.getCriteriaBuilder().desc(filterContext.getPath("startDate")));
     }
 
     @Override
