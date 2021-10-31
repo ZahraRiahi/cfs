@@ -3,14 +3,16 @@ package ir.demisco.cfs.model.entity;
 import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 
 @Entity
 @Table(name = "FINANCIAL_PERIOD_STATUS", schema = "fnpr")
-public class FinancialPeriodStatus  extends AuditModel<Long> {
+public class FinancialPeriodStatus extends AuditModel<Long> {
     private Long id;
     private String code;
     private String name;
+    private LocalDateTime deletedDate;
 
     @Id
     public Long getId() {
@@ -54,4 +56,12 @@ public class FinancialPeriodStatus  extends AuditModel<Long> {
 
     }
 
+    @Column(name = "DELETED_DATE")
+    public LocalDateTime getDeletedDate() {
+        return deletedDate;
+    }
+
+    public void setDeletedDate(LocalDateTime deletedDate) {
+        this.deletedDate = deletedDate;
+    }
 }
