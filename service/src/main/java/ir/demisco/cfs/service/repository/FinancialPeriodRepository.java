@@ -53,7 +53,7 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "       ' دوره مالی از ' || case" +
             "         when fpty.calendar_type_id = 1 then " +
             "          TO_CHAR(TO_DATE(TO_char(fp.start_date, 'mm/dd/yyyy'), 'mm/dd/yyyy'), " +
-            "                  'yyyy/mm/dd',\n" +
+            "                  'yyyy/mm/dd', " +
             "                  'NLS_CALENDAR=persian') || ' تا ' || " +
             "          TO_CHAR(TO_DATE(TO_char(fp.end_date, 'mm/dd/yyyy'), 'mm/dd/yyyy'), " +
             "                  'yyyy/mm/dd',\n" +
