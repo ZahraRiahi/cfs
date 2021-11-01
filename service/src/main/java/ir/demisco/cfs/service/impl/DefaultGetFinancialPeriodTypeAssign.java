@@ -10,6 +10,7 @@ import ir.demisco.cfs.service.repository.FinancialPeriodTypeRepository;
 import ir.demisco.cfs.service.repository.OrganizationRepository;
 import ir.demisco.cloud.core.middle.exception.RuleException;
 import ir.demisco.cloud.core.security.util.SecurityHelper;
+import ir.demisco.core.utils.DateUtil;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -44,9 +45,9 @@ public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeA
 
     @Override
     public FinancialPeriodTypeAssignSaveDto save(FinancialPeriodTypeAssignRequest financialPeriodTypeAssignRequest) {
-        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        Long organizationId = 100L;
         FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.findById(financialPeriodTypeAssignRequest.getId() == null ? 0L : financialPeriodTypeAssignRequest.getId()).orElse(new FinancialPeriodTypeAssign());
-        Long periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(SecurityHelper.getCurrentUser().getOrganizationId(), financialPeriodTypeAssignRequest.getFinancialPeriodTypeId(), financialPeriodTypeAssignRequest.getStartDate());
+        Long periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(100L, financialPeriodTypeAssignRequest.getFinancialPeriodTypeId());
         if (periodTypeAssign != null) {
             throw new RuleException("اطلاعات تکراری است");
         } else {
