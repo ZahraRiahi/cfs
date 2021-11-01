@@ -1,6 +1,7 @@
 package ir.demisco.cfs.service.api;
 
 
+import ir.demisco.cfs.model.dto.request.FinancialPeriodTypeAssignRequest;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodTypeAssignDto;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodTypeAssignSaveDto;
 
@@ -10,6 +11,6 @@ public interface FinancialPeriodTypeAssignService {
 
     List<FinancialPeriodTypeAssignDto> getFinancialPeriodTypeAssignByOrganizationId(Long organizationId);
 
-    FinancialPeriodTypeAssignSaveDto save(FinancialPeriodTypeAssignDto financialPeriodTypeAssignDto);
+    FinancialPeriodTypeAssignSaveDto save(FinancialPeriodTypeAssignRequest financialPeriodTypeAssignRequest);
 
 }

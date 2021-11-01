@@ -1,5 +1,6 @@
 package ir.demisco.cfs.app.web.controller;
 
+import ir.demisco.cfs.model.dto.request.FinancialPeriodTypeAssignRequest;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodTypeAssignDto;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodTypeAssignSaveDto;
 import ir.demisco.cfs.service.api.FinancialPeriodTypeAssignService;
@@ -24,7 +25,7 @@ public class FinancialPeriodTypeAssignController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<FinancialPeriodTypeAssignSaveDto> saveFinancialPeriod(@RequestBody FinancialPeriodTypeAssignDto financialPeriodTypeAssignDto) {
-        return ResponseEntity.ok(financialPeriodTypeAssignService.save(financialPeriodTypeAssignDto));
+    public ResponseEntity<FinancialPeriodTypeAssignSaveDto> saveFinancialPeriod(@RequestBody FinancialPeriodTypeAssignRequest financialPeriodTypeAssignRequest) {
+        return ResponseEntity.ok(financialPeriodTypeAssignService.save(financialPeriodTypeAssignRequest));
     }
 }
