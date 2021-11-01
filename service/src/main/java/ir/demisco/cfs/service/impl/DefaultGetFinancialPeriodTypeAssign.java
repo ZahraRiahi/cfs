@@ -1,5 +1,6 @@
 package ir.demisco.cfs.service.impl;
 
+import ir.demisco.cfs.model.dto.request.FinancialPeriodTypeAssignRequest;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodTypeAssignDto;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodTypeAssignSaveDto;
 import ir.demisco.cfs.model.entity.FinancialPeriodTypeAssign;
@@ -7,8 +8,10 @@ import ir.demisco.cfs.service.api.FinancialPeriodTypeAssignService;
 import ir.demisco.cfs.service.repository.FinancialPeriodTypeAssignRepository;
 import ir.demisco.cfs.service.repository.FinancialPeriodTypeRepository;
 import ir.demisco.cfs.service.repository.OrganizationRepository;
+import ir.demisco.cloud.core.middle.exception.RuleException;
 import ir.demisco.cloud.core.security.util.SecurityHelper;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,20 +43,22 @@ public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeA
     }
 
     @Override
-    public FinancialPeriodTypeAssignSaveDto save(FinancialPeriodTypeAssignDto financialPeriodTypeAssignDto) {
+    public FinancialPeriodTypeAssignSaveDto save(FinancialPeriodTypeAssignRequest financialPeriodTypeAssignRequest) {
         Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        FinancialPeriodTypeAssign periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(organizationId).orElse(new FinancialPeriodTypeAssign());
-        if (periodTypeAssign.getId() != null) {
-            periodTypeAssign.setActiveFlag(0L);
-            financialPeriodTypeAssignRepository.save(periodTypeAssign);
+        FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.findById(financialPeriodTypeAssignRequest.getId() == null ? 0L : financialPeriodTypeAssignRequest.getId()).orElse(new FinancialPeriodTypeAssign());
+        Long periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(SecurityHelper.getCurrentUser().getOrganizationId(), financialPeriodTypeAssignRequest.getFinancialPeriodTypeId(), financialPeriodTypeAssignRequest.getStartDate());
+        if (periodTypeAssign != null) {
+            throw new RuleException("اطلاعات تکراری است");
+        } else {
+            financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(organizationId).ifPresent(financialPeriodTypeAssign1 -> financialPeriodTypeAssign1.setActiveFlag(0L));
+
         }
-        FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.findById(financialPeriodTypeAssignDto.getId() == null ? 0L : financialPeriodTypeAssignDto.getId()).orElse(new FinancialPeriodTypeAssign());
         financialPeriodTypeAssign.setOrganization(organizationRepository.getOne(organizationId));
-        financialPeriodTypeAssign.setFinancialPeriodType(financialPeriodTypeRepository.getOne(financialPeriodTypeAssignDto.getFinancialPeriodTypeId()));
+        financialPeriodTypeAssign.setFinancialPeriodType(financialPeriodTypeRepository.getOne(financialPeriodTypeAssignRequest.getFinancialPeriodTypeId()));
         financialPeriodTypeAssign.setActiveFlag(1L);
-        financialPeriodTypeAssign.setStartDate(financialPeriodTypeAssignDto.getStartDate());
-        financialPeriodTypeAssign=financialPeriodTypeAssignRepository.save(financialPeriodTypeAssign);
-        return  convertFinancialPeriodTypeAssignToDto(financialPeriodTypeAssign);
+        financialPeriodTypeAssign.setStartDate(financialPeriodTypeAssignRequest.getStartDate());
+        financialPeriodTypeAssign = financialPeriodTypeAssignRepository.save(financialPeriodTypeAssign);
+        return convertFinancialPeriodTypeAssignToDto(financialPeriodTypeAssign);
     }
 
     private FinancialPeriodTypeAssignSaveDto convertFinancialPeriodTypeAssignToDto(FinancialPeriodTypeAssign financialPeriodTypeAssign) {
