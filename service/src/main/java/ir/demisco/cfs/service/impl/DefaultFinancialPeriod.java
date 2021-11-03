@@ -3,6 +3,7 @@ package ir.demisco.cfs.service.impl;
 import ir.demisco.cfs.model.dto.request.FinancialPeriodRequest;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodDateDto;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
+import ir.demisco.cfs.model.dto.response.FinancialPeriodNewResponse;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodResponse;
 import ir.demisco.cfs.model.entity.FinancialMonth;
 import ir.demisco.cfs.model.entity.FinancialPeriod;
@@ -20,6 +21,7 @@ import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
@@ -238,6 +240,18 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
                 .code(objects[3] == null ? null : objects[3].toString())
                 .fullDescription(objects[1].toString())
                 .build()).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public FinancialPeriodNewResponse getGetPeriodStartDateByOrganizationId(Long organizationId) {
+        LocalDateTime countPeriod = financialPeriodRepository.findByFinancialPeriodAndOrganizationId(100L);
+        if (countPeriod == null) {
+            throw new RuleException("دوره مالی باز برای این سازمان وجود ندارد");
+        }
+        FinancialPeriodNewResponse financialPeriodNewResponse = new FinancialPeriodNewResponse();
+        financialPeriodNewResponse.setStartDate(countPeriod);
+        return financialPeriodNewResponse;
     }
 
     private FinancialPeriodDateDto objectToDto(List<Object[]> objects) {
