@@ -55,9 +55,9 @@ public class FinancialPeriodController {
         return ResponseEntity.ok(financialPeriodService.getFinancialAccountByDateAndOrgan(financialPeriodRequest, organizationId));
     }
 
-    @GetMapping("/GetPeriodStartDate/{organizationId}")
-    public ResponseEntity<FinancialPeriodNewResponse> responseEntity(@PathVariable Long organizationId) {
-        return ResponseEntity.ok(financialPeriodService.getGetPeriodStartDateByOrganizationId(SecurityHelper.getCurrentUser().getOrganizationId()));
+    @GetMapping("/GetPeriodStartDate")
+    public ResponseEntity<FinancialPeriodNewResponse> responseEntity() {
+        return ResponseEntity.ok(financialPeriodService.getGetPeriodStartDateByOrganizationId(100L));
 
     }
 }
