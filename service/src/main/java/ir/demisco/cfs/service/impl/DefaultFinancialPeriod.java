@@ -245,7 +245,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     @Override
     @Transactional
     public FinancialPeriodNewResponse getGetPeriodStartDateByOrganizationId(Long organizationId) {
-        LocalDateTime countPeriod = financialPeriodRepository.findByFinancialPeriodAndOrganizationId(100L);
+        LocalDateTime countPeriod = financialPeriodRepository.findByFinancialPeriodAndOrganizationId(SecurityHelper.getCurrentUser().getOrganizationId());
         if (countPeriod == null) {
             throw new RuleException("دوره مالی باز برای این سازمان وجود ندارد");
         }
