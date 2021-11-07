@@ -21,7 +21,7 @@ public interface FinancialPeriodTypeAssignRepository extends JpaRepository<Finan
     @Query(value = " select " +
             "    TO_CHAR(start_date ,'yyyy/mm/dd') start_date, " +
             "    (select max(ad.pdat_ggdate_c) " +
-            "    from clnd.all_date ad " +
+            "    from clnd.all_date1 ad " +
             "   where (calendar_type_id = 1 and " +
             "         ad.pdat_hsdate_yer = substr(TO_CHAR(add_months((start_date), 11) ,'yyyy/mm/dd','NLS_CALENDAR=persian'),0,4) and " +
             "         ad.pdat_hsdate_mon = substr(TO_CHAR(add_months((start_date), 11),'yyyy/mm/dd','NLS_CALENDAR=persian'),6,2)) " +
