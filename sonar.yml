@@ -1,0 +1,147 @@
+image: 192.168.25.203:8080/library/docker:19.03.12 
+
+stages:
+  - dev
+  - .post
+variables:
+  MAVEN_CLI_OPTS: "-s settings.xml --batch-mode"
+  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+  SONAR_TOKEN: "82f58e9c88675cfed0b8c35c841184df5cbbed1f"
+  SONAR_HOST_URL: "https://sonar.demisco.com"
+  SONAR_PROJECT_KEY: "cfs.cfs"
+  SONAR_TOKEN: "e8ea8d204ca989834c4baf97aa9d5d80ccefffb2"
+  GITLAB_ACCESS_TOKEN: "nBY4FLt4LSfv4yM5nQs8"
+  SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar" # Defines the location of the analysis task cache
+  GIT_DEPTH: 0 # Tells git to fetch all the branches of the project, required by the analysis task
+  gitlabAuthHeader: "Authorization: Bearer _BybFMHzBDH_ykm9tbKN"
+  ContentType: "Content-Type: application/x-www-form-urlencoded"
+  Body0: "درخواست مرج ریکوست شما به علت عدم اساین به کاربر مشخص مورد پذیرش واقع نگردید و بسته شد"
+  Body: "درخواست مرج ریکوست شما به علت اساین به خود مورد پذیرش واقع نگردید و بسته شد"
+  Body2: "گام بیلد با خطا مواجه گردید"
+  Body3: "آنالیز سونار حاوی ایشیو می باشد. لطفا نسبت به رفع آن ها اقدام نمایید. لینک پروژه در سونارکیوب در خط زیر کامنت شده است و درخواست مرج ریکوست شما بسته شد" 
+cache:
+  key: ${CI_JOB_NAME}
+  paths:
+    - .m2/repository/
+    - .sonar/cache
+QCbuild:
+    stage: dev
+    tags:
+    - QC  
+    image: 192.168.25.203:8080/library/maven:3.3.9-jdk-8
+    only:
+      refs:
+        - merge_requests
+    script:
+        - ls
+        - rm -rf .m2/repository/ir 
+        - mvn $MAVEN_CLI_OPTS clean install -Dmaven.test.skip=true
+        - find . -type f -name app*.jar -exec cp -rf {} . \;
+        - find . -type f -name model*.jar -exec cp -rf {} . \;
+        - find . -type f -name service*.jar -exec cp -rf {} . \;
+        - rm -Rf ihio
+        - ls
+    artifacts:
+        paths:
+            - app*.jar
+            - model*.jar 
+            - service*.jar
+        expire_in: 1 days
+QCsonar:
+  stage: .post
+  tags:
+    - QC  
+  image: 192.168.25.203:8080/library/sonarsource/sonar-scanner-cli:jq-version
+  only:
+    refs:
+      - merge_requests  
+  script: 
+    - echo $Body0 >> body0.txt
+    - value0=$(<body0.txt)
+    - echo $Body >> body1.txt
+    - value=$(<body1.txt)
+    - echo $Body2 >> body2.txt
+    - value2=$(<body2.txt)
+    - echo "curl --insecure --location --request POST  --header \"$gitlabAuthHeader\" https://gitlab.demisco.com/api/v4/projects/${CI_MERGE_REQUEST_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes --header \"$ContentType\" --data-urlencode \"body=$value0\"" >> curl0.txt
+    - echo "curl --insecure --location --request POST  --header \"$gitlabAuthHeader\" https://gitlab.demisco.com/api/v4/projects/${CI_MERGE_REQUEST_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes --header \"$ContentType\" --data-urlencode \"body=$value\"" >> curl1.txt
+    - echo "curl --insecure --request PUT --header \"$gitlabAuthHeader\" \"https://gitlab.demisco.com/api/v4/projects/${CI_MERGE_REQUEST_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}?state_event=close\" "  >> curlClose.txt
+    - echo "curl --insecure --location --request POST  --header \"$gitlabAuthHeader\" https://gitlab.demisco.com/api/v4/projects/${CI_MERGE_REQUEST_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes --header \"$ContentType\" --data-urlencode \"body=$value2\"" >> curl2.txt
+    - ls
+    - a=$(find . -name 'app*.jar')
+    - b=$(find . -name 'model*.jar')
+    - c=$(find . -name 'service*.jar')
+    - if [[ $a && $b && $c ]]; then echo Build is ok; else sh curl2.txt;sh curlClose.txt; exit 1; fi
+    - echo "curl --insecure --location --request GET --header \"$gitlabAuthHeader\" https://gitlab.demisco.com/api/v4/projects/${CI_MERGE_REQUEST_PROJECT_ID}/protected_branches" >> curl3.txt
+    - a=$(sh curl3.txt)
+    - b=$(echo $a | jq '.[].name')
+    - c=$(echo $b| tr -d '"')
+    - protectedbranch=false
+    - while IFS=' ' read -ra ADDR; do
+      for i in "${ADDR[@]}"; do
+      if [[ $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == $i ]]; then
+      protectedbranch=true;
+      fi
+      done
+      done <<< "$c"
+    - echo $protectedbranch
+    - echo $c
+    - echo $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
+    - echo "curl --insecure --header \"$gitlabAuthHeader\" https://gitlab.demisco.com/api/v4/projects/${CI_MERGE_REQUEST_PROJECT_ID}/members " >> curl4.txt
+    - echo $(sh curl4.txt) >> temp2.txt
+    - cat temp2.txt
+    - jq -r '.[].id' temp2.txt >tempf.txt
+    - cat tempf.txt
+    - echo $CI_MERGE_REQUEST_ASSIGNEES
+    - if [ -z ${CI_MERGE_REQUEST_ASSIGNEES+x} ]; then echo "var is unset";sh curl0.txt;sh curlClose.txt; exit 1; else echo "var is set to '$CI_MERGE_REQUEST_ASSIGNEES'"; fi
+    - echo "curl --insecure --location --request GET --header \"$gitlabAuthHeader\" https://gitlab.demisco.com/api/v4/projects/${CI_MERGE_REQUEST_PROJECT_ID}/members/all/$GITLAB_USER_ID" >> curl5.txt ;
+    - d=$(sh curl5.txt);
+    - echo $d;
+    - access=$(echo $d | jq '.access_level');
+    - echo $access;
+    - if [[ $access < 40 && $CI_MERGE_REQUEST_ASSIGNEES == $GITLAB_USER_LOGIN ]]; then sh curl1.txt;sh curlClose.txt; exit 1; fi
+    - if [[ $protectedbranch == false ]]; then exit 0; fi 
+    - sonar-scanner  -Dsonar.branch.name=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_PATH -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
+    - export url=$(cat .scannerwork/report-task.txt | grep ceTaskUrl | cut -c11- ) #URL where report gets stored
+    - FILE=".scannerwork/report-task.txt"
+    - curl -k -u "$SONAR_TOKEN":"" $url -o analysis.txt
+    - export status=$(cat analysis.txt | jq -r '.task.status') #Status as SUCCESS, CANCELED or FAILED
+    - export analysisId=$(cat analysis.txt | jq -r '.task.analysisId') #Get the analysis Id
+    - |
+      while true; do     
+      curl -k -u "$SONAR_TOKEN":"" $url -o analysis.txt
+      export status=$(cat analysis.txt | jq -r '.task.status') #Status as SUCCESS, CANCELED or FAILED
+      export analysisId=$(cat analysis.txt | jq -r '.task.analysisId') #Get the analysis Id
+      echo $status
+      if [[ -f "$FILE" && -s "$FILE" &&  "$status" != "PENDING" && "$status" != "IN_PROGRESS" ]]; then break; else sleep 10s; fi;
+      done
+    - |
+      if [[ "$status" == "SUCCESS" ]];then 
+      echo -e "SONAR ANALYSIS SUCCESSFUL...ANALYSING RESULTS";
+      curl -k -u "$SONAR_TOKEN":"" $SONAR_HOST_URL/api/qualitygates/project_status?analysisId=$analysisId -o result.txt; #Analysis result like critical, major and minor issues
+      cat result.txt;
+      export result=$(cat result.txt | jq -r '.projectStatus.status');
+      if [[ "$result" == "ERROR" ]];then
+      echo -e "RESULTS FAILED";
+      echo $Body3 >> body3.txt
+      value3=$(<body3.txt)
+      echo "curl --insecure --location --request POST  --header \"$gitlabAuthHeader\" https://gitlab.demisco.com/api/v4/projects/${CI_MERGE_REQUEST_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes --header \"$ContentType\" --data-urlencode \"body=$value3\"" >> curl4.txt
+      sh curl4.txt 
+      dashboardUrl=$(sed -n '/dashboardUrl/,/ceTaskId/p' .scannerwork/report-task.txt)
+      dashboardUrl=(${dashboardUrl[@]})
+      echo "curl --insecure --location --request POST  --header \"$gitlabAuthHeader\" https://gitlab.demisco.com/api/v4/projects/${CI_MERGE_REQUEST_PROJECT_ID}/merge_requests/${CI_MERGE_REQUEST_IID}/notes --header \"$ContentType\" --data-urlencode \"body=$dashboardUrl\"" >> curl5.txt
+      sh curl5.txt 
+      sh curlClose.txt
+      echo "$(cat result.txt | jq -r '.projectStatus.conditions')"; #prints the critical, major and minor violations
+      exit 1 #breaks the build for violations
+      else
+      echo -e "SONAR RESULTS SUCCESSFUL";
+      echo "$(cat result.txt | jq -r '.projectStatus.conditions')";
+      exit 0 
+      fi
+      else 
+      echo -e "ANALYSIS FAILED";
+      exit 1 #breaks the build for failure in Step2
+      fi
+  allow_failure: false
+  needs: [QCbuild]
+
