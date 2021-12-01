@@ -1,3 +1,4 @@
+include: 'sonar.yml'
 image: 192.168.25.203:8080/library/mvn-k8s:latest
 
 variables:
