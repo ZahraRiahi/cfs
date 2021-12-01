@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <servers>
+    <server>
+       <id>hms-mvn-host</id>
+       <username>anonymous</username>
+       <password>anonymous</password>
+    </server>
+  </servers>
+  <mirrors>
+      <mirror>
+          <id>dms-mvn-mirror</id>
+          <name>dms-mvn-mirror</name>
+          <url>http://nexus:8081/repository/dms-mvn-group/</url>
+          <mirrorOf>*</mirrorOf>
+      </mirror>
+  </mirrors>
+</settings>
