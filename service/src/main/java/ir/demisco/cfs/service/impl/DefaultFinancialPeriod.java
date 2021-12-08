@@ -135,7 +135,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod.setEndDate(financialPeriodDto.getEndDate());
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
         financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getStatusId()));
-        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        Long organizationId = 100L;
         financialPeriod.setCode(financialPeriodRepository.getCodeFinancialPeriod(organizationId));
         financialPeriod.setDescription(financialPeriodRepository.getDescriptionFinancialPeriod(financialPeriodDto.getEndDate().toString().split("T")[0]));
         financialPeriod = financialPeriodRepository.save(financialPeriod);
@@ -145,7 +145,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
 
     private void validationUpdate(FinancialPeriodDto financialPeriodDto, String mode) {
-        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        Long organizationId = 100L;
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId()).orElseThrow(() -> new RuleException("هیچ دوره ی مالی یافت نشد."));
         if (financialPeriodDto.getId() == null && mode.equals("start")) {
             throw new RuleException("برای انجام عملیات ویرایش شناسه ی دوره ی مالی الزامی میباشد.");
@@ -160,14 +160,14 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
             throw new RuleException("تعداد ماه قابل ویرایش میبایست بین 1 تا 12 باشد.");
         }
         if (financialPeriod.getStartDate() != null && !financialPeriod.getStartDate().equals(financialPeriodDto.getStartDate())) {
-            if (mode.equals("start")) {
+            if (mode.equals("end")) {
                 throw new RuleException("تاریخ شروع قابل ویرایش نیست.");
             }
         }
     }
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
-        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        Long organizationId = 100L;
         List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN");
         List<FinancialPeriod> periodStartDate = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(organizationId);
         if (period.size() >= 2) {
