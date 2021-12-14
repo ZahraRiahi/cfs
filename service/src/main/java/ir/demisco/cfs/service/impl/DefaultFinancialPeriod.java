@@ -60,7 +60,6 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
                 .build();
     }
 
-
     @Override
     @Transactional
     public DataSourceResult getFinancialPeriodByOrganizationId(Long organizationId, DataSourceRequest dataSourceRequest) {
