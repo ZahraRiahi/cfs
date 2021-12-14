@@ -32,6 +32,6 @@ public interface FinancialPeriodParameterRepository extends JpaRepository<Financ
             "                     And t.deleted_date is null " +
             "                   order by t.start_date desc) " +
             "           where rownum = 1 ) " +
-            "           And p.deleted_date is null",nativeQuery = true)
+            "           And p.deleted_date is null ",nativeQuery = true)
     List<Object[]>  getPeriodParameterByPeriodId(Long organizationId,Long periodId);
 }
