@@ -92,14 +92,14 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod.setDescription(financialPeriodRepository.getDescriptionFinancialPeriod(financialPeriodDto.getEndDate().toString().split("T")[0]));
 
         financialPeriod = financialPeriodRepository.save(financialPeriod);
-
+        financialPeriodRepository.flush();
         List<Object[]> list = financialMonthTypeRepository.findByParam(organizationId, financialPeriod.getId());
         FinancialPeriod finalFinancialPeriod = financialPeriod;
         list.forEach(item -> {
             FinancialMonth financialMonth = new FinancialMonth();
             financialMonth.setFinancialPeriod(finalFinancialPeriod);
             financialMonth.setFinancialMonthType(financialMonthTypeRepository.getOne(Long.parseLong(item[0].toString())));
-            financialMonth.setFinancialMonthStatus(financialMonthStatusRepository.getOne(1L));
+            financialMonth.setFinancialMonthStatus(financialMonthStatusRepository.findById(1L).orElse(null));
             financialMonth.setStartDate(DateUtil.convertStringToDate(item[1].toString()));
             financialMonth.setEndDate(DateUtil.convertStringToDate(item[2].toString()));
             financialMonth.setDescription(item[3].toString());
