@@ -1,10 +1,8 @@
 package ir.demisco.cfs.app.web.controller;
 
 import ir.demisco.cfs.model.dto.request.FinancialPeriodRequest;
-import ir.demisco.cfs.model.dto.response.FinancialPeriodDateDto;
-import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
-import ir.demisco.cfs.model.dto.response.FinancialPeriodNewResponse;
-import ir.demisco.cfs.model.dto.response.FinancialPeriodResponse;
+import ir.demisco.cfs.model.dto.request.FinancialPeriodStatusRequest;
+import ir.demisco.cfs.model.dto.response.*;
 import ir.demisco.cfs.service.api.FinancialPeriodService;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceResult;
@@ -59,5 +57,10 @@ public class FinancialPeriodController {
     public ResponseEntity<FinancialPeriodNewResponse> responseEntity() {
         return ResponseEntity.ok(financialPeriodService.getGetPeriodStartDateByOrganizationId(100L));
 
+    }
+
+    @PostMapping("/GetStatus")
+    public ResponseEntity<FinancialPeriodStatusResponse> responseEntity(@RequestBody FinancialPeriodStatusRequest financialPeriodStatusRequest) {
+        return ResponseEntity.ok(financialPeriodService.getFinancialPeriodStatus(financialPeriodStatusRequest));
     }
 }

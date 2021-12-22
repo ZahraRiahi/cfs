@@ -56,7 +56,7 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "                  'yyyy/mm/dd', " +
             "                  'NLS_CALENDAR=persian') || ' تا ' || " +
             "          TO_CHAR(TO_DATE(TO_char(fp.end_date, 'mm/dd/yyyy'), 'mm/dd/yyyy'), " +
-            "                  'yyyy/mm/dd',\n" +
+            "                  'yyyy/mm/dd'," +
             "                  'NLS_CALENDAR=persian') " +
             "         when fpty.calendar_type_id = 2 then " +
             "          TO_CHAR(TO_DATE(TO_char(fp.start_date, 'mm/dd/yyyy'), 'mm/dd/yyyy'), " +
@@ -104,5 +104,56 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             " and fpa.deletedDate is null and fpa.activeFlag=1 ")
     LocalDateTime findByFinancialPeriodAndOrganizationId(Long organizationId);
 
+    @Query(value = "SELECT  CASE " +
+            "         WHEN T.FINANCIAL_PERIOD_STATUS_ID = 2 THEN " +
+            "          0 " +
+            "         ELSE " +
+            "          1 " +
+            "       END " +
+            "  FROM FNPR.FINANCIAL_PERIOD T" +
+            " WHERE T.ID = :financialPeriodId " +
+            " and t.deleted_date is null "
+            , nativeQuery = true)
+    Long findFinancialPeriodById(Long financialPeriodId);
 
+    @Query(value = " SELECT CASE " +
+            "         WHEN FMN.FINANCIAL_MONTH_STATUS_ID = 2 THEN " +
+            "          0 " +
+            "         ELSE " +
+            "          1 " +
+            "       END " +
+            "  FROM FNPR.FINANCIAL_MONTH FMN " +
+            " INNER JOIN FNPR.FINANCIAL_MONTH_TYPE FMT " +
+            "    ON FMT.ID = FMN.FINANCIAL_MONTH_TYPE_ID " +
+            " INNER JOIN FNPR.FINANCIAL_PERIOD_TYPE FNP " +
+            "    ON FNP.ID = FMT.FINANCIAL_PERIOD_TYPE_ID " +
+            " INNER JOIN FNPR.FINANCIAL_PERIOD_TYPE_ASSIGN PT " +
+            "    ON PT.FINANCIAL_PERIOD_TYPE_ID = FNP.ID " +
+            " INNER JOIN fnpr.FINANCIAL_PERIOD FP " +
+            "    ON FP.FINAN_PERIOD_TYPE_ASSIGN_ID = PT.ID " +
+            "   AND FMN.FINANCIAL_PERIOD_ID = FP.ID " +
+            " WHERE FP.ID = :financialPeriodId " +
+            "   AND (CASE CALENDAR_TYPE_ID " +
+            "         WHEN 2 THEN " +
+            "          EXTRACT(MONTH FROM " +
+            "                  to_date(:date, 'mm/dd/yyyy')) " +
+            "         WHEN 1 THEN " +
+            "          TO_NUMBER(SUBSTR(TO_CHAR(to_date(:date, 'mm/dd/yyyy')," +
+            "                                   'yyyy/mm/dd'," +
+            "                                   'NLS_CALENDAR=persian')," +
+            "                           6," +
+            "                           2))" +
+            "       END = CASE " +
+            "         WHEN FNP.CURRENT_YEAR_FLAG = 1 THEN " +
+            "          FNP.FROM_MONTH + FMT.MONTH_NUMBER - 1 " +
+            "         ELSE " +
+            "          CASE " +
+            "            WHEN FNP.FROM_MONTH + FMT.MONTH_NUMBER - 1 > 12 THEN " +
+            "             FNP.FROM_MONTH + FMT.MONTH_NUMBER - 13 " +
+            "            ELSE " +
+            "             FNP.FROM_MONTH + FMT.MONTH_NUMBER - 1 " +
+            "          END" +
+            "       END AND FMN.FINANCIAL_MONTH_STATUS_ID = 1) "
+            , nativeQuery = true)
+    Long findFinancialPeriodByFinancialPeriodIdAndDate(Long financialPeriodId,String date);
 }

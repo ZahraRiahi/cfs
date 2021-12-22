@@ -49,7 +49,7 @@ public class DefaultFinancialMonth implements FinancialMonthService {
         } else {
             String financialPeriodStatusCode = financialMonth.getFinancialPeriod().getFinancialPeriodStatus().getCode();
             if (financialPeriodStatusCode.equals(FinancialPeriodStatus.Code.CLOSE.getCode())) {
-                throw new RuleException("به دلیل بسته بودن وضعیت دوره ی مالی امکان باز شدن وضعیت ماههای عملیاتی وجود ندارد.");
+                throw new RuleException("fin.financialMonth.statusCode");
             }
             financialMonth.setFinancialMonthStatus(financialMonthStatusRepository.getOne(1L));
         }
