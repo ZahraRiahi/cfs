@@ -1,10 +1,8 @@
 package ir.demisco.cfs.service.api;
 
 import ir.demisco.cfs.model.dto.request.FinancialPeriodRequest;
-import ir.demisco.cfs.model.dto.response.FinancialPeriodDateDto;
-import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
-import ir.demisco.cfs.model.dto.response.FinancialPeriodNewResponse;
-import ir.demisco.cfs.model.dto.response.FinancialPeriodResponse;
+import ir.demisco.cfs.model.dto.request.FinancialPeriodStatusRequest;
+import ir.demisco.cfs.model.dto.response.*;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceResult;
 
@@ -26,4 +24,6 @@ public interface FinancialPeriodService {
     List<FinancialPeriodResponse> getFinancialAccountByDateAndOrgan(FinancialPeriodRequest financialPeriodRequest, Long organizationId);
 
     FinancialPeriodNewResponse getGetPeriodStartDateByOrganizationId(Long organizationId);
+
+    FinancialPeriodStatusResponse getFinancialPeriodStatus(FinancialPeriodStatusRequest financialPeriodStatusRequest);
 }

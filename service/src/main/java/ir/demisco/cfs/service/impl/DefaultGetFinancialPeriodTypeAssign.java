@@ -48,7 +48,7 @@ public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeA
         FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.findById(financialPeriodTypeAssignRequest.getId() == null ? 0L : financialPeriodTypeAssignRequest.getId()).orElse(new FinancialPeriodTypeAssign());
         Long periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(SecurityHelper.getCurrentUser().getOrganizationId(), financialPeriodTypeAssignRequest.getFinancialPeriodTypeId());
         if (periodTypeAssign != null) {
-            throw new RuleException("اطلاعات تکراری است");
+            throw new RuleException("fin.informationIsDuplicate");
         } else {
             financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(organizationId).ifPresent(financialPeriodTypeAssign1 -> financialPeriodTypeAssign1.setActiveFlag(0L));
 

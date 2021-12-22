@@ -1,15 +1,15 @@
 package ir.demisco.cfs.model.dto.request;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class FinancialPeriodRequest {
-    private LocalDate date;
+    private LocalDateTime date;
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 }
