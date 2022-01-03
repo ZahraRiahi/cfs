@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface FinancialDocumentRepository extends JpaRepository<FinancialDocument, Long> {
 
-    @Query("select fd.financialPeriod,fd.documentDate from FinancialDocument  fd " +
+    @Query("select fd.financialPeriod.id,fd.documentDate from FinancialDocument  fd " +
             " where fd.id=:financialDocumentId and fd.deletedDate is null")
     List<Object[]> financialDocumentById(Long financialDocumentId);
 
