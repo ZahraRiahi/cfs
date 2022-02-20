@@ -264,7 +264,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         FinancialPeriodStatusResponse financialPeriodStatusResponses = new FinancialPeriodStatusResponse();
         if (financialPeriodStatusRequest.getFinancialDocumentId() != null) {
             List<Object[]> financialDocument = financialDocumentRepository.financialDocumentById(financialPeriodStatusRequest.getFinancialDocumentId());
-            financialPeriodStatusRequest.setDate(financialDocument.get(0)[1] == null ? financialPeriodStatusRequest.getDate() : LocalDateTime.parse(financialDocument.get(0)[1].toString().substring(0,10)+"T00:00"));
+            financialPeriodStatusRequest.setDate(financialDocument.get(0)[1] == null ? financialPeriodStatusRequest.getDate() : LocalDateTime.parse(financialDocument.get(0)[1].toString().substring(0, 10) + "T00:00"));
             financialPeriodStatusRequest.setFinancialPeriodId(financialDocument.get(0)[0] == null ? financialPeriodStatusRequest.getFinancialPeriodId() : Long.parseLong(financialDocument.get(0)[0].toString()));
             if (financialPeriodStatusRequest.getFinancialPeriodId() == null || financialPeriodStatusRequest.getDate() == null) {
                 throw new RuleException("fin.financialPeriod.list");
@@ -272,7 +272,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         } else if (financialPeriodStatusRequest.getFinancialPeriodId() == null && financialPeriodStatusRequest.getDate() != null && financialPeriodStatusRequest.getOrganizationId() != null) {
             FinancialPeriodRequest financialPeriodRequest = new FinancialPeriodRequest();
             financialPeriodRequest.setDate(financialPeriodStatusRequest.getDate());
-            List<FinancialPeriodResponse> accountByDateAndOrgan = this.getFinancialAccountByDateAndOrgan(financialPeriodRequest, 100L);
+            List<FinancialPeriodResponse> accountByDateAndOrgan = this.getFinancialAccountByDateAndOrgan(financialPeriodRequest, SecurityHelper.getCurrentUser().getOrganizationId());
             Long financialPeriodId = null;
             if (!accountByDateAndOrgan.isEmpty()) {
                 financialPeriodId = accountByDateAndOrgan.get(0).getId();
