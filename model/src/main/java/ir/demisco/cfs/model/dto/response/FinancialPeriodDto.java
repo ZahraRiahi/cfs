@@ -15,6 +15,7 @@ public class FinancialPeriodDto {
     private String statusName;
     private String description;
     private String code;
+    private Long financialPeriodTypeId;
 
     public Long getId() {
         return id;
@@ -88,6 +89,14 @@ public class FinancialPeriodDto {
         this.code = code;
     }
 
+    public Long getFinancialPeriodTypeId() {
+        return financialPeriodTypeId;
+    }
+
+    public void setFinancialPeriodTypeId(Long financialPeriodTypeId) {
+        this.financialPeriodTypeId = financialPeriodTypeId;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -159,7 +168,10 @@ public class FinancialPeriodDto {
             financialPeriodDto.setCode(code);
             return this;
         }
-
+        public Builder financialPeriodTypeId(Long financialPeriodTypeId) {
+            financialPeriodDto.setFinancialPeriodTypeId(financialPeriodTypeId);
+            return this;
+        }
         public FinancialPeriodDto build() {
             return financialPeriodDto;
         }

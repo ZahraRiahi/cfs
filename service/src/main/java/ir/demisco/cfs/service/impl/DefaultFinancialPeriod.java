@@ -306,6 +306,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
                 .description(financialPeriod.getDescription())
                 .code(financialPeriod.getCode())
                 .financialPeriodTypeAssignId(financialPeriod.getFinancialPeriodTypeAssign().getId())
+                .financialPeriodTypeId(financialPeriod.getFinancialPeriodType() == null ? 0 : financialPeriod.getFinancialPeriodType().getId())
                 .build();
     }
 }
