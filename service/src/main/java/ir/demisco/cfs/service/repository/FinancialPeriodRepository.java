@@ -4,9 +4,7 @@ import ir.demisco.cfs.model.entity.FinancialPeriod;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod, Long> {
@@ -76,7 +74,7 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "            and fpt.active_flag = 1 " +
             "    inner join" +
             "        fnpr.financial_period_type fpty    " +
-            "            on fpt.financial_period_type_id = fpty.id " +
+            "            on fp.financial_period_type_id  = fpty.id " +
             "    where " +
             "        fp.financial_period_status_id = 1   " +
             "        and to_date(:localDate, 'yyyy-mm-dd') between fp.start_date and fp.end_date   " +
@@ -98,7 +96,7 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
     Long checkFinancialStatusIdIsClose(Long financialPeriodId, Long organizationId);
 
     @Query("select min(fp.startDate) from FinancialPeriod  fp  join fp.financialPeriodTypeAssign fpa  " +
-            " join fpa.financialPeriodType fpt " +
+            " join fp.financialPeriodType fpt " +
             " where fp.deletedDate is null and fp.financialPeriodStatus.id=1 " +
             " and fpa.organization.id =:organizationId " +
             " and fpa.deletedDate is null and fpa.activeFlag=1 ")
@@ -130,7 +128,7 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             " INNER JOIN FNPR.FINANCIAL_PERIOD_TYPE_ASSIGN PT " +
             "    ON PT.FINANCIAL_PERIOD_TYPE_ID = FNP.ID " +
             " INNER JOIN fnpr.FINANCIAL_PERIOD FP " +
-            "    ON FP.FINAN_PERIOD_TYPE_ASSIGN_ID = PT.ID " +
+            "   ON FP.FINANCIAL_PERIOD_TYPE_ID = fnp.id " +
             "   AND FMN.FINANCIAL_PERIOD_ID = FP.ID " +
             " WHERE FP.ID = :financialPeriodId " +
             "   AND (CASE CALENDAR_TYPE_ID " +
@@ -155,5 +153,5 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "          END" +
             "       END AND FMN.FINANCIAL_MONTH_STATUS_ID = 1) "
             , nativeQuery = true)
-    Long findFinancialPeriodByFinancialPeriodIdAndDate(Long financialPeriodId,String date);
+    Long findFinancialPeriodByFinancialPeriodIdAndDate(Long financialPeriodId, String date);
 }

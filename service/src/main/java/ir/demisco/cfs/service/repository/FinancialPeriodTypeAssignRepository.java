@@ -4,7 +4,6 @@ import ir.demisco.cfs.model.entity.FinancialPeriodTypeAssign;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,7 +40,7 @@ public interface FinancialPeriodTypeAssignRepository extends JpaRepository<Finan
             "            on fnpr.deleted_date is null " +
             "           and fnpr.finan_period_type_assign_id = ta.id " +
             "         inner join fnpr.financial_period_type fnpt " +
-            "            on fnpt.id = ta.financial_period_type_id " +
+            "            on fnpt.id = fnpr.financial_period_type_id " +
             "           and fnpt.deleted_date is null " +
             "         where ta.deleted_date is null " +
             "           and ta.organization_id = :organizationId " +
