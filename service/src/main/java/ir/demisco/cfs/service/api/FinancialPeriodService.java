@@ -1,5 +1,6 @@
 package ir.demisco.cfs.service.api;
 
+import ir.demisco.cfs.model.dto.request.FinancialPeriodGetDateRequest;
 import ir.demisco.cfs.model.dto.request.FinancialPeriodRequest;
 import ir.demisco.cfs.model.dto.request.FinancialPeriodStatusRequest;
 import ir.demisco.cfs.model.dto.response.*;
@@ -19,7 +20,7 @@ public interface FinancialPeriodService {
 
     FinancialPeriodDto changeStatusFinancialPeriodById(FinancialPeriodDto financialPeriodDto);
 
-    FinancialPeriodDateDto getStartDateFinancialPeriod(Long organizationId);
+    FinancialPeriodDateDto getStartDateFinancialPeriod(Long organizationId ,FinancialPeriodGetDateRequest financialPeriodGetDateRequest);
 
     List<FinancialPeriodResponse> getFinancialAccountByDateAndOrgan(FinancialPeriodRequest financialPeriodRequest, Long organizationId);
 

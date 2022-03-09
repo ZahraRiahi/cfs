@@ -37,16 +37,14 @@ public interface FinancialPeriodTypeAssignRepository extends JpaRepository<Finan
             "               calendar_type_id " +
             "          from fnpr.financial_period_type_assign ta " +
             "          left outer join fnpr.financial_period fnpr " +
-            "            on fnpr.deleted_date is null " +
-            "           and fnpr.finan_period_type_assign_id = ta.id " +
+            "           on fnpr.finan_period_type_assign_id = ta.id " +
             "         inner join fnpr.financial_period_type fnpt " +
             "            on fnpt.id = fnpr.financial_period_type_id " +
-            "           and fnpt.deleted_date is null " +
-            "         where ta.deleted_date is null " +
-            "           and ta.organization_id = :organizationId " +
+            "         where  ta.organization_id = :organizationId " +
             "           And ta.active_flag = 1 " +
+            " and  ( :financialPeriodType is null or fnpt.id = :financialPeriodTypeId)" +
             "         group by calendar_type_id, ta.start_date)" , nativeQuery = true)
-    List<Object[]> getStartDateAndEndDate(Long organizationId);
+    List<Object[]> getStartDateAndEndDate(Long organizationId,Object financialPeriodType,Long financialPeriodTypeId);
 
     @Query("select fpa from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId and fpa.deletedDate is null ")
     Optional<FinancialPeriodTypeAssign> getFinancialPeriodTypeAssignIdAndOrgan(Long organizationId);
