@@ -1,5 +1,6 @@
 package ir.demisco.cfs.service.impl;
 
+import ir.demisco.cfs.model.dto.request.FinancialPeriodGetDateRequest;
 import ir.demisco.cfs.model.dto.request.FinancialPeriodRequest;
 import ir.demisco.cfs.model.dto.request.FinancialPeriodStatusRequest;
 import ir.demisco.cfs.model.dto.response.*;
@@ -220,9 +221,14 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     @Override
     @Transactional
-    public FinancialPeriodDateDto getStartDateFinancialPeriod(Long organizationId) {
-
-        List<Object[]> objects = financialPeriodTypeAssignRepository.getStartDateAndEndDate(organizationId);
+    public FinancialPeriodDateDto getStartDateFinancialPeriod(Long organizationId,FinancialPeriodGetDateRequest financialPeriodGetDateRequest) {
+        Object financialPeriodType = null;
+        if (financialPeriodGetDateRequest.getFinancialPeriodTypeId() != null) {
+            financialPeriodType = "financialPeriodType";
+        } else {
+            financialPeriodGetDateRequest.setFinancialPeriodTypeId(0L);
+        }
+        List<Object[]> objects = financialPeriodTypeAssignRepository.getStartDateAndEndDate(SecurityHelper.getCurrentUser().getOrganizationId(), financialPeriodType, financialPeriodGetDateRequest.getFinancialPeriodTypeId());
         if (objects.isEmpty()) {
             throw new RuleException("fin.financialPeriodType.getDate");
         }

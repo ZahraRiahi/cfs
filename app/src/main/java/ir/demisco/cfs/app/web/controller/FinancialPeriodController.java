@@ -1,5 +1,6 @@
 package ir.demisco.cfs.app.web.controller;
 
+import ir.demisco.cfs.model.dto.request.FinancialPeriodGetDateRequest;
 import ir.demisco.cfs.model.dto.request.FinancialPeriodRequest;
 import ir.demisco.cfs.model.dto.request.FinancialPeriodStatusRequest;
 import ir.demisco.cfs.model.dto.response.*;
@@ -42,9 +43,9 @@ public class FinancialPeriodController {
         return ResponseEntity.ok(financialPeriodService.changeStatusFinancialPeriodById(financialPeriodDto));
     }
 
-    @GetMapping("/GetDate")
-    public ResponseEntity<FinancialPeriodDateDto> responseEntitygetStartDate() {
-        return ResponseEntity.ok(financialPeriodService.getStartDateFinancialPeriod(SecurityHelper.getCurrentUser().getOrganizationId()));
+    @PostMapping("/GetDate")
+    public ResponseEntity<FinancialPeriodDateDto> responseEntitygetStartDate(@RequestBody FinancialPeriodGetDateRequest financialPeriodGetDateRequest) {
+        return ResponseEntity.ok(financialPeriodService.getStartDateFinancialPeriod(SecurityHelper.getCurrentUser().getOrganizationId(),financialPeriodGetDateRequest));
     }
 
     @PostMapping("/GetCurrent")
