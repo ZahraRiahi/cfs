@@ -18,6 +18,7 @@ import ir.demisco.cloud.core.security.util.SecurityHelper;
 import ir.demisco.core.utils.DateUtil;
 import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -221,7 +222,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     @Override
     @Transactional
-    public FinancialPeriodDateDto getStartDateFinancialPeriod(Long organizationId,FinancialPeriodGetDateRequest financialPeriodGetDateRequest) {
+    public FinancialPeriodDateDto getStartDateFinancialPeriod(Long organizationId, FinancialPeriodGetDateRequest financialPeriodGetDateRequest) {
         Object financialPeriodType = null;
         if (financialPeriodGetDateRequest.getFinancialPeriodTypeId() != null) {
             financialPeriodType = "financialPeriodType";
@@ -239,7 +240,13 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     @Transactional(rollbackOn = Throwable.class)
     public List<FinancialPeriodResponse> getFinancialAccountByDateAndOrgan(FinancialPeriodRequest
                                                                                    financialPeriodRequest, Long organizationId) {
-        List<Object[]> financialPeriodListObject = financialPeriodRepository.findByFinancialPeriodAndDate(financialPeriodRequest.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), organizationId);
+        Object financialPeriodType = null;
+        if (financialPeriodRequest.getFinancialPeriodTypeId() != null) {
+            financialPeriodType = "financialPeriodType";
+        } else {
+            financialPeriodRequest.setFinancialPeriodTypeId(0L);
+        }
+        List<Object[]> financialPeriodListObject = financialPeriodRepository.findByFinancialPeriodAndDate(financialPeriodRequest.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), organizationId, financialPeriodType, financialPeriodRequest.getFinancialPeriodTypeId());
         return financialPeriodListObject.stream().map(objects -> FinancialPeriodResponse.builder().id(Long.parseLong(objects[0].toString()))
                 .description(objects[2] == null ? null : objects[2].toString())
                 .code(objects[3] == null ? null : objects[3].toString())
@@ -249,8 +256,14 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     @Override
     @Transactional
-    public FinancialPeriodNewResponse getGetPeriodStartDateByOrganizationId(Long organizationId) {
-        LocalDateTime countPeriod = financialPeriodRepository.findByFinancialPeriodAndOrganizationId(SecurityHelper.getCurrentUser().getOrganizationId());
+    public FinancialPeriodNewResponse getGetPeriodStartDateByOrganizationId(Long organizationId, FinancialPeriodGetDateRequest financialPeriodGetDateRequest) {
+        Object financialPeriodType = null;
+        if (financialPeriodGetDateRequest.getFinancialPeriodTypeId() != null) {
+            financialPeriodType = "financialPeriodType";
+        } else {
+            financialPeriodGetDateRequest.setFinancialPeriodTypeId(0L);
+        }
+        LocalDateTime countPeriod = financialPeriodRepository.findByFinancialPeriodAndOrganizationId(SecurityHelper.getCurrentUser().getOrganizationId(), financialPeriodType, financialPeriodGetDateRequest.getFinancialPeriodTypeId());
         if (countPeriod == null) {
             throw new RuleException("fin.financialPeriodType.getPeriodStartDate");
         }

@@ -77,10 +77,11 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "            on fp.financial_period_type_id  = fpty.id " +
             "    where " +
             "        fp.financial_period_status_id = 1   " +
-            "        and to_date(:localDate, 'yyyy-mm-dd') between fp.start_date and fp.end_date   " +
+            "        and to_date(:localDate, 'yyyy-mm-dd') between fp.start_date and fp.end_date " +
+            " and  ( :financialPeriodType is null or fpty.id = :financialPeriodTypeId)" +
             "        and fp.deleted_date is null "
             , nativeQuery = true)
-    List<Object[]> findByFinancialPeriodAndDate(String localDate, Long organizationId);
+    List<Object[]> findByFinancialPeriodAndDate(String localDate, Long organizationId, Object financialPeriodType, Long financialPeriodTypeId);
 
 
     @Query("select 1 from FinancialPeriod  fp  join FinancialPeriodTypeAssign ta on  " +
@@ -95,12 +96,24 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "(select  fpd.endDate +1  from FinancialPeriod  fpd where fpd.id=:financialPeriodId) ")
     Long checkFinancialStatusIdIsClose(Long financialPeriodId, Long organizationId);
 
-    @Query("select min(fp.startDate) from FinancialPeriod  fp  join fp.financialPeriodTypeAssign fpa  " +
-            " join fp.financialPeriodType fpt " +
-            " where fp.deletedDate is null and fp.financialPeriodStatus.id=1 " +
-            " and fpa.organization.id =:organizationId " +
-            " and fpa.deletedDate is null and fpa.activeFlag=1 ")
-    LocalDateTime findByFinancialPeriodAndOrganizationId(Long organizationId);
+//    @Query("select min(fp.startDate) from FinancialPeriod  fp  join fp.financialPeriodTypeAssign fpa  " +
+//            " join fp.financialPeriodType fpt " +
+//            " where fp.deletedDate is null and fp.financialPeriodStatus.id=1 " +
+//            " and fpa.organization.id =:organizationId " +
+//            " and fpa.deletedDate is null and fpa.activeFlag=1 ")
+
+    @Query(value = "SELECT MIN(FP.START_DATE) as FinancialPeriodStartDate" +
+            "  FROM FNPR.FINANCIAL_PERIOD FP" +
+            " INNER JOIN FNPR.FINANCIAL_PERIOD_TYPE_ASSIGN FPT" +
+            "    ON FP.FINAN_PERIOD_TYPE_ASSIGN_ID = FPT.ID" +
+            "   AND FPT.ORGANIZATION_ID = :organizationId" +
+            "   AND FPT.ACTIVE_FLAG = 1" +
+            " INNER JOIN FNPR.FINANCIAL_PERIOD_TYPE FPTY" +
+            "    ON FP.FINANCIAL_PERIOD_TYPE_ID = FPTY.ID" +
+            " WHERE FP.FINANCIAL_PERIOD_STATUS_ID = 1" +
+            " and  ( :financialPeriodType is null or FPTY.Id = :financialPeriodTypeId)"
+            , nativeQuery = true)
+    LocalDateTime findByFinancialPeriodAndOrganizationId(Long organizationId,Object financialPeriodType, Long financialPeriodTypeId);
 
     @Query(value = "SELECT  CASE " +
             "         WHEN T.FINANCIAL_PERIOD_STATUS_ID = 2 THEN " +
