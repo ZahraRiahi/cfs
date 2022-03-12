@@ -246,7 +246,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         } else {
             financialPeriodRequest.setFinancialPeriodTypeId(0L);
         }
-        List<Object[]> financialPeriodListObject = financialPeriodRepository.findByFinancialPeriodAndDate(financialPeriodRequest.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), organizationId, financialPeriodType, financialPeriodRequest.getFinancialPeriodTypeId());
+        List<Object[]> financialPeriodListObject = financialPeriodRepository.findByFinancialPeriodAndDate(financialPeriodRequest.getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), SecurityHelper.getCurrentUser().getOrganizationId(), financialPeriodType, financialPeriodRequest.getFinancialPeriodTypeId());
         return financialPeriodListObject.stream().map(objects -> FinancialPeriodResponse.builder().id(Long.parseLong(objects[0].toString()))
                 .description(objects[2] == null ? null : objects[2].toString())
                 .code(objects[3] == null ? null : objects[3].toString())
