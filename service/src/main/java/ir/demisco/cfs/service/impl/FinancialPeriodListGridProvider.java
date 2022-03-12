@@ -6,10 +6,7 @@ import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridDataProvider;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Order;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Selection;
+import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +38,8 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
                 filterContext.getPath("financialPeriodStatus.code"),
                 filterContext.getPath("financialPeriodTypeAssign.id"),
                 filterContext.getPath("description"),
-                filterContext.getPath("code")
+                filterContext.getPath("code"),
+                filterContext.getPath("financialPeriodType.id")
 
         );
     }
@@ -63,6 +61,7 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
                     .financialPeriodTypeAssignId((Long) array[7])
                     .description((String) array[8])
                     .code((String) array[9])
+                    .financialPeriodTypeId((Long) array[10])
                     .build();
         }).collect(Collectors.toList());
     }
@@ -70,6 +69,11 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
     @Override
     public Predicate getCustomRestriction(FilterContext filterContext) {
         DataSourceRequest dataSourceRequest = filterContext.getDataSourceRequest();
+        CriteriaBuilder criteriaBuilder = filterContext.getCriteriaBuilder();
+        Root<Object> root = filterContext.getRoot();
+        Join<Object, Object> centricAccountParent = root.join("financialPeriodType", JoinType.LEFT);
+        criteriaBuilder.equal(centricAccountParent.get("id"), root.get("id"));
+        centricAccountParent.alias("financialPeriodTypeId");
         boolean flagSearch = false;
         for (DataSourceRequest.FilterDescriptor filter : dataSourceRequest.getFilter().getFilters()) {
             if ("SEARCH_STATUS_FLAG".equals(filter.getField())) {
@@ -78,8 +82,9 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
                     flagSearch = (int) filter.getValue() == 1;
                 }
             }
+
         }
-        if (flagSearch){
+        if (flagSearch) {
             dataSourceRequest.getFilter().getFilters().add(DataSourceRequest
                     .FilterDescriptor.create("financialPeriodStatus.id", 1L, DataSourceRequest.Operators.EQUALS));
         }
