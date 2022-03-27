@@ -41,8 +41,9 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     private final FinancialMonthStatusRepository financialMonthStatusRepository;
     private final FinancialPeriodParameterRepository periodParameterRepository;
     private final FinancialDocumentRepository financialDocumentRepository;
+    private final FinancialPeriodTypeRepository financialPeriodTypeRepository;
 
-    public DefaultFinancialPeriod(GridFilterService gridFilterService, FinancialPeriodListGridProvider financialPeriodListGridProvider, FinancialPeriodStatusRepository financialPeriodStatusRepository, FinancialPeriodTypeAssignRepository financialPeriodTypeAssignRepository, FinancialPeriodRepository financialPeriodRepository, FinancialMonthTypeRepository financialMonthTypeRepository, FinancialMonthRepository financialMonthRepository, FinancialMonthStatusRepository financialMonthStatusRepository, FinancialPeriodParameterRepository periodParameterRepository, FinancialDocumentRepository financialDocumentRepository) {
+    public DefaultFinancialPeriod(GridFilterService gridFilterService, FinancialPeriodListGridProvider financialPeriodListGridProvider, FinancialPeriodStatusRepository financialPeriodStatusRepository, FinancialPeriodTypeAssignRepository financialPeriodTypeAssignRepository, FinancialPeriodRepository financialPeriodRepository, FinancialMonthTypeRepository financialMonthTypeRepository, FinancialMonthRepository financialMonthRepository, FinancialMonthStatusRepository financialMonthStatusRepository, FinancialPeriodParameterRepository periodParameterRepository, FinancialDocumentRepository financialDocumentRepository, FinancialPeriodTypeRepository financialPeriodTypeRepository) {
         this.gridFilterService = gridFilterService;
         this.financialPeriodListGridProvider = financialPeriodListGridProvider;
         this.financialPeriodStatusRepository = financialPeriodStatusRepository;
@@ -53,6 +54,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         this.financialMonthStatusRepository = financialMonthStatusRepository;
         this.periodParameterRepository = periodParameterRepository;
         this.financialDocumentRepository = financialDocumentRepository;
+        this.financialPeriodTypeRepository = financialPeriodTypeRepository;
     }
 
     private static FinancialPeriodDateDto apply(Object[] object) {
@@ -91,7 +93,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod.setFinancialPeriodTypeAssign(financialPeriodTypeAssign);
         financialPeriod.setCode(financialPeriodRepository.getCodeFinancialPeriod(organizationId));
         financialPeriod.setDescription(financialPeriodRepository.getDescriptionFinancialPeriod(financialPeriodDto.getEndDate().toString().split("T")[0]));
-
+        financialPeriod.setFinancialPeriodType(financialPeriodTypeRepository.getOne(financialPeriodDto.getFinancialPeriodTypeId()));
         financialPeriod = financialPeriodRepository.save(financialPeriod);
         List<Object[]> list = financialMonthTypeRepository.findByParam(organizationId, financialPeriod.getId());
         FinancialPeriod finalFinancialPeriod = financialPeriod;
@@ -150,7 +152,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         if (financialPeriodDto.getId() == null && mode.equals("start")) {
             throw new RuleException("fin.financialPeriod.update");
         }
-        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN");
+        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN",financialPeriodDto.getFinancialPeriodTypeId());
         if (period.size() >= 3 && mode.equals("end")) {
             throw new RuleException("fin.financialPeriod.validationUpdate");
         } else if (period.size() > 2 && mode.equals("change")) {
@@ -168,8 +170,8 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
         Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN");
-        List<FinancialPeriod> periodStartDate = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(organizationId);
+        List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN", financialPeriodDto.getFinancialPeriodTypeId());
+        List<FinancialPeriod> periodStartDate = financialPeriodRepository.findByFinancialPeriodGetStartDateOrganizationId(organizationId,"OPEN",financialPeriodDto.getFinancialPeriodTypeId());
         if (period.size() >= 2) {
             throw new RuleException("fin.financialPeriod.validationSave");
         } else if (periodStartDate.size() > 0) {
@@ -185,7 +187,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         if (financialPeriodDto.getStartDate().isAfter(financialPeriodDto.getEndDate())) {
             throw new RuleException("fin.financialPeriod.validationSave.comparisonStartDateAndEndDate");
         }
-        Long financialCount = financialPeriodRepository.getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(financialPeriodDto.getStartDate(), financialPeriodDto.getEndDate(), financialPeriodDto.getFinancialPeriodTypeAssignId());
+        Long financialCount = financialPeriodRepository.getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(financialPeriodDto.getStartDate(), financialPeriodDto.getEndDate(), financialPeriodDto.getFinancialPeriodTypeAssignId(),financialPeriodDto.getFinancialPeriodTypeId());
         if (financialCount > 0) {
             throw new RuleException("fin.financialPeriod.validationSave.saveStartDateAndEndDate");
         }
