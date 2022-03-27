@@ -57,7 +57,6 @@ public class FinancialPeriodController {
     @PostMapping("/GetPeriodStartDate")
     public ResponseEntity<FinancialPeriodNewResponse> responseEntity(@RequestBody FinancialPeriodGetDateRequest financialPeriodGetDateRequest) {
         return ResponseEntity.ok(financialPeriodService.getGetPeriodStartDateByOrganizationId(SecurityHelper.getCurrentUser().getOrganizationId(),financialPeriodGetDateRequest));
-
     }
 
     @PostMapping("/GetStatus")
