@@ -294,10 +294,6 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     @Override
     @Transactional
     public FinancialPeriodStatusResponse getFinancialPeriodStatus(FinancialPeriodStatusRequest financialPeriodStatusRequest) {
-//        if (financialPeriodStatusRequest.getFinancialDocumentId() == null && financialPeriodStatusRequest.getFinancialPeriodId() == null
-//                && financialPeriodStatusRequest.getDate() == null && financialPeriodStatusRequest.getOrganizationId() == null) {
-//            throw new RuleException("fin.financialPeriod.getStatus");
-//        }
         checkFinancialPeriodStatus(financialPeriodStatusRequest);
         FinancialPeriodStatusResponse financialPeriodStatusResponses = new FinancialPeriodStatusResponse();
         if (financialPeriodStatusRequest.getFinancialDocumentId() != null) {
