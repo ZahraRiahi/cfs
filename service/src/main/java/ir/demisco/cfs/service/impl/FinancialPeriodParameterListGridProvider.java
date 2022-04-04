@@ -5,7 +5,8 @@ import ir.demisco.cfs.model.entity.FinancialPeriodParameter;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridDataProvider;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Selection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;

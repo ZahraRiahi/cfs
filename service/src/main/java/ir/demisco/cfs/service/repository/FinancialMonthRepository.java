@@ -5,9 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FinancialMonthRepository extends JpaRepository<FinancialMonth, Long> {
 
-//    @Query(value = "select coalesce(count(fp.id),0) from  FinancialMonth fm join fm.financialPeriod fp " +
-//            " join  fp.financialPeriodStatus fps " +
-//            " where fm.id=:financialMonthId and fps.code =:statusCode  ")
-//    Long findByFinancialMonthIdAndStatus(Long financialMonthId, String statusCode);
-
 }
