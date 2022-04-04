@@ -3,7 +3,15 @@ package ir.demisco.cfs.model.entity;
 import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
 import ir.demisco.cloud.basic.model.entity.org.Organization;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -23,7 +31,7 @@ public class FinancialDocument extends AuditModel<Long> {
     private FinancialLedgerType financialLedgerType;
     private FinancialDepartment financialDepartment;
     private String documentNumber;
-    private LocalDateTime DeletedDate;
+    private LocalDateTime deletedDate;
 
 
 //    @Override
@@ -138,10 +146,10 @@ public class FinancialDocument extends AuditModel<Long> {
     }
 
     public LocalDateTime getDeletedDate() {
-        return DeletedDate;
+        return deletedDate;
     }
 
     public void setDeletedDate(LocalDateTime deletedDate) {
-        DeletedDate = deletedDate;
+        this.deletedDate = deletedDate;
     }
 }
