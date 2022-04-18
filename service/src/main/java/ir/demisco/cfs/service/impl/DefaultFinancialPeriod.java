@@ -86,9 +86,6 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         dataSourceRequest.getFilter().setLogic("and");
         dataSourceRequest.getFilter().getFilters().add(DataSourceRequest
                 .FilterDescriptor.create("financialPeriodTypeAssign.organization.id", organizationId, DataSourceRequest.Operators.EQUALS));
-//        dataSourceRequest.getFilter().getFilters().add(DataSourceRequest.FilterDescriptor.create("deletedDate", null, DataSourceRequest.Operators.IS_NULL));
-//        dataSourceRequest.getFilter().getFilters().add(DataSourceRequest.FilterDescriptor.create("financialPeriodTypeAssign.deletedDate", null, DataSourceRequest.Operators.IS_NULL));
-//        dataSourceRequest.getFilter().getFilters().add(DataSourceRequest.FilterDescriptor.create("financialPeriodStatus.deletedDate", null, DataSourceRequest.Operators.IS_NULL));
         dataSourceRequest.getFilter().getFilters().add(DataSourceRequest.FilterDescriptor.create("financialPeriodTypeAssign.activeFlag", 1, DataSourceRequest.Operators.EQUALS));
         return gridFilterService.filter(dataSourceRequest, financialPeriodListGridProvider);
     }
@@ -177,12 +174,10 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         List<FinancialPeriod> period = financialPeriodRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN", financialPeriodDto.getFinancialPeriodTypeId());
         if (period.size() >= 3 && mode.equals("end")) {
             throw new RuleException("fin.financialPeriod.validationUpdate");
-        } else if (period.size() > 2 && mode.equals("change")) {
-            throw new RuleException("fin.financialPeriod.validationUpdate");
-        } else {
-            throw new RuleException("");
         }
-
+        if (period.size() > 2 && mode.equals("change")) {
+            throw new RuleException("fin.financialPeriod.validationUpdate");
+        }
     }
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {

@@ -15,6 +15,7 @@ public class FinancialPeriodDto {
     private String description;
     private String code;
     private Long financialPeriodTypeId;
+    private Boolean disable;
 
     public Long getId() {
         return id;
@@ -96,6 +97,14 @@ public class FinancialPeriodDto {
         this.financialPeriodTypeId = financialPeriodTypeId;
     }
 
+    public Boolean getDisable() {
+        return disable;
+    }
+
+    public void setDisable(Boolean disable) {
+        this.disable = disable;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -169,6 +178,10 @@ public class FinancialPeriodDto {
         }
         public Builder financialPeriodTypeId(Long financialPeriodTypeId) {
             financialPeriodDto.setFinancialPeriodTypeId(financialPeriodTypeId);
+            return this;
+        }
+        public Builder disable(Boolean disable) {
+            financialPeriodDto.setDisable(disable);
             return this;
         }
         public FinancialPeriodDto build() {
