@@ -23,14 +23,14 @@ public class FinancialCodingType extends AuditModel<Long> {
     private String description;
     private Organization organization;
     private LocalDateTime deletedDate;
-
+    @Override
     @Id
     @SequenceGenerator(schema = "fnac", name = "financial_coding_type_generator", sequenceName = "sq_financial_coding_type", allocationSize = 50)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_coding_type_generator")
     public Long getId() {
         return id;
     }
-
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

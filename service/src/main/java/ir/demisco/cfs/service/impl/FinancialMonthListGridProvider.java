@@ -41,7 +41,6 @@ public class FinancialMonthListGridProvider implements GridDataProvider {
 
         return resultList.stream().map(object -> {
             Object[] array = (Object[]) object;
-
             return FinancialMonthDto.builder()
                     .id((Long) array[0])
                     .financialPeriodId((Long) array[1])

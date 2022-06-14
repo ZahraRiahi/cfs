@@ -12,7 +12,7 @@
     <parent>
         <groupId>ir.demisco.cloud.core</groupId>
         <artifactId>dms-core-parent</artifactId>
-        <version>2.6.2</version>
+        <version>2.6.9</version>
     </parent>
 
 

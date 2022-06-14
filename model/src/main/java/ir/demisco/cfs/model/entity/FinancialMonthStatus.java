@@ -4,7 +4,10 @@ import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -13,12 +16,14 @@ public class FinancialMonthStatus extends AuditModel<Long> {
     private Long id;
     private String code;
     private String name;
-
+    @Override
     @Id
+    @SequenceGenerator(schema = "fnpr", name = "financial_month_status_generator", sequenceName = "sq_financial_month_status")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_month_status_generator")
     public Long getId() {
         return id;
     }
-
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -41,19 +46,5 @@ public class FinancialMonthStatus extends AuditModel<Long> {
         this.name = name;
     }
 
-    public enum Code {
-        OPEN("OPEN"), CLOSE("CLOSE");
-
-        Code(String code) {
-            this.code = code;
-        }
-
-        String code;
-
-        public String getCode() {
-            return code;
-        }
-
-    }
 
 }

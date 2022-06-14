@@ -25,14 +25,14 @@ public class FinancialPeriodTypeAssign extends AuditModel<Long> {
     private Long activeFlag;
     private LocalDateTime startDate;
     private LocalDateTime deletedDate;
-
+    @Override
     @Id
     @SequenceGenerator(schema = "fnpr", name = "financial_period_type_assign_generator", sequenceName = "sq_financial_period_type_assign", allocationSize = 50)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_period_type_assign_generator")
     public Long getId() {
         return id;
     }
-
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

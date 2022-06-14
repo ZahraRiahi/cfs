@@ -26,14 +26,14 @@ public class FinancialPeriodParameter extends AuditModel<Long> {
     private Long insuranceDeductionRate;
     private Long maxFewerAmount;
     private Boolean vatFillFlag;
-
+    @Override
     @Id
     @SequenceGenerator(schema = "fnpr", name = "financial_period_parameter_generator", sequenceName = "sq_financial_period_parameter", allocationSize = 50)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_period_parameter_generator")
     public Long getId() {
         return id;
     }
-
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

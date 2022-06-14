@@ -4,9 +4,12 @@ import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
@@ -16,12 +19,14 @@ public class FinancialMonthType extends AuditModel<Long> {
     private FinancialPeriodType financialPeriodType;
     private String description;
     private Long monthNumber;
-
+    @Override
     @Id
+    @SequenceGenerator(schema = "fnpr", name = "financial_month_type_generator", sequenceName = "sq_financial_month_type", allocationSize = 50)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_month_type_generator")
     public Long getId() {
         return id;
     }
-
+    @Override
     public void setId(Long id) {
         this.id = id;
     }
