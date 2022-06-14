@@ -100,7 +100,7 @@ QCsonar:
     - echo $access;
     - if [[ $access < 40 && $CI_MERGE_REQUEST_ASSIGNEES == $GITLAB_USER_LOGIN ]]; then sh curl1.txt;sh curlClose.txt; exit 1; fi
     - if [[ $protectedbranch == false ]]; then exit 0; fi 
-    - sonar-scanner  -Dsonar.branch.name=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME -Dsonar.gitlab.project_id=$CI_PROJECT_PATH -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
+    - sonar-scanner  -Dsonar.branch.name=master -Dsonar.gitlab.project_id=$CI_PROJECT_PATH -Dsonar.gitlab.commit_sha=$CI_COMMIT_SHA -Dsonar.gitlab.ref_name=$CI_COMMIT_REF_NAME
     - export url=$(cat .scannerwork/report-task.txt | grep ceTaskUrl | cut -c11- ) #URL where report gets stored
     - FILE=".scannerwork/report-task.txt"
     - curl -k -u "$SONAR_TOKEN":"" $url -o analysis.txt
