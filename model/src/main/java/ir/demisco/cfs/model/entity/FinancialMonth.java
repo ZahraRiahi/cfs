@@ -26,14 +26,14 @@ public class FinancialMonth extends AuditModel<Long> {
     private Date endDate;
     private String    description;
     private LocalDateTime deletedDate;
-
+    @Override
     @Id
     @SequenceGenerator(schema = "fnpr", name = "financial_month_generator", sequenceName = "sq_financial_month")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_month_generator")
     public Long getId() {
         return id;
     }
-
+    @Override
     public void setId(Long id) {
         this.id = id;
     }

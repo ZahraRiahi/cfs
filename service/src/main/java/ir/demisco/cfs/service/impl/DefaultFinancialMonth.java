@@ -2,7 +2,6 @@ package ir.demisco.cfs.service.impl;
 
 import ir.demisco.cfs.model.dto.response.FinancialMonthDto;
 import ir.demisco.cfs.model.entity.FinancialMonth;
-import ir.demisco.cfs.model.entity.FinancialPeriodStatus;
 import ir.demisco.cfs.service.api.FinancialMonthService;
 import ir.demisco.cfs.service.repository.FinancialMonthRepository;
 import ir.demisco.cfs.service.repository.FinancialMonthStatusRepository;
@@ -48,7 +47,7 @@ public class DefaultFinancialMonth implements FinancialMonthService {
             financialMonth.setFinancialMonthStatus(financialMonthStatusRepository.getOne(2L));
         } else {
             String financialPeriodStatusCode = financialMonth.getFinancialPeriod().getFinancialPeriodStatus().getCode();
-            if (financialPeriodStatusCode.equals(FinancialPeriodStatus.Code.CLOSE.getCode())) {
+            if (financialPeriodStatusCode.equals("CLOSE")) {
                 throw new RuleException("fin.financialMonth.statusCode");
             }
             financialMonth.setFinancialMonthStatus(financialMonthStatusRepository.getOne(1L));

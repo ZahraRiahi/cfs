@@ -89,7 +89,9 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         dataSourceRequest.getFilter().getFilters().add(DataSourceRequest.FilterDescriptor.create("financialPeriodTypeAssign.activeFlag", 1, DataSourceRequest.Operators.EQUALS));
         return gridFilterService.filter(dataSourceRequest, financialPeriodListGridProvider);
     }
-
+    private String getItemForString(Object[] item, int i) {
+        return item[i] == null ? null : item[i].toString();
+    }
     @Override
     @Transactional(rollbackOn = Throwable.class)
     public FinancialPeriodDto save(FinancialPeriodDto financialPeriodDto) {
@@ -109,18 +111,18 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod = financialPeriodRepository.save(financialPeriod);
         List<Object[]> list = financialMonthTypeRepository.findByParam(organizationId, financialPeriod.getId());
         FinancialPeriod finalFinancialPeriod = financialPeriod;
-        list.forEach(item -> {
+        list.forEach((Object[] item) -> {
             FinancialMonth financialMonth = new FinancialMonth();
             financialMonth.setFinancialPeriod(finalFinancialPeriod);
             financialMonth.setFinancialMonthType(financialMonthTypeRepository.findById(Long.parseLong(item[0].toString())).orElse(null));
             financialMonth.setFinancialMonthStatus(financialMonthStatusRepository.findById(1L).orElse(null));
             financialMonth.setStartDate(DateUtil.convertStringToDate(item[1].toString()));
             financialMonth.setEndDate(DateUtil.convertStringToDate(item[2].toString()));
-            financialMonth.setDescription(item[3].toString());
+            financialMonth.setDescription(getItemForString(item, 3));
             financialMonthRepository.save(financialMonth);
         });
         List<Object[]> periodParameters = periodParameterRepository.getPeriodParameterByPeriodId(organizationId, finalFinancialPeriod.getId());
-        periodParameters.forEach(objects -> {
+        periodParameters.forEach((Object [] objects) -> {
             FinancialPeriodParameter financialPeriodParameter = new FinancialPeriodParameter();
             financialPeriodParameter.setFinancialPeriod(finalFinancialPeriod);
             financialPeriodParameter.setStartDate((Date) objects[1]);
