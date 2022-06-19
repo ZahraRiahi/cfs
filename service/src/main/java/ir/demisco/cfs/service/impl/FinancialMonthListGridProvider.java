@@ -17,12 +17,6 @@ public class FinancialMonthListGridProvider implements GridDataProvider {
     public Class<?> getRootEntityClass() {
         return FinancialMonth.class;
     }
-
-    @Override
-    public Predicate getCustomRestriction(FilterContext filterContext) {
-        return null;
-    }
-
     @Override
     public Selection<?> getCustomSelection(FilterContext filterContext) {
         CriteriaBuilder criteriaBuilder = filterContext.getCriteriaBuilder();
