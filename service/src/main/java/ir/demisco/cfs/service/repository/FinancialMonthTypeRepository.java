@@ -72,7 +72,7 @@ public interface FinancialMonthTypeRepository extends JpaRepository<FinancialMon
         "            on fnp.id = fm.financial_period_type_id " +
         "           and fm.deleted_date is null " +
         "         inner join fnpr.financial_period_type_assign ta " +
-        "            on ta.financial_period_type_id = fnp.id " +
+        "            on ta.financial_period_id = fnp.id " +
         "           and ta.deleted_date is null " +
         "           and ta.active_flag = 1 " +
         "           and ta.organization_id = :organizationId " +

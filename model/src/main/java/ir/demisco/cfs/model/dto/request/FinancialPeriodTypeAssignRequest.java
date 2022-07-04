@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class FinancialPeriodTypeAssignRequest {
     private Long id;
     private Long organizationId;
-    private Long financialPeriodTypeId;
+    private Long financialPeriodId;
     private LocalDateTime startDate;
 
     public Long getId() {
@@ -24,12 +24,12 @@ public class FinancialPeriodTypeAssignRequest {
         this.organizationId = organizationId;
     }
 
-    public Long getFinancialPeriodTypeId() {
-        return financialPeriodTypeId;
+    public Long getFinancialPeriodId() {
+        return financialPeriodId;
     }
 
-    public void setFinancialPeriodTypeId(Long financialPeriodTypeId) {
-        this.financialPeriodTypeId = financialPeriodTypeId;
+    public void setFinancialPeriodId(Long financialPeriodTypeId) {
+        this.financialPeriodId = financialPeriodId;
     }
 
     public LocalDateTime getStartDate() {

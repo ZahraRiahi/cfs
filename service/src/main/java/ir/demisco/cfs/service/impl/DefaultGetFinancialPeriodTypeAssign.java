@@ -5,8 +5,8 @@ import ir.demisco.cfs.model.dto.response.FinancialPeriodTypeAssignDto;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodTypeAssignSaveDto;
 import ir.demisco.cfs.model.entity.FinancialPeriodTypeAssign;
 import ir.demisco.cfs.service.api.FinancialPeriodTypeAssignService;
+import ir.demisco.cfs.service.repository.FinancialPeriodRepository;
 import ir.demisco.cfs.service.repository.FinancialPeriodTypeAssignRepository;
-import ir.demisco.cfs.service.repository.FinancialPeriodTypeRepository;
 import ir.demisco.cfs.service.repository.OrganizationRepository;
 import ir.demisco.cloud.core.middle.exception.RuleException;
 import ir.demisco.cloud.core.security.util.SecurityHelper;
@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
 public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeAssignService {
     private final FinancialPeriodTypeAssignRepository financialPeriodTypeAssignRepository;
     private final OrganizationRepository organizationRepository;
-    private final FinancialPeriodTypeRepository financialPeriodTypeRepository;
+    private final FinancialPeriodRepository financialPeriodRepository;
 
-    public DefaultGetFinancialPeriodTypeAssign(FinancialPeriodTypeAssignRepository financialPeriodTypeAssignRepository, OrganizationRepository organizationRepository, FinancialPeriodTypeRepository financialPeriodTypeRepository) {
+    public DefaultGetFinancialPeriodTypeAssign(FinancialPeriodTypeAssignRepository financialPeriodTypeAssignRepository, OrganizationRepository organizationRepository, FinancialPeriodRepository financialPeriodRepository) {
         this.financialPeriodTypeAssignRepository = financialPeriodTypeAssignRepository;
         this.organizationRepository = organizationRepository;
-        this.financialPeriodTypeRepository = financialPeriodTypeRepository;
+        this.financialPeriodRepository = financialPeriodRepository;
     }
 
     @Override
@@ -35,8 +35,8 @@ public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeA
         List<FinancialPeriodTypeAssign> financialPeriodTypeList = financialPeriodTypeAssignRepository.findByOrganizationId(organizationId);
 
         return financialPeriodTypeList.stream().map(e -> FinancialPeriodTypeAssignDto.builder().id(e.getId())
-                .financialPeriodTypeDescription(e.getFinancialPeriodType().getDescription())
-                .financialPeriodTypeId(e.getFinancialPeriodType().getId())
+                .financialPeriodTypeDescription(e.getFinancialPeriod().getDescription())
+                .financialPeriodId(e.getFinancialPeriod().getId())
                 .startDate(e.getStartDate())
                 .activeFlag(e.getActiveFlag())
                 .organizationId(e.getOrganization().getId()).build()).collect(Collectors.toList());
@@ -46,7 +46,7 @@ public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeA
     public FinancialPeriodTypeAssignSaveDto save(FinancialPeriodTypeAssignRequest financialPeriodTypeAssignRequest) {
         Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.findById(financialPeriodTypeAssignRequest.getId() == null ? 0L : financialPeriodTypeAssignRequest.getId()).orElse(new FinancialPeriodTypeAssign());
-        Long periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(SecurityHelper.getCurrentUser().getOrganizationId(), financialPeriodTypeAssignRequest.getFinancialPeriodTypeId());
+        Long periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(SecurityHelper.getCurrentUser().getOrganizationId(), financialPeriodTypeAssignRequest.getFinancialPeriodId());
         if (periodTypeAssign != null) {
             throw new RuleException("fin.informationIsDuplicate");
         } else {
@@ -54,7 +54,7 @@ public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeA
 
         }
         financialPeriodTypeAssign.setOrganization(organizationRepository.getOne(organizationId));
-        financialPeriodTypeAssign.setFinancialPeriodType(financialPeriodTypeRepository.getOne(financialPeriodTypeAssignRequest.getFinancialPeriodTypeId()));
+        financialPeriodTypeAssign.setFinancialPeriod(financialPeriodRepository.getOne(financialPeriodTypeAssignRequest.getFinancialPeriodId()));
         financialPeriodTypeAssign.setActiveFlag(1L);
         financialPeriodTypeAssign.setStartDate(financialPeriodTypeAssignRequest.getStartDate());
         financialPeriodTypeAssign = financialPeriodTypeAssignRepository.save(financialPeriodTypeAssign);
@@ -64,7 +64,7 @@ public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeA
     private FinancialPeriodTypeAssignSaveDto convertFinancialPeriodTypeAssignToDto(FinancialPeriodTypeAssign financialPeriodTypeAssign) {
         return FinancialPeriodTypeAssignSaveDto.builder()
                 .id(financialPeriodTypeAssign.getId())
-                .financialPeriodTypeId(financialPeriodTypeAssign.getFinancialPeriodType().getId())
+                .financialPeriodId(financialPeriodTypeAssign.getFinancialPeriod().getId())
                 .organizationId(financialPeriodTypeAssign.getOrganization().getId())
                 .activeFlag(financialPeriodTypeAssign.getActiveFlag())
                 .startDate(financialPeriodTypeAssign.getStartDate())

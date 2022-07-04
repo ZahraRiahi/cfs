@@ -1,9 +1,11 @@
 package ir.demisco.cfs.service.repository;
 
+import ir.demisco.cfs.model.entity.FinancialPeriod;
 import ir.demisco.cfs.model.entity.FinancialPeriodTypeAssign;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,8 +16,8 @@ public interface FinancialPeriodTypeAssignRepository extends JpaRepository<Finan
     @Query("select fpa from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId ")
     Optional<FinancialPeriodTypeAssign> getFinancialPeriodTypeAssignId(Long organizationId);
 
-    @Query("select 1 from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId and  fpa.financialPeriodType.id=:financialPeriodTypeId ")
-    Long getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(Long organizationId, Long financialPeriodTypeId);
+    @Query("select 1 from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId and  fpa.financialPeriod.id=:financialPeriodId ")
+    Long getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(Long organizationId, Long financialPeriodId);
     @Query(value = " select " +
             "    TO_CHAR(start_date ,'yyyy/mm/dd') start_date, " +
             "    (select max(ad.pdat_ggdate_c) " +
@@ -48,4 +50,32 @@ public interface FinancialPeriodTypeAssignRepository extends JpaRepository<Finan
 
     @Query("select fpa from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId and fpa.deletedDate is null ")
     Optional<FinancialPeriodTypeAssign> getFinancialPeriodTypeAssignIdAndOrgan(Long organizationId);
+
+    @Query(value = "select fpa from  FinancialPeriodTypeAssign fpa  join  fpa.financialPeriod fp join  fp.financialPeriodStatus fps left outer join fp.financialPeriodType fpt " +
+            " where fpa.organization.id=:organizationId and fps.code =:statusCode and fpa.activeFlag=1 and fpt.id=:financialPeriodTypeId and fp.deletedDate is null order by fp.endDate desc ")
+    List<FinancialPeriod> findByFinancialPeriodTypeAssignOrganizationId(Long organizationId, String statusCode, Long financialPeriodTypeId);
+
+
+    @Query(value = "select fpa from  FinancialPeriodTypeAssign fpa  join  fpa.financialPeriod fp join  fp.financialPeriodStatus fps left outer join fp.financialPeriodType fpt" +
+            " where fpa.organization.id=:organizationId and  fps.code =:statusCode and fpa.activeFlag=1 and fpt.id=:financialPeriodTypeId order by fp.endDate desc ")
+    List<FinancialPeriod> findByFinancialPeriodGetStartDateOrganizationId(Long organizationId, String statusCode, Long financialPeriodTypeId);
+
+    @Query("select coalesce(COUNT(fp.id),0) from FinancialPeriodTypeAssign fpa  join  fpa.financialPeriod fp where ((fp.startDate=:startDate and fpa.id=:typeAssignId and fp.financialPeriodType.id=:financialPeriodTypeId ) " +
+            " or (fp.endDate =:endDate and fpa.id=:typeAssignId and fp.financialPeriodType.id=:financialPeriodTypeId )) and fp.financialPeriodStatus.id = 1  ")
+    Long getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(LocalDateTime startDate, LocalDateTime endDate, Long typeAssignId, Long financialPeriodTypeId);
+
+    @Query("select 1 from FinancialPeriodTypeAssign  fpa  join FinancialPeriod fp on  " +
+            "fp.id = fpa.financialPeriod.id and fpa.organization.id =:organizationId  " +
+            "where fp.financialPeriodStatus.id=1  and fp.endDate=" +
+            "(select  fpd.startDate -1  from FinancialPeriod  fpd where fpd.id=:financialPeriodId) ")
+    Long checkFinancialStatusIdIsOpen(Long financialPeriodId, Long organizationId);
+
+
+
+    @Query("select 1 from FinancialPeriodTypeAssign  fpa  join FinancialPeriod fp on  " +
+            "fp.id = fpa.financialPeriod.id and fpa.organization.id =:organizationId  " +
+            "where fp.financialPeriodStatus.id=2  and fp.startDate=" +
+            "(select  fpd.endDate +1  from FinancialPeriod  fpd where fpd.id=:financialPeriodId) ")
+    Long checkFinancialStatusIdIsClose(Long financialPeriodId, Long organizationId);
+
 }
