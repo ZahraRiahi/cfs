@@ -25,24 +25,6 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             , nativeQuery = true)
     String getDescriptionFinancialPeriod(String localDate);
 
-//    @Query("select coalesce(COUNT(fp.id),0) from FinancialPeriod fp where ((fp.startDate=:startDate and fp.financialPeriodTypeAssign.id=:typeAssignId and fp.financialPeriodType.id=:financialPeriodTypeId ) " +
-//            " or (fp.endDate =:endDate and fp.financialPeriodTypeAssign.id=:typeAssignId and fp.financialPeriodType.id=:financialPeriodTypeId )) and fp.financialPeriodStatus.id = 1  ")
-//    Long getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(LocalDateTime startDate, LocalDateTime endDate, Long typeAssignId, Long financialPeriodTypeId);
-
-
-//    @Query(value = "select fp from  FinancialPeriod fp left outer join  fp.financialPeriodTypeAssign fpa join  fp.financialPeriodStatus fps left outer join fp.financialPeriodType fpt" +
-//            " where fpa.organization.id=:organizationId and  fps.code =:statusCode and fpa.activeFlag=1 and fpt.id=:financialPeriodTypeId order by fp.endDate desc ")
-//    List<FinancialPeriod> findByFinancialPeriodGetStartDateOrganizationId(Long organizationId, String statusCode, Long financialPeriodTypeId);
-
-
-//    @Query("select fnpr from FinancialPeriod fnpr " +
-//            " where  fnpr.deletedDate is null  " +
-//            "  and fnpr.financialPeriodTypeAssign.id in (select fpt.id" +
-//            "      from FinancialPeriodTypeAssign fpt" +
-//            "     where fpt.organization.id =:organizationId  And fpt.activeFlag=1 " +
-//            "     and fpt.deletedDate is null)")
-//    List<FinancialPeriod> findActiveFinancialPeriod(Long organizationId);
-
     @Query(value = "select fp.id, " +
             "       ' دوره مالی از ' || case" +
             "         when fpty.calendar_type_id = 1 then " +
@@ -78,24 +60,6 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "        and fp.deleted_date is null "
             , nativeQuery = true)
     List<Object[]> findByFinancialPeriodAndDate(String localDate, Long organizationId, Object financialPeriodType, Long financialPeriodTypeId);
-
-//    @Query("select 1 from FinancialPeriod  fp  join FinancialPeriodTypeAssign ta on  " +
-//            "ta.id = fp.financialPeriodTypeAssign.id and ta.organization.id =:organizationId  " +
-//            "where fp.financialPeriodStatus.id=1  and fp.endDate=" +
-//            "(select  fpd.startDate -1  from FinancialPeriod  fpd where fpd.id=:financialPeriodId) ")
-//    Long checkFinancialStatusIdIsOpen(Long financialPeriodId, Long organizationId);
-
-//    @Query("select 1 from FinancialPeriod  fp  join FinancialPeriodTypeAssign ta on  " +
-//            "ta.id = fp.financialPeriodTypeAssign.id and ta.organization.id =:organizationId  " +
-//            "where fp.financialPeriodStatus.id=2  and fp.startDate=" +
-//            "(select  fpd.endDate +1  from FinancialPeriod  fpd where fpd.id=:financialPeriodId) ")
-//    Long checkFinancialStatusIdIsClose(Long financialPeriodId, Long organizationId);
-
-//    @Query("select min(fp.startDate) from FinancialPeriod  fp  join fp.financialPeriodTypeAssign fpa  " +
-//            " join fp.financialPeriodType fpt " +
-//            " where fp.deletedDate is null and fp.financialPeriodStatus.id=1 " +
-//            " and fpa.organization.id =:organizationId " +
-//            " and fpa.deletedDate is null and fpa.activeFlag=1 ")
 
     @Query(value = "SELECT MIN(FP.START_DATE) as FinancialPeriodStartDate" +
             "  FROM FNPR.FINANCIAL_PERIOD FP" +
