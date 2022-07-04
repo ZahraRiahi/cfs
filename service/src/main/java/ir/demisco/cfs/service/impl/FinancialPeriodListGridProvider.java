@@ -7,8 +7,6 @@ import ir.demisco.cloud.core.middle.service.business.api.core.GridDataProvider;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
@@ -75,11 +73,6 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
     @Override
     public Predicate getCustomRestriction(FilterContext filterContext) {
         DataSourceRequest dataSourceRequest = filterContext.getDataSourceRequest();
-        CriteriaBuilder criteriaBuilder = filterContext.getCriteriaBuilder();
-        Root<Object> root = filterContext.getRoot();
-//        Join<Object, Object> centricAccountParent = root.join("financialPeriodType", JoinType.LEFT);
-//        criteriaBuilder.equal(centricAccountParent.get("id"), root.get("id"));
-//        centricAccountParent.alias("financialPeriodId");
         boolean flagSearch = false;
         for (DataSourceRequest.FilterDescriptor filter : dataSourceRequest.getFilter().getFilters()) {
             if ("SEARCH_STATUS_FLAG".equals(filter.getField())) {
