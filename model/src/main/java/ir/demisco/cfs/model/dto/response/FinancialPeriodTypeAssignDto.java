@@ -32,7 +32,7 @@ public class FinancialPeriodTypeAssignDto {
         return financialPeriodId;
     }
 
-    public void setFinancialPeriodId(Long financialPeriodTypeId) {
+    public void setFinancialPeriodId(Long financialPeriodId) {
         this.financialPeriodId = financialPeriodId;
     }
 

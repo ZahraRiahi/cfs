@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import javax.persistence.criteria.Selection;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -51,7 +50,7 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
     @Override
     public List<Object> mapToDto(List<Object> resultList) {
 
-        return resultList.stream().map(object -> {
+        return resultList.stream().map((Object object) -> {
             Object[] array = (Object[]) object;
 
             return FinancialPeriodDto.builder()

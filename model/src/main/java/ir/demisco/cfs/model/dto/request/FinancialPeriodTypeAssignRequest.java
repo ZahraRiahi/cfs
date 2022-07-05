@@ -28,7 +28,7 @@ public class FinancialPeriodTypeAssignRequest {
         return financialPeriodId;
     }
 
-    public void setFinancialPeriodId(Long financialPeriodTypeId) {
+    public void setFinancialPeriodId(Long financialPeriodId) {
         this.financialPeriodId = financialPeriodId;
     }
 

@@ -96,7 +96,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     @Transactional(rollbackOn = Throwable.class)
     public FinancialPeriodDto save(FinancialPeriodDto financialPeriodDto) {
         validationSave(financialPeriodDto);
-        Long organizationId = 1L;
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId() == null ? 0L : financialPeriodDto.getId()).orElse(new FinancialPeriod());
         financialPeriod.setEndDate(financialPeriodDto.getEndDate().truncatedTo(ChronoUnit.DAYS));
         financialPeriod.setStartDate(financialPeriodDto.getStartDate().truncatedTo(ChronoUnit.DAYS));
@@ -151,7 +151,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         financialPeriod.setEndDate(financialPeriodDto.getEndDate());
         financialPeriod.setOpenMonthCount(financialPeriodDto.getOpenMonthCount());
         financialPeriod.setFinancialPeriodStatus(financialPeriodStatusRepository.getOne(financialPeriodDto.getStatusId()));
-        Long organizationId = 1L;
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         financialPeriod.setCode(financialPeriodRepository.getCodeFinancialPeriod(organizationId));
         financialPeriod.setDescription(financialPeriodRepository.getDescriptionFinancialPeriod(financialPeriodDto.getEndDate().toString().split("T")[0]));
         financialPeriod = financialPeriodRepository.save(financialPeriod);
@@ -160,7 +160,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     }
 
     private void validationUpdate(FinancialPeriodDto financialPeriodDto, String mode) {
-        Long organizationId = 1L;
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
         FinancialPeriod financialPeriod = financialPeriodRepository.findById(financialPeriodDto.getId()).orElseThrow(() -> new RuleException("fin.financialPeriod.notFound"));
         if (!String.valueOf(financialPeriodDto.getOpenMonthCount()).matches(myRegex.pattern())) {
             throw new RuleException("fin.financialPeriod.financialMonth.update");
@@ -181,14 +181,14 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
     }
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
-        Long organizationId = 1L;
-        List<FinancialPeriod> period = financialPeriodTypeAssignRepository.findByFinancialPeriodTypeAssignOrganizationId(1L, "OPEN", financialPeriodDto.getFinancialPeriodTypeId());
+        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        List<FinancialPeriod> period = financialPeriodTypeAssignRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN", financialPeriodDto.getFinancialPeriodTypeId());
         if (period.size() >= 2) {
             throw new RuleException("fin.financialPeriod.validationSave");
         }
             {
             FinancialPeriodTypeAssign financialPeriodTypeAssign =
-                    financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(1L).orElseThrow(() -> new RuleException("fin.financialPeriod.financialPeriodTypeAssignIdAndOrgan"));
+                    financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(organizationId).orElseThrow(() -> new RuleException("fin.financialPeriod.financialPeriodTypeAssignIdAndOrgan"));
             financialPeriodDto.setFinancialPeriodTypeAssignId(financialPeriodTypeAssign.getId());
         }
         if (!String.valueOf(financialPeriodDto.getOpenMonthCount()).matches(myRegex.pattern())) {
