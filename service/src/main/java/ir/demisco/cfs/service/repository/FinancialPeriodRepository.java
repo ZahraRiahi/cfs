@@ -46,7 +46,7 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "        fnpr.financial_period fp " +
             "    inner join" +
             "        fnpr.financial_period_type_assign fpt    " +
-            "            on fp.finan_period_type_assign_id = fpt.id   " +
+            "            on fp.id = fpt.financial_period_id    " +
             "            and fpt.organization_id = :organizationId " +
             "            and fpt.deleted_date is null   " +
             "            and fpt.active_flag = 1 " +
@@ -64,7 +64,7 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
     @Query(value = "SELECT MIN(FP.START_DATE) as FinancialPeriodStartDate" +
             "  FROM FNPR.FINANCIAL_PERIOD FP" +
             " INNER JOIN FNPR.FINANCIAL_PERIOD_TYPE_ASSIGN FPT" +
-            "    ON FP.FINAN_PERIOD_TYPE_ASSIGN_ID = FPT.ID" +
+            "    ON FP.id = FPT.FINANCIAL_PERIOD_ID" +
             "   AND FPT.ORGANIZATION_ID = :organizationId" +
             "   AND FPT.ACTIVE_FLAG = 1" +
             " INNER JOIN FNPR.FINANCIAL_PERIOD_TYPE FPTY" +
