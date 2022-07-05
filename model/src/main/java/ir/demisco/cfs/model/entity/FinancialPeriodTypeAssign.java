@@ -19,32 +19,27 @@ import java.time.LocalDateTime;
 @Table(name = "financial_period_type_assign", schema = "fnpr")
 public class FinancialPeriodTypeAssign extends AuditModel<Long> {
 
-    private Long id;
     private Organization organization;
-    private FinancialPeriodType financialPeriodType;
+    private FinancialPeriod financialPeriod;
     private Long activeFlag;
     private LocalDateTime startDate;
     private LocalDateTime deletedDate;
+
     @Override
-    @Id
+        @Id
     @SequenceGenerator(schema = "fnpr", name = "financial_period_type_assign_generator", sequenceName = "sq_financial_period_type_assign", allocationSize = 50)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_period_type_assign_generator")
     public Long getId() {
-        return id;
+        return super.getId();
     }
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FINANCIAL_PERIOD_TYPE_ID")
-    public FinancialPeriodType getFinancialPeriodType() {
-        return financialPeriodType;
+    @JoinColumn(name = "FINANCIAL_PERIOD_ID")
+    public FinancialPeriod getFinancialPeriod() {
+        return financialPeriod;
     }
 
-    public void setFinancialPeriodType(FinancialPeriodType financialPeriodType) {
-        this.financialPeriodType = financialPeriodType;
+    public void setFinancialPeriod(FinancialPeriod financialPeriod) {
+        this.financialPeriod = financialPeriod;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)

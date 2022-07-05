@@ -5,7 +5,6 @@ import ir.demisco.cfs.model.entity.FinancialMonth;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridDataProvider;
 import org.springframework.stereotype.Component;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Selection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,12 +16,6 @@ public class FinancialMonthListGridProvider implements GridDataProvider {
     public Class<?> getRootEntityClass() {
         return FinancialMonth.class;
     }
-
-    @Override
-    public Predicate getCustomRestriction(FilterContext filterContext) {
-        return null;
-    }
-
     @Override
     public Selection<?> getCustomSelection(FilterContext filterContext) {
         CriteriaBuilder criteriaBuilder = filterContext.getCriteriaBuilder();
@@ -39,7 +32,7 @@ public class FinancialMonthListGridProvider implements GridDataProvider {
     @Override
     public List<Object> mapToDto(List<Object> resultList) {
 
-        return resultList.stream().map(object -> {
+        return resultList.stream().map((Object object) -> {
             Object[] array = (Object[]) object;
             return FinancialMonthDto.builder()
                     .id((Long) array[0])

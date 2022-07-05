@@ -1,7 +1,7 @@
 package ir.demisco.cfs.service.impl;
 
 import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
-import ir.demisco.cfs.model.entity.FinancialPeriod;
+import ir.demisco.cfs.model.entity.FinancialPeriodTypeAssign;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.service.business.api.core.GridDataProvider;
 import org.springframework.stereotype.Component;
@@ -16,33 +16,32 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class FinancialPeriodListGridProvider implements GridDataProvider {
-
+public class FinancialPeriodTypeAssignListGridProvider implements GridDataProvider {
     @Override
     public Class<?> getRootEntityClass() {
-        return FinancialPeriod.class;
+        return FinancialPeriodTypeAssign.class;
     }
 
     @Override
     public List<Order> getCustomSort(FilterContext filterContext) {
-        return Collections.singletonList(filterContext.getCriteriaBuilder().desc(filterContext.getPath("startDate")));
+        return Collections.singletonList(filterContext.getCriteriaBuilder().desc(filterContext.getPath("financialPeriod.startDate")));
     }
 
     @Override
     public Selection<?> getCustomSelection(FilterContext filterContext) {
         CriteriaBuilder criteriaBuilder = filterContext.getCriteriaBuilder();
         return criteriaBuilder.array(
+                filterContext.getPath("financialPeriod.id"),
+                filterContext.getPath("financialPeriod.startDate"),
+                filterContext.getPath("financialPeriod.endDate"),
+                filterContext.getPath("financialPeriod.openMonthCount"),
+                filterContext.getPath("financialPeriod.financialPeriodStatus.id"),
+                filterContext.getPath("financialPeriod.financialPeriodStatus.name"),
+                filterContext.getPath("financialPeriod.financialPeriodStatus.code"),
                 filterContext.getPath("id"),
-                filterContext.getPath("startDate"),
-                filterContext.getPath("endDate"),
-                filterContext.getPath("openMonthCount"),
-                filterContext.getPath("financialPeriodStatus.id"),
-                filterContext.getPath("financialPeriodStatus.name"),
-                filterContext.getPath("financialPeriodStatus.code"),
-                filterContext.getPath("periodTypeAssignList.id"),
-                filterContext.getPath("description"),
-                filterContext.getPath("code"),
-                filterContext.getPath("financialPeriodType.id")
+                filterContext.getPath("financialPeriod.description"),
+                filterContext.getPath("financialPeriod.code"),
+                filterContext.getPath("financialPeriod.financialPeriodType.id")
 
         );
     }
@@ -84,7 +83,7 @@ public class FinancialPeriodListGridProvider implements GridDataProvider {
         }
         if (flagSearch) {
             dataSourceRequest.getFilter().getFilters().add(DataSourceRequest
-                    .FilterDescriptor.create("financialPeriodStatus.id", 1L, DataSourceRequest.Operators.EQUALS));
+                    .FilterDescriptor.create("financialPeriod.financialPeriodStatus.id", 1L, DataSourceRequest.Operators.EQUALS));
         }
         return null;
     }

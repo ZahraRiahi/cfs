@@ -1,6 +1,7 @@
 package ir.demisco.cfs.model.entity;
 
 import ir.demisco.cloud.basic.model.entity.domain.AuditModel;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,7 +14,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
-
 @Entity
 @Table(name = "financial_period", schema = "fnpr")
 public class FinancialPeriod extends AuditModel<Long> {
@@ -22,11 +22,11 @@ public class FinancialPeriod extends AuditModel<Long> {
     private LocalDateTime endDate;
     private Long openMonthCount;
     private FinancialPeriodStatus financialPeriodStatus;
-    private FinancialPeriodTypeAssign financialPeriodTypeAssign;
     private String description;
     private String code;
     private LocalDateTime deletedDate;
     private FinancialPeriodType financialPeriodType;
+
     @Override
     @Id
     @SequenceGenerator(schema = "fnpr", name = "financial_period_generator", sequenceName = "sq_financial_period")
@@ -34,6 +34,7 @@ public class FinancialPeriod extends AuditModel<Long> {
     public Long getId() {
         return id;
     }
+
     @Override
     public void setId(Long id) {
         this.id = id;
@@ -76,16 +77,6 @@ public class FinancialPeriod extends AuditModel<Long> {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
-    }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FINAN_PERIOD_TYPE_ASSIGN_ID")
-    public FinancialPeriodTypeAssign getFinancialPeriodTypeAssign() {
-        return financialPeriodTypeAssign;
-    }
-
-    public void setFinancialPeriodTypeAssign(FinancialPeriodTypeAssign financialPeriodTypeAssign) {
-        this.financialPeriodTypeAssign = financialPeriodTypeAssign;
     }
 
     @Column(name = "DESCRIPTION")

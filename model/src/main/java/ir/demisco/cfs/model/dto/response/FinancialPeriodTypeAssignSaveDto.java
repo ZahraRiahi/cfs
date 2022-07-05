@@ -6,7 +6,7 @@ public class FinancialPeriodTypeAssignSaveDto {
 
     private Long id;
     private Long organizationId;
-    private Long financialPeriodTypeId;
+    private Long financialPeriodId;
     private Long activeFlag;
     private LocalDateTime startDate;
 
@@ -26,12 +26,12 @@ public class FinancialPeriodTypeAssignSaveDto {
         this.organizationId = organizationId;
     }
 
-    public Long getFinancialPeriodTypeId() {
-        return financialPeriodTypeId;
+    public Long getFinancialPeriodId() {
+        return financialPeriodId;
     }
 
-    public void setFinancialPeriodTypeId(Long financialPeriodTypeId) {
-        this.financialPeriodTypeId = financialPeriodTypeId;
+    public void setFinancialPeriodId(Long financialPeriodId) {
+        this.financialPeriodId = financialPeriodId;
     }
 
     public Long getActiveFlag() {
@@ -75,8 +75,8 @@ public class FinancialPeriodTypeAssignSaveDto {
             return this;
         }
 
-        public Builder financialPeriodTypeId(Long financialPeriodTypeId) {
-            financialPeriodTypeAssignSaveDto.setFinancialPeriodTypeId(financialPeriodTypeId);
+        public Builder financialPeriodId(Long financialPeriodId) {
+            financialPeriodTypeAssignSaveDto.setFinancialPeriodId(financialPeriodId);
             return this;
         }
 

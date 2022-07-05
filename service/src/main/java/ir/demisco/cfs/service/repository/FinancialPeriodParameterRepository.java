@@ -18,20 +18,16 @@ public interface FinancialPeriodParameterRepository extends JpaRepository<Financ
             "   max_fewer_amount, " +
             "   vat_fill_flag " +
             "    from fnpr.financial_period_parameter p " +
-            "   where p.financial_period_id = " +
-            "         (select id " +
-            "            from (select t.id " +
-            "                    from fnpr.financial_period t " +
-            "                   where t.finan_period_type_assign_id = " +
-            "                         (select id " +
-            "                            from fnpr.financial_period_type_assign fpt " +
-            "                           where organization_id = :organizationId " +
-            "                             And active_flag = 1 " +
-            "                             And fpt.deleted_date is null ) " +
-            "                     and t.id != :periodId" +
-            "                     And t.deleted_date is null " +
-            "                   order by t.start_date desc) " +
-            "           where rownum = 1 ) " +
-            "           And p.deleted_date is null ",nativeQuery = true)
+            "   where p.financial_period_id =" +
+            "       (select id" +
+            "          from (select t.id" +
+            "                  from fnpr.financial_period t" +
+            "                 inner join fnpr.financial_period_type_assign tt" +
+            "                    on t.id = tt.financial_period_id" +
+            "                 where tt.organization_id = :organizationId " +
+            "                   And tt.active_flag = 1" +
+            "                   and t.id != :periodId" +
+            "                 order by t.start_date desc)" +
+            "         where rownum = 1)  ",nativeQuery = true)
     List<Object[]>  getPeriodParameterByPeriodId(Long organizationId,Long periodId);
 }
