@@ -41,22 +41,21 @@ public interface FinancialPeriodTypeAssignRepository extends JpaRepository<Finan
             "         ad.pdat_ggdate_yer = substr(TO_CHAR(add_months((start_date), 11),'yyyy/mm/dd'),0,4) " +
             "         and " +
             "         ad.pdat_ggdate_mon = substr(TO_CHAR(add_months((start_date), 11),'yyyy/mm/dd'),6,2))) end_date " +
-            "  from (select case " +
-            "                 when max(fnpr.end_date) is null then " +
-            "                 ta.start_date " +
-            "                 else " +
-            "                  max(fnpr.end_date) + 1  " +
-            "               end start_date, " +
-            "               calendar_type_id " +
-            "          from fnpr.financial_period_type_assign ta " +
-            "          left outer join fnpr.financial_period fnpr " +
-            "           on fnpr.finan_period_type_assign_id = ta.id " +
-            "         inner join fnpr.financial_period_type fnpt " +
-            "            on fnpt.id = fnpr.financial_period_type_id " +
-            "         where  ta.organization_id = :organizationId " +
+            "  from (select max( case" +
+            "                 when fnpr.end_date is null then" +
+            "                  ta.start_date" +
+            "                 else" +
+            "                  fnpr.end_date + 1" +
+            "               end) start_date, calendar_type_id" +
+            "           from fnpr.financial_period fnpr" +
+            "          inner join fnpr.financial_period_type_assign ta" +
+            "             on ta.financial_period_id = fnpr.id" +
+            "          inner join fnpr.financial_period_type fnpt" +
+            "             on fnpt.id = fnpr.financial_period_type_id " +
+            "         where ta.organization_id = :organizationId " +
             "           And ta.active_flag = 1 " +
             " and  ( :financialPeriodType is null or fnpt.id = :financialPeriodTypeId)" +
-            "         group by calendar_type_id, ta.start_date)", nativeQuery = true)
+            "         group by calendar_type_id)", nativeQuery = true)
     List<Object[]> getStartDateAndEndDate(Long organizationId, Object financialPeriodType, Long financialPeriodTypeId);
 
     @Query("select fpa from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId and fpa.deletedDate is null ")
