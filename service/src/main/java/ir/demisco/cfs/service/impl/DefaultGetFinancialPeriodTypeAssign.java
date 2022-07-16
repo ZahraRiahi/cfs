@@ -44,9 +44,9 @@ public class DefaultGetFinancialPeriodTypeAssign implements FinancialPeriodTypeA
 
     @Override
     public FinancialPeriodTypeAssignSaveDto save(FinancialPeriodTypeAssignRequest financialPeriodTypeAssignRequest) {
-        Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
+        Long organizationId = financialPeriodTypeAssignRequest.getOrganizationId();
         FinancialPeriodTypeAssign financialPeriodTypeAssign = financialPeriodTypeAssignRepository.findById(financialPeriodTypeAssignRequest.getId() == null ? 0L : financialPeriodTypeAssignRequest.getId()).orElse(new FinancialPeriodTypeAssign());
-        Long periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(SecurityHelper.getCurrentUser().getOrganizationId(), financialPeriodTypeAssignRequest.getFinancialPeriodId());
+        Long periodTypeAssign = financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(organizationId, financialPeriodTypeAssignRequest.getFinancialPeriodId());
         if (periodTypeAssign != null) {
             throw new RuleException("fin.informationIsDuplicate");
         } else {
