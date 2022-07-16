@@ -26,8 +26,8 @@ public interface FinancialPeriodTypeAssignRepository extends JpaRepository<Finan
     @Query("select fpa from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId ")
     Optional<FinancialPeriodTypeAssign> getFinancialPeriodTypeAssignId(Long organizationId);
 
-    @Query("select 1 from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId and  fpa.financialPeriod.id=:financialPeriodId ")
-    Long getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(Long organizationId, Long financialPeriodId);
+    @Query("select 1 from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId and  fpa.financialPeriod.id=:financialPeriodId and fpa.startDate=:startDate")
+    Long getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(Long organizationId, Long financialPeriodId,LocalDateTime startDate);
 
     @Query(value = " select " +
             "    TO_CHAR(start_date ,'yyyy/mm/dd') start_date, " +
