@@ -9,7 +9,6 @@ import ir.demisco.cfs.service.repository.FinancialPeriodRepository;
 import ir.demisco.cfs.service.repository.FinancialPeriodTypeAssignRepository;
 import ir.demisco.cfs.service.repository.OrganizationRepository;
 import ir.demisco.cloud.core.middle.exception.RuleException;
-import ir.demisco.cloud.core.security.util.SecurityHelper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
