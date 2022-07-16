@@ -80,12 +80,10 @@ public class FinancialPeriodTypeAssignListGridProvider implements GridDataProvid
                     flagSearch = (int) filter.getValue() == 1;
                 }
             }
-            if ("financialPeriodType.id".equals(filter.getField())) {
+            if ("financialPeriodType.id".equals(filter.getField()) && filter.getValue() != null) {
+                newFilter = DataSourceRequest.FilterDescriptor.create("financialPeriod.financialPeriodType.id", filter.getValue(), DataSourceRequest.Operators.EQUALS);
+                filter.setDisable(true);
 
-                if (filter.getValue() != null) {
-                    newFilter = DataSourceRequest.FilterDescriptor.create("financialPeriod.financialPeriodType.id", filter.getValue(), DataSourceRequest.Operators.EQUALS);
-                    filter.setDisable(true);
-                }
             }
 
         }
