@@ -72,6 +72,7 @@ public class FinancialPeriodTypeAssignListGridProvider implements GridDataProvid
     public Predicate getCustomRestriction(FilterContext filterContext) {
         DataSourceRequest dataSourceRequest = filterContext.getDataSourceRequest();
         boolean flagSearch = false;
+        DataSourceRequest.FilterDescriptor newFilter = null;
         for (DataSourceRequest.FilterDescriptor filter : dataSourceRequest.getFilter().getFilters()) {
             if ("SEARCH_STATUS_FLAG".equals(filter.getField())) {
                 filter.setDisable(true);
@@ -79,11 +80,19 @@ public class FinancialPeriodTypeAssignListGridProvider implements GridDataProvid
                     flagSearch = (int) filter.getValue() == 1;
                 }
             }
+            if ("financialPeriodType.id".equals(filter.getField()) && filter.getValue() != null) {
+                newFilter = DataSourceRequest.FilterDescriptor.create("financialPeriod.financialPeriodType.id", filter.getValue(), DataSourceRequest.Operators.EQUALS);
+                filter.setDisable(true);
+
+            }
 
         }
         if (flagSearch) {
             dataSourceRequest.getFilter().getFilters().add(DataSourceRequest
                     .FilterDescriptor.create("financialPeriod.financialPeriodStatus.id", 1L, DataSourceRequest.Operators.EQUALS));
+        }
+        if (newFilter != null) {
+            dataSourceRequest.getFilter().getFilters().add(newFilter);
         }
         return null;
     }
