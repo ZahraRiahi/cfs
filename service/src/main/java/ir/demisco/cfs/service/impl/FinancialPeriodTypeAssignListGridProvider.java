@@ -79,7 +79,8 @@ public class FinancialPeriodTypeAssignListGridProvider implements GridDataProvid
                 if (filter.getValue() instanceof Integer) {
                     flagSearch = (int) filter.getValue() == 1;
                 }
-            } else if ("financialPeriodType.id".equals(filter.getField())) {
+            }
+            if ("financialPeriodType.id".equals(filter.getField())) {
 
                 if (filter.getValue() != null) {
                     newFilter = DataSourceRequest.FilterDescriptor.create("financialPeriod.financialPeriodType.id", filter.getValue(), DataSourceRequest.Operators.EQUALS);
