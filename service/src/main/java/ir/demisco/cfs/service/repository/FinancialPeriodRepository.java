@@ -81,8 +81,7 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "          1 " +
             "       END " +
             "  FROM FNPR.FINANCIAL_PERIOD T" +
-            " WHERE T.ID = :financialPeriodId " +
-            " and t.deleted_date is null "
+            " WHERE T.ID = :financialPeriodId "
             , nativeQuery = true)
     Long findFinancialPeriodById(Long financialPeriodId);
 
