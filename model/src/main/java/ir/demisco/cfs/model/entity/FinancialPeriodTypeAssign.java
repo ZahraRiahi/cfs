@@ -26,12 +26,13 @@ public class FinancialPeriodTypeAssign extends AuditModel<Long> {
     private LocalDateTime deletedDate;
 
     @Override
-        @Id
+    @Id
     @SequenceGenerator(schema = "fnpr", name = "financial_period_type_assign_generator", sequenceName = "sq_financial_period_type_assign", allocationSize = 50)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "financial_period_type_assign_generator")
     public Long getId() {
         return super.getId();
     }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FINANCIAL_PERIOD_ID")
     public FinancialPeriod getFinancialPeriod() {

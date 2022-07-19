@@ -125,4 +125,27 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "       END AND FMN.FINANCIAL_MONTH_STATUS_ID = 1) "
             , nativeQuery = true)
     Long findFinancialPeriodByFinancialPeriodIdAndDate(Long financialPeriodId, String date);
+
+
+    @Query(value = " select count(fp.id)" +
+            "  from FNPR.FINANCIAL_PERIOD fp" +
+            " left outer join fnpr.financial_period_type fpt" +
+            "    on fpt.id = fp.financial_period_type_id" +
+            " where fp.start_date = :startDate" +
+            "   and fp.financial_period_type_id= :financialPeriodTypeId " +
+            "and fp.deleted_date is null "
+            , nativeQuery = true)
+    Long getCountByFinancialPeriodByStartDateAndFinancialPeriodTypeId(LocalDateTime startDate, Long financialPeriodTypeId);
+
+
+
+    @Query(value = " select count(fp.id)" +
+            "  from FNPR.FINANCIAL_PERIOD fp" +
+            " left outer join fnpr.financial_period_type fpt" +
+            "    on fpt.id = fp.financial_period_type_id" +
+            " where fp.start_date = :endDate" +
+            "   and fp.financial_period_type_id= :financialPeriodTypeId " +
+            "and fp.deleted_date is null "
+            , nativeQuery = true)
+    Long getCountByFinancialPeriodByEndDateAndFinancialPeriodTypeId(LocalDateTime endDate, Long financialPeriodTypeId);
 }

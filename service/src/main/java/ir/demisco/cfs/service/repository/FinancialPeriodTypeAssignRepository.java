@@ -27,7 +27,7 @@ public interface FinancialPeriodTypeAssignRepository extends JpaRepository<Finan
     Optional<FinancialPeriodTypeAssign> getFinancialPeriodTypeAssignId(Long organizationId);
 
     @Query("select 1 from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId and  fpa.financialPeriod.id=:financialPeriodId and fpa.startDate=:startDate")
-    Long getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(Long organizationId, Long financialPeriodId,LocalDateTime startDate);
+    Long getFinancialPeriodTypeAssignAndOrganAndPeriodTypeAndStartDate(Long organizationId, Long financialPeriodId, LocalDateTime startDate);
 
     @Query(value = " select " +
             "    TO_CHAR(start_date ,'yyyy/mm/dd') start_date, " +
@@ -58,12 +58,21 @@ public interface FinancialPeriodTypeAssignRepository extends JpaRepository<Finan
             "         group by calendar_type_id)", nativeQuery = true)
     List<Object[]> getStartDateAndEndDate(Long organizationId, Object financialPeriodType, Long financialPeriodTypeId);
 
-    @Query("select fpa from FinancialPeriodTypeAssign fpa where fpa.activeFlag=1 and fpa.organization.id=:organizationId and fpa.deletedDate is null ")
-    Optional<FinancialPeriodTypeAssign> getFinancialPeriodTypeAssignIdAndOrgan(Long organizationId);
-
-    @Query(value = "select fpa from  FinancialPeriodTypeAssign fpa  join  fpa.financialPeriod fp join  fp.financialPeriodStatus fps left outer join fp.financialPeriodType fpt " +
-            " where fpa.organization.id=:organizationId and fps.code =:statusCode and fpa.activeFlag=1 and fpt.id=:financialPeriodTypeId and fp.deletedDate is null order by fp.endDate desc ")
-    List<FinancialPeriod> findByFinancialPeriodTypeAssignOrganizationId(Long organizationId, String statusCode, Long financialPeriodTypeId);
+    @Query(value = "select fpa.id " +
+            "  from fnpr.financial_period_type_assign fpa" +
+            " inner join fnpr.financial_period fp" +
+            "    on fp.id = fpa.financial_period_id" +
+            " inner join fnpr.financial_period_status fps" +
+            "    on fps.id = fp.financial_period_status_id" +
+            "  left outer join fnpr.financial_period_type fpt" +
+            "    on fpt.id = fp.financial_period_type_id" +
+            " where fpa.organization_id = :organizationId" +
+            "   and fps.code = :statusCode" +
+            "   and fpa.active_flag = 1" +
+            "   and fpt.id = :financialPeriodTypeId" +
+            "   and fp.deleted_date is null" +
+            " order by fp.end_date desc ", nativeQuery = true)
+    List<Long> findByFinancialPeriodTypeAssignOrganizationId(Long organizationId, String statusCode, Long financialPeriodTypeId);
 
 
     @Query(value = "select fpa from  FinancialPeriodTypeAssign fpa  join  fpa.financialPeriod fp join  fp.financialPeriodStatus fps left outer join fp.financialPeriodType fpt" +
