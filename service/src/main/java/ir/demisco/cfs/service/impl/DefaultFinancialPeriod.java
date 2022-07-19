@@ -173,7 +173,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         if (financialPeriodDto.getId() == null && mode.equals("start")) {
             throw new RuleException("fin.financialPeriod.update");
         }
-        List<FinancialPeriod> period = financialPeriodTypeAssignRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN", financialPeriodDto.getFinancialPeriodTypeId());
+        List<Long> period = financialPeriodTypeAssignRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN", financialPeriodDto.getFinancialPeriodTypeId());
         if (period.size() >= 3 && mode.equals("end")) {
             throw new RuleException("fin.financialPeriod.validationUpdate");
         }
@@ -184,7 +184,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
 
     private void validationSave(FinancialPeriodDto financialPeriodDto) {
         Long organizationId = SecurityHelper.getCurrentUser().getOrganizationId();
-        List<FinancialPeriod> period = financialPeriodTypeAssignRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN", financialPeriodDto.getFinancialPeriodTypeId());
+        List<Long> period = financialPeriodTypeAssignRepository.findByFinancialPeriodTypeAssignOrganizationId(organizationId, "OPEN", financialPeriodDto.getFinancialPeriodTypeId());
         if (period.size() >= 2) {
             throw new RuleException("fin.financialPeriod.validationSave");
         }
@@ -202,6 +202,16 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         Long financialCount = financialPeriodTypeAssignRepository.getCountByStartDateAndEndDateAndFinancialPeriodTypeAssignId(financialPeriodDto.getStartDate(), financialPeriodDto.getEndDate(), financialPeriodDto.getFinancialPeriodTypeAssignId(), financialPeriodDto.getFinancialPeriodTypeId());
         if (financialCount > 0) {
             throw new RuleException("fin.financialPeriod.validationSave.saveStartDateAndEndDate");
+        }
+
+        Long financialPeriodStartDate = financialPeriodRepository.getCountByFinancialPeriodByStartDateAndFinancialPeriodTypeId(financialPeriodDto.getStartDate(), financialPeriodDto.getFinancialPeriodTypeId());
+        if (financialPeriodStartDate > 0) {
+            throw new RuleException("برای این سازمان دوره ی مالی با این تاریخ شروع قبلا ثبت شده است.");
+        }
+
+        Long financialPeriodEndDate = financialPeriodRepository.getCountByFinancialPeriodByEndDateAndFinancialPeriodTypeId(financialPeriodDto.getEndDate(), financialPeriodDto.getFinancialPeriodTypeId());
+        if (financialPeriodEndDate > 0) {
+            throw new RuleException("برای این سازمان دوره ی مالی با این تاریخ پایان قبلا ثبت شده است.");
         }
     }
 
