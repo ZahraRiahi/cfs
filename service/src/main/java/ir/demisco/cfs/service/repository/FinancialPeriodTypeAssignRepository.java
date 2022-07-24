@@ -52,11 +52,10 @@ public interface FinancialPeriodTypeAssignRepository extends JpaRepository<Finan
             "             on ta.financial_period_id = fnpr.id" +
             "          inner join fnpr.financial_period_type fnpt" +
             "             on fnpt.id = fnpr.financial_period_type_id " +
-            "         where ta.organization_id = :organizationId " +
-            "           And ta.active_flag = 1 " +
+            "         where  ta.active_flag = 1 " +
             " and  ( :financialPeriodType is null or fnpt.id = :financialPeriodTypeId)" +
             "         group by calendar_type_id)", nativeQuery = true)
-    List<Object[]> getStartDateAndEndDate(Long organizationId, Object financialPeriodType, Long financialPeriodTypeId);
+    List<Object[]> getStartDateAndEndDate(Object financialPeriodType, Long financialPeriodTypeId);
 
     @Query(value = "select fpa.id " +
             "  from fnpr.financial_period_type_assign fpa" +

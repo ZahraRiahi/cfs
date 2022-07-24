@@ -253,7 +253,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         } else {
             financialPeriodGetDateRequest.setFinancialPeriodTypeId(0L);
         }
-        List<Object[]> objects = financialPeriodTypeAssignRepository.getStartDateAndEndDate(SecurityHelper.getCurrentUser().getOrganizationId(), financialPeriodType, financialPeriodGetDateRequest.getFinancialPeriodTypeId());
+        List<Object[]> objects = financialPeriodTypeAssignRepository.getStartDateAndEndDate( financialPeriodType, financialPeriodGetDateRequest.getFinancialPeriodTypeId());
         if (objects.isEmpty()) {
             throw new RuleException("fin.financialPeriodType.getDate");
         }
