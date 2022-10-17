@@ -55,7 +55,7 @@ public interface FinancialPeriodRepository extends JpaRepository<FinancialPeriod
             "            on fp.financial_period_type_id  = fpty.id " +
             "    where " +
             "        fp.financial_period_status_id = 1   " +
-            "        and to_date(:localDate, 'yyyy-mm-dd') between fp.start_date and fp.end_date " +
+            "        and to_date(:localDate, 'yyyy-mm-dd') between trunc(fp.start_date) and trunc(fp.end_date) " +
             " and  ( :financialPeriodType is null or fpty.id = :financialPeriodTypeId)" +
             "        and fp.deleted_date is null "
             , nativeQuery = true)
