@@ -206,11 +206,11 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
             if (period.size() >= 2) {
                 throw new RuleException("fin.financialPeriod.validationSave");
             }
-            {
-                FinancialPeriodTypeAssign financialPeriodTypeAssign =
-                        financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(SecurityHelper.getCurrentUser().getOrganizationId()).orElseThrow(() -> new RuleException("fin.financialPeriod.financialPeriodTypeAssignIdAndOrgan"));
-                financialPeriodDto.setFinancialPeriodTypeAssignId(financialPeriodTypeAssign.getId());
-            }
+//            {
+//                FinancialPeriodTypeAssign financialPeriodTypeAssign =
+//                        financialPeriodTypeAssignRepository.getFinancialPeriodTypeAssignId(SecurityHelper.getCurrentUser().getOrganizationId()).orElseThrow(() -> new RuleException("fin.financialPeriod.financialPeriodTypeAssignIdAndOrgan"));
+//                financialPeriodDto.setFinancialPeriodTypeAssignId(financialPeriodTypeAssign.getId());
+//            }
             if (!String.valueOf(financialPeriodDto.getOpenMonthCount()).matches(myRegex.pattern())) {
                 throw new RuleException("fin.financialPeriod.financialMonth.update");
             }
