@@ -8,9 +8,11 @@ import ir.demisco.cfs.model.dto.response.FinancialPeriodDto;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodNewResponse;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodResponse;
 import ir.demisco.cfs.model.dto.response.FinancialPeriodStatusResponse;
+import ir.demisco.cfs.model.entity.FinancialPeriod;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceRequest;
 import ir.demisco.cloud.core.middle.model.dto.DataSourceResult;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 
@@ -19,6 +21,9 @@ public interface FinancialPeriodService {
     DataSourceResult getFinancialPeriodByOrganizationId(Long organizationId, DataSourceRequest dataSourceRequest);
 
     FinancialPeriodDto save(FinancialPeriodDto financialPeriodDto);
+
+    @Transactional(rollbackOn = Throwable.class,value = Transactional.TxType.REQUIRES_NEW)
+    FinancialPeriod saveFinancialPeriod(FinancialPeriodDto financialPeriodDto);
 
     FinancialPeriodDto update(FinancialPeriodDto financialPeriodDto);
 
