@@ -1,5 +1,6 @@
 package ir.demisco.cfs.service.impl;
 
+import com.fasterxml.jackson.databind.util.StdDateFormat;
 import ir.demisco.cfs.model.dto.request.FinancialPeriodGetDateRequest;
 import ir.demisco.cfs.model.dto.request.FinancialPeriodRequest;
 import ir.demisco.cfs.model.dto.request.FinancialPeriodStatusRequest;
@@ -34,7 +35,11 @@ import org.apache.http.util.Asserts;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -107,7 +112,7 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         FinancialPeriod finalFinancialPeriod = financialPeriod;
         saveAssignee(financialPeriodDto, financialPeriod);
         saveMonth(financialPeriod, finalFinancialPeriod);
-         saveParameters(organizationId, finalFinancialPeriod);
+        saveParameters(organizationId, finalFinancialPeriod);
         return financialPeriodDto;
     }
 
@@ -148,17 +153,36 @@ public class DefaultFinancialPeriod implements FinancialPeriodService {
         });
     }
 
+    private LocalDateTime parseStringToLocalDateTime(Object input, boolean truncateDate) {
+        if (input instanceof String) {
+            try {
+                Date date = StdDateFormat.instance.parse((String) input);
+                return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            } catch (ParseException var4) {
+                if (((String) input).equalsIgnoreCase("current_date")) {
+                    return truncateDate ? DateUtil.truncate(LocalDateTime.now()) : LocalDateTime.now();
+                } else {
+                    return ((String) input).equalsIgnoreCase("current_timestamp") ? LocalDateTime.now() : LocalDateTime.parse((String) input);
+                }
+            }
+        } else if (input instanceof LocalDateTime) {
+            return truncateDate ? DateUtil.truncate((LocalDateTime) input) : (LocalDateTime) input;
+        } else {
+            throw new IllegalArgumentException("Filter for LocalDateTime has error :" + input + " with class" + input.getClass());
+        }
+    }
+
     @Transactional(rollbackFor = Throwable.class)
     public void saveMonth(FinancialPeriod financialPeriod, FinancialPeriod finalFinancialPeriod) {
         List<Object[]> list = financialMonthTypeRepository.findByParam(financialPeriod.getId(), SecurityHelper.getCurrentUser().getOrganizationId());
         list.forEach((Object[] item) -> {
             FinancialMonth financialMonth = new FinancialMonth();
             financialMonth.setFinancialPeriod(finalFinancialPeriod);
-            financialMonth.setFinancialMonthType(financialMonthTypeRepository.findById(Long.parseLong(item[0].toString())).orElse(null));
+            financialMonth.setFinancialMonthType(financialMonthTypeRepository.findById(Long.parseLong(item[2].toString())).orElse(null));
             financialMonth.setFinancialMonthStatus(financialMonthStatusRepository.findById(1L).orElse(null));
-            financialMonth.setStartDate(DateUtil.convertStringToDate(item[1].toString()));
-            financialMonth.setEndDate(DateUtil.convertStringToDate(item[2].toString()));
-            financialMonth.setDescription(getItemForString(item, 3));
+            financialMonth.setStartDate(((Timestamp) item[0]).toLocalDateTime());
+            financialMonth.setEndDate(((Timestamp) item[1]).toLocalDateTime());
+            financialMonth.setDescription(getItemForString(item, 4));
             financialMonthRepository.save(financialMonth);
         });
     }

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FinancialMonthTypeRepository extends JpaRepository<FinancialMonthType,Long> {
 
-@Query(value = " select (select case calendar_type_id" +
+@Query(value = " select TO_DATE((select case calendar_type_id" +
         "                         when 1 then " +
         "                          min(ad.pdat_ggdate_c) " +
         "                         when 2 then" +
@@ -36,8 +36,8 @@ public interface FinancialMonthTypeRepository extends JpaRepository<FinancialMon
         "                       ad.pdat_ggdate_mon =" +
         "                       extract(month from" +
         "                                TO_DATE(start_date_final, 'mm/dd/yyyy')))" +
-        "                ) start_date," +
-        "               (select" +
+        "                ), 'yyyy/mm/dd')  start_date," +
+        "              TO_DATE( (select" +
         "                      TO_CHAR(TO_DATE( max(ad.pdat_hsdate_c), 'yyyy/mm/dd','NLS_CALENDAR=persian')," +
         "                                       'yyyy/mm/dd'" +
         "                                       )" +
@@ -63,7 +63,7 @@ public interface FinancialMonthTypeRepository extends JpaRepository<FinancialMon
         "                       ad.pdat_ggdate_mon =" +
         "                       extract(month from" +
         "                                TO_DATE(start_date_final, 'mm/dd/yyyy')))" +
-        "                ) end_date," +
+        "                ), 'yyyy/mm/dd') end_date," +
         "               MONTH_TYPE_ID," +
         "               CALENDAR_TYPE_ID," +
         "               description || ' ' ||" +
